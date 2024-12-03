@@ -14,20 +14,19 @@ def classifyData(classifier, colToClassify):
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
 
-    match classifier:
-        case 'rf':
-            classificationResults = randomForest(X_train, X_test, y_train, y_test)
-        case 'svm':
-            classificationResults = supportVectorMachine(X_train, X_test, y_train, y_test)
-        case 'neuralNetwork':
-            classificationResults = neuralNetwork(X_train, X_test, y_train, y_test)
-        case 'naiveBayes':
-            classificationResults = naiveBayes(X_train, X_test, y_train, y_test)
-        case 'knn':
-            classificationResults = kNearestNeighbor(X_train, X_test, y_train, y_test)
-        case _:
-            print('invalid classifier')
-            classificationResults = []
+    if classifier == 'rf':
+        classificationResults = randomForest(X_train, X_test, y_train, y_test)
+    elif classifier == 'svm':
+        classificationResults = supportVectorMachine(X_train, X_test, y_train, y_test)
+    elif classifier == 'neuralNetwork':
+        classificationResults = neuralNetwork(X_train, X_test, y_train, y_test)
+    elif classifier == 'naiveBayes':
+        classificationResults = naiveBayes(X_train, X_test, y_train, y_test)
+    elif classifier == 'knn':
+        classificationResults = kNearestNeighbor(X_train, X_test, y_train, y_test)
+    else:
+        print('invalid classifier')
+        classificationResults = []
 
     return classificationResults
 
