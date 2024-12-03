@@ -1,17 +1,12 @@
-import pandas as pd #testimport
-import flask
+import classifier
 
 def main():
-    print("test")
-
+    #name des classifiers und spalte, die vorhergesagt werden soll
+    #Valide Classifier: 'rf', 'svm', 'knn', 'naiveBayes', 'neuralNetwork'
+    #Valide Vorhersagespalten: 'Text zum Fertigungshilfsmittel', 'Stichprobenverfahren', 'Lenkungsmethode', 'Merkmalsgewichtung'
+    results = classifier.classifyData('rf', 'Text zum Fertigungshilfsmittel')
+    print(results)
     return
-
-
-
-
-
-
-
 
 if __name__ == '__main__':
   main()
