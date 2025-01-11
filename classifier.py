@@ -3,7 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 def classifyData(classifier, colToClassify):
-    data = pd.read_excel('data\input_test.xlsx')
+    data = pd.read_excel('data/input_test.xlsx')
     data = preprocessor(data)
 
     #split data into training/testing set and scale values
