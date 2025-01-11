@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auswertungen</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 18px;
+            text-align: left;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Auswertungen</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Weitere Informationen und Spalten</th>
+                <th>Spalte x</th>
+                <th>Spalte y</th>
+                <th>Spalte z</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Beispiel-Datenzeilen -->
+            <tr>
+                <td>Wert 1</td>
+                <td>
+                    <select>
+                        <option value="Option 1">Option 1</option>
+                        <option value="Option 2">Option 2</option>
+                        <option value="Option 3">Option 3</option>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <option value="Option A">Option A</option>
+                        <option value="Option B">Option B</option>
+                        <option value="Option C">Option C</option>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <option value="Option 1">Option 1</option>
+                        <option value="Option 2">Option 2</option>
+                        <option value="Option 3">Option 3</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Wert 3</td>
+                <td>
+                    <select>
+                        <option value="Option 1">Option 1</option>
+                        <option value="Option 2">Option 2</option>
+                        <option value="Option 3">Option 3</option>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <option value="Option 1">Option 1</option>
+                        <option value="Option 2">Option 2</option>
+                        <option value="Option 3">Option 3</option>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <option value="Option 1">Option 1</option>
+                        <option value="Option 2">Option 2</option>
+                        <option value="Option 3">Option 3</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="button-container">
+        <button onclick="window.location.href='/endansicht'">Zur Endansicht</button>
+        <button onclick="window.location.href='/html'">Zurück zur Startseite</button>
+    </div>
+</body>
+</html>

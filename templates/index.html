@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision Support System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        input[type="file"], button {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        a button {
+            text-decoration: none;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        a button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Decision Support System</h1>
+    <p>Info</p>
+
+    
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".xlsx, .xls" required>
+        <button type="submit">Upload Excel File</button>
+    </form>
+
+    
+    <a href="auswertungen.html">
+        <button>Click below for results</button>
+    </a>
+    <p><a href="{{ url_for('index_func') }}">Click for Results</a></p>
+</body>
+</html>
+
