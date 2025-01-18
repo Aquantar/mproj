@@ -43,13 +43,13 @@ def auswertungen():
 @app.route('/auswertungen', methods=['GET', 'POST'])
 def index_func():
     #DAS IST FALSCH; NUR ZUM TESTEN OB ALLES FUNKTIONIERT, bis print(results)
-    """
+    
     trainData = pd.read_excel('data//traindata.xlsx')
     predData = pd.read_excel('data//testdata.xlsx')
     modelType = 'rf'
     results = modelTrainer.createPrediction(trainData, predData, modelType)
     print(results)
-    """
+    
     if request.method == 'POST':
         # do stuff when the form is submitted
         # redirect to end the POST handling
@@ -68,8 +68,8 @@ def index_func():
         return redirect(url_for('auswertungen'))
     # show the form, it wasn't submitted
     return render_template('auswertungen.html')
-
-'''
+        
+"""
 @app.route('/monitoring', methods=['GET', 'POST'])
 def index_func():
     if request.method == 'POST':
@@ -79,7 +79,7 @@ def index_func():
         return redirect(url_for('monitoring'))
     # show the form, it wasn't submitted
     return render_template('monitoring.html')
-'''
+"""
 
 if __name__ == '__main__':
   app.run(debug=True)
