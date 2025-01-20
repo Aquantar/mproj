@@ -264,3 +264,10 @@ def kNearestNeighbor(X_train, X_test, y_train, y_test):
     accuracy = accuracy_score(y_test, y_pred)
 
     return model, y_pred, accuracy
+
+def getUniqueValues(trainData):
+    uniqueVals = {}
+    cols = ['Fertigungshilfsmittel', 'Stichprobenverfahren', 'Lenkungsmethode', 'Merkmalsgewichtung']
+    for col in cols:     
+        uniqueVals[col] = trainData[col].unique()
+    return uniqueVals

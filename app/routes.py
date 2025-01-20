@@ -8,21 +8,25 @@ optionen = ["Option 1", "Option 2", "Option 3", "Option 4"]
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def html():
-    global inputFile
+    global results
     if request.method == 'POST':
         print("success. starting prediction")
         file = request.files['input']
-        trainData = pd.read_excel(file)
-        predData = pd.read_excel('data//testdata.xlsx')
-        modelType = 'rf'
-        results = createPrediction(trainData, predData, modelType)
+        trainData = pd.read_excel('data//traindata.xlsx')
+        predData = pd.read_excel(file)
+        #modelType = 'rf'
+        #results = createPrediction(trainData, predData, modelType)
         return redirect(url_for('index_func'))
     return render_template('index.html')
-
+#
 @app.route('/auswertungen', methods=['GET', 'POST'])
 def index_func():
-    if request.method == 'POST':
-        return redirect(url_for('index_func'))
+    #if request.method == 'POST':
+    #    return redirect(url_for('index_func'))
+    global results
+    print(results)
+    trainData = pd.read_excel('data//traindata.xlsx')
+    print(getUniqueValues(trainData))
 
     return render_template('auswertungen.html', optionen=optionen)
 
