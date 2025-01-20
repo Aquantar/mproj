@@ -52,7 +52,7 @@
                     <select name="Fertigungshilfsmittel">
                         {% for option in uniqueVals['Fertigungshilfsmittel'] %}
                         <option value="{{ option }}" 
-                                {% if option == predictionDummy['Fertigungshilfsmittel'][i] %} selected {% endif %}>
+                                {% if option == results['Fertigungshilfsmittel'][i] %} selected {% endif %}>
                             {{ option }}
                         </option>
                         {% endfor %}
@@ -62,7 +62,7 @@
                     <select name="Stichprobenverfahren">
                         {% for option in uniqueVals['Stichprobenverfahren'] %}
                         <option value="{{ option }}" 
-                                {% if option == predictionDummy['Stichprobenverfahren'][i] %} selected {% endif %}>
+                                {% if option == results['Stichprobenverfahren'][i] %} selected {% endif %}>
                             {{ option }}
                         </option>
                         {% endfor %}
@@ -72,7 +72,7 @@
                     <select name="Lenkungsmethode">
                         {% for option in uniqueVals['Lenkungsmethode'] %}
                         <option value="{{ option }}" 
-                                {% if option == predictionDummy['Lenkungsmethode'][i] %} selected {% endif %}>
+                                {% if option == results['Lenkungsmethode'][i] %} selected {% endif %}>
                             {{ option }}
                         </option>
                         {% endfor %}
@@ -82,7 +82,7 @@
                     <select name="Merkmalsgewichtung">
                         {% for option in uniqueVals['Merkmalsgewichtung'] %}
                         <option value="{{ option }}" 
-                                {% if option == predictionDummy['Merkmalsgewichtung'][i] %} selected {% endif %}>
+                                {% if option == results['Merkmalsgewichtung'][i] %} selected {% endif %}>
                             {{ option }}
                         </option>
                         {% endfor %}

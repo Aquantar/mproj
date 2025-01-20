@@ -29,16 +29,18 @@ def html():
 
 @app.route('/auswertungen', methods=['GET', 'POST'])
 def index_func():
-    #if request.method == 'POST':
-    #    return redirect(url_for('index_func'))
     global results
+    if request.method == 'POST':
+        #results = request.form.get("meteodrop")
+        outputForm = pd.read_excel('data//testdata_control.xlsx')
+        outputForm = results[""]
     print(results)
     trainData = pd.read_excel('data//traindata.xlsx')
     unique_values = getUniqueValues(trainData)
-    prediction_dummy = predictionDummy
+    #prediction_dummy = predictionDummy
     print(getUniqueValues(trainData))
 
-    return render_template('auswertungen.html', uniqueVals=unique_values, predictionDummy=prediction_dummy)
+    return render_template('auswertungen.html', uniqueVals=unique_values, results=results)
 
 @app.route('/monitoring', methods=['GET', 'POST'])
 def monitoring_func():
