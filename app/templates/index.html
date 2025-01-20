@@ -35,17 +35,23 @@
     <h1>Decision Support System</h1>
     <p>Info</p>
 
-    
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".xlsx, .xls" required>
-        <button type="submit">Upload Excel File</button>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="input" accept=".xlsx, .xls" required>
+        <input type="submit" value="Submit">
     </form>
 
-    
+<!--
+    <form action="/auswertungen" method="post" enctype="multipart/form-data">
+        <input type="file" name="input" accept=".xlsx, .xls" required>
+        <button type="submit">Upload Excel File</button>
+    </form>
+-->
+<!--
     <a href="auswertungen.html">
         <button>Click below for results</button>
     </a>
     <p><a href="{{ url_for('index_func') }}">Click for Results</a></p>
+-->
 </body>
 </html>
 
