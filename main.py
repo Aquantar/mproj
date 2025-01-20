@@ -26,10 +26,6 @@ def main():
 """
 
 @app.route('/')
-def hello_world():
-    return 'hello world'
-
-@app.route('/html')
 def html():
     return render_template('index.html')
 
@@ -80,6 +76,16 @@ def index_func():
     # show the form, it wasn't submitted
     return render_template('monitoring.html')
 """
+
+@app.route('/monitoring', methods=['GET', 'POST'])
+def monitoring_func():
+    if request.method == 'POST':
+        # do stuff when the form is submitted
+        # redirect to end the POST handling
+        # the redirect can be to the same route or somewhere else
+        return redirect(url_for('monitoring_func'))
+    # show the form, it wasn't submitted
+    return render_template('monitoring.html')
 
 if __name__ == '__main__':
   app.run(debug=True)
