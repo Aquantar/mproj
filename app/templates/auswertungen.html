@@ -38,41 +38,40 @@
         <thead>
             <tr>
                 <th>Weitere Informationen</th>
-                <th>Spalte w</th>
-                <th>Spalte x</th>
-                <th>Spalte y</th>
-                <th>Spalte z</th>
+                <th>Fertigungshilfsmittel</th>
+                <th>Stichprobenverfahren</th>
+                <th>Lenkungsmethode</th>
+                <th>Merkmalsgewichtung</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Beispiel-Datenzeilen -->
             {% for i in range(1, 7) %}
             <tr>
                 <td>Wert {{ i }}</td>
                 <td>
-                    <select>
-                        {% for option in optionen %}
+                    <select name="Fertigungshilfsmittel">
+                        {% for option in uniqueVals['Fertigungshilfsmittel'] %}
                         <option value="{{ option }}">{{ option }}</option>
                         {% endfor %}
                     </select>
                 </td>
                 <td>
-                    <select>
-                        {% for option in optionen %}
+                    <select name="Stichprobenverfahren">
+                        {% for option in uniqueVals['Stichprobenverfahren'] %}
                         <option value="{{ option }}">{{ option }}</option>
                         {% endfor %}
                     </select>
                 </td>
                 <td>
-                    <select>
-                        {% for option in optionen %}
+                    <select name="Lenkungsmethode">
+                        {% for option in uniqueVals['Lenkungsmethode'] %}
                         <option value="{{ option }}">{{ option }}</option>
                         {% endfor %}
                     </select>
                 </td>
                 <td>
-                    <select>
-                        {% for option in optionen %}
+                    <select name="Merkmalsgewichtung">
+                        {% for option in uniqueVals['Merkmalsgewichtung'] %}
                         <option value="{{ option }}">{{ option }}</option>
                         {% endfor %}
                     </select>

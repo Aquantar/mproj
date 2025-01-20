@@ -34,9 +34,10 @@ def index_func():
     global results
     print(results)
     trainData = pd.read_excel('data//traindata.xlsx')
+    unique_values = getUniqueValues(trainData)
     print(getUniqueValues(trainData))
 
-    return render_template('auswertungen.html', optionen=optionen)
+    return render_template('auswertungen.html', uniqueVals=unique_values)
 
 @app.route('/monitoring', methods=['GET', 'POST'])
 def monitoring_func():
