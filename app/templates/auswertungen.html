@@ -45,34 +45,46 @@
             </tr>
         </thead>
         <tbody>
-            {% for i in range(1, 7) %}
+            {% for i in range(0, 7) %}
             <tr>
-                <td>Wert {{ i }}</td>
+                <td>Wert {{ i + 1 }}</td>
                 <td>
                     <select name="Fertigungshilfsmittel">
                         {% for option in uniqueVals['Fertigungshilfsmittel'] %}
-                        <option value="{{ option }}">{{ option }}</option>
+                        <option value="{{ option }}" 
+                                {% if option == predictionDummy['Fertigungshilfsmittel'][i] %} selected {% endif %}>
+                            {{ option }}
+                        </option>
                         {% endfor %}
                     </select>
                 </td>
                 <td>
                     <select name="Stichprobenverfahren">
                         {% for option in uniqueVals['Stichprobenverfahren'] %}
-                        <option value="{{ option }}">{{ option }}</option>
+                        <option value="{{ option }}" 
+                                {% if option == predictionDummy['Stichprobenverfahren'][i] %} selected {% endif %}>
+                            {{ option }}
+                        </option>
                         {% endfor %}
                     </select>
                 </td>
                 <td>
                     <select name="Lenkungsmethode">
                         {% for option in uniqueVals['Lenkungsmethode'] %}
-                        <option value="{{ option }}">{{ option }}</option>
+                        <option value="{{ option }}" 
+                                {% if option == predictionDummy['Lenkungsmethode'][i] %} selected {% endif %}>
+                            {{ option }}
+                        </option>
                         {% endfor %}
                     </select>
                 </td>
                 <td>
                     <select name="Merkmalsgewichtung">
                         {% for option in uniqueVals['Merkmalsgewichtung'] %}
-                        <option value="{{ option }}">{{ option }}</option>
+                        <option value="{{ option }}" 
+                                {% if option == predictionDummy['Merkmalsgewichtung'][i] %} selected {% endif %}>
+                            {{ option }}
+                        </option>
                         {% endfor %}
                     </select>
                 </td>
