@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Monitor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .info {
+            margin-bottom: 20px;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".xlsx, .xls" required>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div class="container">
+        <h1>Model Monitoring</h1>
+        <div class="info">
+            <p>Hier können Sie die Accuracy eines Modells berechnen und überwachen.</p>
+            <p>Drücken Sie den Button, um die Berechnung zu starten.</p>
+        </div>
+        <button id="calculateAccuracy">Accuracy berechnen</button>
+        <div class="result" id="accuracyResult">
+            <!-- Das Ergebnis wird hier angezeigt -->
+        </div>
+        <canvas id="accuracyChart" width="800" height="400"></canvas>
+    </div>
+
+    <script>
+        document.getElementById("calculateAccuracy").addEventListener("click", function() {
+            // Platzhalter für zukünftige Funktionalität
+            const resultElement = document.getElementById("accuracyResult");
+            resultElement.textContent = "Berechnung läuft... (Funktion noch nicht implementiert)";
+        });
+    </script>
+    <script>
+        const ctx = document.getElementById('accuracyChart').getContext('2d');
+        const accuracyChart = new Chart(ctx, {
+            type: 'line', // Diagrammtyp
+            data: {
+                labels: ['Januar', 'Februar', 'März', 'April', 'Mai'], // X-Achse
+                datasets: [{
+                    label: 'Accuracy-Verlauf',
+                    data: [65, 59, 80, 81, 56], // Y-Achse
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 2,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    
+        // Dynamische Aktualisierung des Diagramms
+        document.getElementById("calculateAccuracy").addEventListener("click", function() {
+            // Füge neuen Datenpunkt hinzu zufällig
+            const newLabel = 'Juni';
+            const newData = Math.floor(Math.random() * 100); // Zufallswert
+            accuracyChart.data.labels.push(newLabel);
+            accuracyChart.data.datasets[0].data.push(newData);
+            accuracyChart.update();
+        });
+    </script>
+</body>
+</html>
