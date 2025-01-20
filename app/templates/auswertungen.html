@@ -33,7 +33,7 @@
 </head>
 <body>
     <h1>Auswertungen</h1>
-
+    <form method="POST">
     <table>
         <thead>
             <tr>
@@ -45,7 +45,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for i in range(0, 7) %}
+            {% for i in range(0, featureCount) %}
             <tr>
                 <td>Wert {{ i + 1 }}</td>
                 <td>
@@ -92,6 +92,8 @@
             {% endfor %}
         </tbody>
     </table>
+    <input type="submit" value="Submit">
+    </form>
 
     <div class="button-container">
         <button onclick="window.location.href='/endansicht'">Zur Endansicht</button>

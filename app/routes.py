@@ -1,7 +1,8 @@
 from app import app, results
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, make_response
 from app.functions import *
 from io import BytesIO
+import xlsxwriter
 
 optionen = ["Option 1", "Option 2", "Option 3", "Option 4"]
 predictionDummy = {'Fertigungshilfsmittel': ['MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'FORM- UND LAGEMESSGERÄT', 'MESSUHR', 'MESSUHR', 'Konturenmessgerät', 'FORM- UND LAGEMESSGERÄT', 'Konturenmessgerät', 'Rauhigkeitsmessgerät', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR'],
@@ -31,16 +32,63 @@ def html():
 def index_func():
     global results
     if request.method == 'POST':
-        #results = request.form.get("meteodrop")
+        choicesOutput = request.form
+        list1 = []
+        list2 = []
+        list3 = []
+        list4 = []
+        for key, value in choicesOutput.items(multi=True):
+            if key == "Fertigungshilfsmittel":
+                list1.append(value)
+            if key == "Stichprobenverfahren":
+                list2.append(value)
+            if key == "Lenkungsmethode":
+                list3.append(value)
+            if key == "Merkmalsgewichtung":
+                list4.append(value)
         outputForm = pd.read_excel('data//testdata_control.xlsx')
-        outputForm = results[""]
-    print(results)
+        outputForm['Fertigungshilfsmittel'] = list1
+        outputForm['Stichprobenverfahren'] = list2
+        outputForm['Lenkungsmethode'] = list3
+        outputForm['Merkmalsgewichtung'] = list4 
+
+        sio = BytesIO()
+        outputName = "output"
+        writerImportsheet = pd.ExcelWriter("{}.xlsx".format(outputName), engine="xlsxwriter")
+        outputForm.to_excel(writerImportsheet, sheet_name="Sheet1", index=False)
+        workbook = xlsxwriter.Workbook(sio)
+        sheet = workbook.add_worksheet(u'sheet1')
+
+        #Header
+        columns = list(outputForm.columns.values) 
+        iter = 0
+        for col in columns:
+            sheet.write(0, iter, col)
+            full_column = outputForm.iloc[:, iter]
+            row = 0
+            while row < len(full_column):
+                try:
+                    sheet.write(row+1, iter, full_column[row])
+                    row = row + 1
+                except:
+                    row = row + 1
+                    pass
+            iter = iter + 1
+
+        workbook.close()
+        sio.seek(0)
+
+        resp = make_response(sio.getvalue())
+        resp.headers["Content-Disposition"] = "attachment; filename={}.xlsx".format(outputName)
+        resp.headers['Content-Type'] = 'application/x-xlsx'
+        return resp
+    
     trainData = pd.read_excel('data//traindata.xlsx')
     unique_values = getUniqueValues(trainData)
-    #prediction_dummy = predictionDummy
+    featureCount = len(results["Fertigungshilfsmittel"])
     print(getUniqueValues(trainData))
 
-    return render_template('auswertungen.html', uniqueVals=unique_values, results=results)
+    return render_template('auswertungen.html', uniqueVals=unique_values, results=results, featureCount = featureCount)
 
 @app.route('/monitoring', methods=['GET', 'POST'])
 def monitoring_func():
