@@ -70,6 +70,76 @@ def createPrediction(trainData, predData, modelType):
         results.append(res)
     return results
 
+
+def createPrediction2(trainData, predData, modelType): 
+
+    trainData_processed = prepareRawData(trainData)
+    predData_processed = prepareRawData(predData)
+
+    #konvertiere textwerte in angegebenen spalten zu zahlen, speichere werte für spätere rück-umwandlung in mappingInfo
+    print("starting to map")
+    combinedData = pd.concat([trainData_processed, predData_processed])
+    columnsToConvert = ['Prüfmerkmal_Text', 'Fertigungshilfsmittel', 'Merkmalsgewichtung', 'Maßeinheit', 'Stichprobenverfahren', 'Vorgang', 'Lenkungsmethode', 'Plangruppe', 'Knotenplan', 'Verbindung', 'Arbeitsplatz', 'Beschreibung_Vorgang']
+    mappingInfo = dict()
+    for col in columnsToConvert:
+        if col in combinedData.columns:
+            temp = convertTextColumnToNumbers(combinedData, col)
+            mappingInfo[col] = temp[1]
+
+    for index, row in trainData_processed.iterrows():
+            for key, value in mappingInfo.items():
+                try:
+                    trainData_processed.at[index, key]=value[row[key]]
+                except:
+                    print(key)
+                    print(row[key])
+
+    for index, row in predData_processed.iterrows():
+        for key, value in mappingInfo.items():
+            try:
+                predData_processed.at[index, key]=value[row[key]]
+            except:
+                print(key)
+                print(row[key])
+
+    colsToClassify = ['Fertigungshilfsmittel', 'Stichprobenverfahren', 'Lenkungsmethode', 'Merkmalsgewichtung']
+    results = []
+    for col in colsToClassify:
+        X_train = trainData_processed.drop(colsToClassify, axis=1)
+        X_test = predData_processed.drop(colsToClassify, axis=1)
+        y_train = trainData_processed[col].astype(int)
+        y_test = predData_processed[col].astype(int)
+
+        from sklearn.preprocessing import StandardScaler
+        scaler = StandardScaler()
+        X_train = scaler.fit_transform(X_train)
+        X_test = scaler.transform(X_test)
+
+        if modelType == 'rf':
+            res = randomForest(X_train, X_test, y_train, y_test)
+        elif modelType == 'svm':
+            res = supportVectorMachine(X_train, X_test, y_train, y_test)
+        elif modelType == 'neuralNetwork':
+            res = neuralNetwork(X_train, X_test, y_train, y_test)
+        elif modelType == 'naiveBayes':
+            res = naiveBayes(X_train, X_test, y_train, y_test)
+        elif modelType == 'knn':
+            res = kNearestNeighbor(X_train, X_test, y_train, y_test)
+
+        preds = res[1]
+        preds_text = []
+        for idx, pred in enumerate(preds):
+            mapping = mappingInfo[col]
+            for key, val in mapping.items():
+                if val == preds[idx]:
+                    preds_text.append(key)
+        res = list(res)
+        res.append(preds_text)
+        res = tuple(res)
+
+        results.append(res)
+    return results
+
 def prepareRawData(data):
     usedCols = ['Prüfmerkmal_Text', 'Fertigungshilfsmittel', 'Sollwert', 'Merkmalsgewichtung', 'Maßeinheit', 'Oberer_Grenzwert', 'Unterer_Grenzwert', 'Nachkommastellen', 'Stichprobenverfahren', 'Vorgang', 'Lenkungsmethode', 'Plangruppe', 'Knotenplan', 'Verbindung', 'Arbeitsplatz', 'Beschreibung_Vorgang']
 
@@ -146,7 +216,6 @@ def randomForest(X_train, X_test, y_train, y_test):
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
-    print(accuracy)
 
     return model, y_pred, accuracy
 
