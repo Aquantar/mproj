@@ -3,6 +3,8 @@ from flask import Flask, render_template, request, url_for, redirect
 from app.functions import *
 from io import BytesIO
 
+optionen = ["Option 1", "Option 2", "Option 3", "Option 4"]
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def html():
@@ -19,9 +21,10 @@ def html():
 
 @app.route('/auswertungen', methods=['GET', 'POST'])
 def index_func():
-    print(results)
+    if request.method == 'POST':
+        return redirect(url_for('index_func'))
 
-    return render_template('auswertungen.html')
+    return render_template('auswertungen.html', optionen=optionen)
 
 @app.route('/monitoring', methods=['GET', 'POST'])
 def monitoring_func():

@@ -37,7 +37,8 @@
     <table>
         <thead>
             <tr>
-                <th>Weitere Informationen und Spalten</th>
+                <th>Weitere Informationen</th>
+                <th>Spalte w</th>
                 <th>Spalte x</th>
                 <th>Spalte y</th>
                 <th>Spalte z</th>
@@ -45,60 +46,46 @@
         </thead>
         <tbody>
             <!-- Beispiel-Datenzeilen -->
+            {% for i in range(1, 7) %}
             <tr>
-                <td>Wert 1</td>
+                <td>Wert {{ i }}</td>
                 <td>
                     <select>
-                        <option value="Option 1">Option 1</option>
-                        <option value="Option 2">Option 2</option>
-                        <option value="Option 3">Option 3</option>
+                        {% for option in optionen %}
+                        <option value="{{ option }}">{{ option }}</option>
+                        {% endfor %}
                     </select>
                 </td>
                 <td>
                     <select>
-                        <option value="Option A">Option A</option>
-                        <option value="Option B">Option B</option>
-                        <option value="Option C">Option C</option>
+                        {% for option in optionen %}
+                        <option value="{{ option }}">{{ option }}</option>
+                        {% endfor %}
                     </select>
                 </td>
                 <td>
                     <select>
-                        <option value="Option 1">Option 1</option>
-                        <option value="Option 2">Option 2</option>
-                        <option value="Option 3">Option 3</option>
+                        {% for option in optionen %}
+                        <option value="{{ option }}">{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        {% for option in optionen %}
+                        <option value="{{ option }}">{{ option }}</option>
+                        {% endfor %}
                     </select>
                 </td>
             </tr>
-            <tr>
-                <td>Wert 3</td>
-                <td>
-                    <select>
-                        <option value="Option 1">Option 1</option>
-                        <option value="Option 2">Option 2</option>
-                        <option value="Option 3">Option 3</option>
-                    </select>
-                </td>
-                <td>
-                    <select>
-                        <option value="Option 1">Option 1</option>
-                        <option value="Option 2">Option 2</option>
-                        <option value="Option 3">Option 3</option>
-                    </select>
-                </td>
-                <td>
-                    <select>
-                        <option value="Option 1">Option 1</option>
-                        <option value="Option 2">Option 2</option>
-                        <option value="Option 3">Option 3</option>
-                    </select>
-                </td>
-            </tr>
+            {% endfor %}
         </tbody>
     </table>
 
     <div class="button-container">
         <button onclick="window.location.href='/endansicht'">Zur Endansicht</button>
         <button onclick="window.location.href='/html'">Zurück zur Startseite</button>
+        <button onclick="window.location.href='/monitoring'">Zum Monitoring</button>
     </div>
 </body>
 </html>
