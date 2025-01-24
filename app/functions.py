@@ -212,6 +212,37 @@ def createPrediction2(trainData, predData, modelType):
         results.append(res)
     return results
 
+def trainNewModel(trainData, modelType, col, cols): 
+    trainData_processed = prepareRawData(trainData)
+    
+    columnsToConvert = ['Prüfmerkmal_Text', 'Fertigungshilfsmittel', 'Merkmalsgewichtung', 'Maßeinheit', 'Stichprobenverfahren', 'Vorgang', 'Lenkungsmethode', 'Plangruppe', 'Knotenplan', 'Verbindung', 'Arbeitsplatz', 'Beschreibung_Vorgang']
+    for col in columnsToConvert:
+        if col in trainData_processed.columns:
+            temp = convertTextColumnToNumbers(trainData_processed, col)
+            trainData_processed = temp[0]
+
+    X = trainData_processed.drop(cols  , axis=1)
+    y = trainData_processed[col].astype(int)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+    from sklearn.preprocessing import StandardScaler
+    scaler = StandardScaler()
+    X_train = scaler.fit_transform(X_train)
+    X_test = scaler.transform(X_test)
+
+    if modelType == 'rf':
+        res = randomForest(X_train, X_test, y_train, y_test)
+    elif modelType == 'svm':
+        res = supportVectorMachine(X_train, X_test, y_train, y_test)
+    elif modelType == 'neuralNetwork':
+        res = neuralNetwork(X_train, X_test, y_train, y_test)
+    elif modelType == 'naiveBayes':
+        res = naiveBayes(X_train, X_test, y_train, y_test)
+    elif modelType == 'knn':
+        res = kNearestNeighbor(X_train, X_test, y_train, y_test)
+
+    return res
+
 def prepareRawData(data):
     usedCols = ['Prüfmerkmal_Text', 'Fertigungshilfsmittel', 'Sollwert', 'Merkmalsgewichtung', 'Maßeinheit', 'Oberer_Grenzwert', 'Unterer_Grenzwert', 'Nachkommastellen', 'Stichprobenverfahren', 'Vorgang', 'Lenkungsmethode', 'Plangruppe', 'Knotenplan', 'Verbindung', 'Arbeitsplatz', 'Beschreibung_Vorgang']
 

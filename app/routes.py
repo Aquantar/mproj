@@ -33,7 +33,7 @@ def prediction_results():
         featureCount = len(results["Fertigungshilfsmittel"])
         
         return render_template('prediction_results.html', uniqueVals=unique_values, results=results, featureCount = featureCount)
-    return
+    return  #diese route sollte nie ohne einen POST trigger aufgerufen werden, deswegen hier einfach return atm
 
 @app.route('/prediction_results_confirmed', methods=['GET', 'POST'])
 def prediction_results_confirmed():
@@ -89,7 +89,24 @@ def prediction_results_confirmed():
         resp.headers["Content-Disposition"] = "attachment; filename={}.xlsx".format(outputName)
         resp.headers['Content-Type'] = 'application/x-xlsx'
         return resp
-    return
+    return #diese route sollte auch nie ohne POST aufgerufen werden können, aber vllt automatisch zurück zu index redirecten nachdem POST fertig ist?
+
+@app.route('/model_training', methods=['GET', 'POST'])
+def model_training():
+    if request.method == 'POST':
+        import pickle
+        import gzip
+        #import h5py
+        file_training = request.files['input_training']
+        trainData = pd.read_excel(file_training)
+        modelType = 'rf'
+        cols = ['Fertigungshilfsmittel', 'Stichprobenverfahren', 'Lenkungsmethode', 'Merkmalsgewichtung']
+        for col in cols:
+            model = trainNewModel(trainData, modelType, col, cols)                                                                                                         
+            with gzip.open('models//{}.pkl'.format(col),'wb') as f:
+                pickle.dump(model[0],f,protocol=pickle.HIGHEST_PROTOCOL)
+        return render_template('index.html')
+    return  #diese route sollte nie ohne einen POST trigger aufgerufen werden, deswegen hier einfach return atm
 
 @app.route('/monitoring', methods=['GET', 'POST'])
 def monitoring():
