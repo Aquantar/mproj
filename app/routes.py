@@ -13,23 +13,30 @@ predictionDummy = {'Fertigungshilfsmittel': ['MESSUHR', 'MESSUHR', 'MESSUHR', 'M
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
-def html():
-    global results
-    if request.method == 'POST':
-        print("success. starting prediction")
-        file = request.files['input']
-        
-        trainData = pd.read_excel('data//traindata.xlsx')
-        predData = pd.read_excel(file)
-        modelType = 'rf'
-        #results = createPrediction(trainData, predData, modelType)         IST AUSKOMMENTIERT WEIL ES AKTUELL ZU LANGE DAUERT
-        results = predictionDummy                                           #FÜRS ERSTE EINFACH DIESE RESULTS BENUTZEN, SIND DIE DUMMY WERTE VON OBEN
-
-        return redirect(url_for('index_func'))
+def index():
     return render_template('index.html')
 
-@app.route('/auswertungen', methods=['GET', 'POST'])
-def index_func():
+@app.route('/prediction_results', methods=['GET', 'POST'])
+def prediction_results():
+    global results
+    if request.method == 'POST':
+        file_prediction = request.files['input_prediction']
+        
+        trainData = pd.read_excel('data//traindata.xlsx')
+        predData = pd.read_excel(file_prediction)
+        modelType = 'rf'
+        #results = createPrediction(trainData, predData, modelType)         IST AUSKOMMENTIERT WEIL ES AKTUELL ZU LANGE DAUERT
+                                                                             #FÜRS ERSTE EINFACH DIESE RESULTS BENUTZEN, SIND DIE DUMMY WERTE VON OBEN
+        
+        results = predictionDummy                                          
+        unique_values = getUniqueValues(trainData)
+        featureCount = len(results["Fertigungshilfsmittel"])
+        
+        return render_template('prediction_results.html', uniqueVals=unique_values, results=results, featureCount = featureCount)
+    return
+
+@app.route('/prediction_results_confirmed', methods=['GET', 'POST'])
+def prediction_results_confirmed():
     global results
     if request.method == 'POST':
         choicesOutput = request.form
@@ -82,20 +89,14 @@ def index_func():
         resp.headers["Content-Disposition"] = "attachment; filename={}.xlsx".format(outputName)
         resp.headers['Content-Type'] = 'application/x-xlsx'
         return resp
-    
-    trainData = pd.read_excel('data//traindata.xlsx')
-    unique_values = getUniqueValues(trainData)
-    featureCount = len(results["Fertigungshilfsmittel"])
-    print(getUniqueValues(trainData))
-
-    return render_template('auswertungen.html', uniqueVals=unique_values, results=results, featureCount = featureCount)
+    return
 
 @app.route('/monitoring', methods=['GET', 'POST'])
-def monitoring_func():
+def monitoring():
     if request.method == 'POST':
         # do stuff when the form is submitted
         # redirect to end the POST handling
         # the redirect can be to the same route or somewhere else
-        return redirect(url_for('monitoring_func'))
+        return redirect(url_for('monitoring'))
     # show the form, it wasn't submitted
     return render_template('monitoring.html')
