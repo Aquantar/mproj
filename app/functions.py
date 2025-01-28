@@ -1,227 +1,51 @@
+from app import app, colsToPredict
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-def createPrediction(trainData, predData, modelType): 
-
-    trainData_processed = prepareRawData(trainData)
+def createPrediction(model, predData, col, mappingInfo): 
+    global colsToPredict
     predData_processed = prepareRawData(predData)
-
-    #konvertiere textwerte in angegebenen spalten zu zahlen, speichere werte für spätere rück-umwandlung in mappingInfo
-    print("starting to map")
-    combinedData = pd.concat([trainData_processed, predData_processed])
-    columnsToConvert = ['Prüfmerkmal_Text', 'Fertigungshilfsmittel', 'Merkmalsgewichtung', 'Maßeinheit', 'Stichprobenverfahren', 'Vorgang', 'Lenkungsmethode', 'Plangruppe', 'Knotenplan', 'Verbindung', 'Arbeitsplatz', 'Beschreibung_Vorgang']
-    mappingInfo = dict()
-    for col in columnsToConvert:
-        if col in combinedData.columns:
-            temp = convertTextColumnToNumbers(combinedData, col)
-            mappingInfo[col] = temp[1]
-
-    for index, row in trainData_processed.iterrows():
-            for key, value in mappingInfo.items():
-                try:
-                    trainData_processed.at[index, key]=value[row[key]]
-                except:
-                    print(key)
-                    print(row[key])
 
     for index, row in predData_processed.iterrows():
         for key, value in mappingInfo.items():
             try:
                 predData_processed.at[index, key]=value[row[key]]
             except:
-                print(key)
-                print(row[key])
-
-    colsToClassify = ['Fertigungshilfsmittel', 'Stichprobenverfahren', 'Lenkungsmethode', 'Merkmalsgewichtung']
-    results = []
-    resultsDict = {}
-    for col in colsToClassify:
-        X_train = trainData_processed.drop(colsToClassify, axis=1)
-        X_test = predData_processed.drop(colsToClassify, axis=1)
-        y_train = trainData_processed[col].astype(int)
-        y_test = predData_processed[col].astype(int)
-
-        from sklearn.preprocessing import StandardScaler
-        scaler = StandardScaler()
-        X_train = scaler.fit_transform(X_train)
-        X_test = scaler.transform(X_test)
-
-        if modelType == 'rf':
-            res = randomForest(X_train, X_test, y_train, y_test)
-        elif modelType == 'svm':
-            res = supportVectorMachine(X_train, X_test, y_train, y_test)
-        elif modelType == 'neuralNetwork':
-            res = neuralNetwork(X_train, X_test, y_train, y_test)
-        elif modelType == 'naiveBayes':
-            res = naiveBayes(X_train, X_test, y_train, y_test)
-        elif modelType == 'knn':
-            res = kNearestNeighbor(X_train, X_test, y_train, y_test)
-
-        preds = res[1]
-        preds_text = []
-        for idx, pred in enumerate(preds):
-            mapping = mappingInfo[col]
-            for key, val in mapping.items():
-                if val == preds[idx]:
-                    preds_text.append(key)
-        res = list(res)
-        res.append(preds_text)
-        res = tuple(res)
-
-        resultsDict[col] = preds_text
-
-    return resultsDict
-
-
-def createPredictionBackup(trainData, predData, modelType): 
-
-    trainData_processed = prepareRawData(trainData)
-    predData_processed = prepareRawData(predData)
-
-    #konvertiere textwerte in angegebenen spalten zu zahlen, speichere werte für spätere rück-umwandlung in mappingInfo
-    print("starting to map")
-    combinedData = pd.concat([trainData_processed, predData_processed])
-    columnsToConvert = ['Prüfmerkmal_Text', 'Fertigungshilfsmittel', 'Merkmalsgewichtung', 'Maßeinheit', 'Stichprobenverfahren', 'Vorgang', 'Lenkungsmethode', 'Plangruppe', 'Knotenplan', 'Verbindung', 'Arbeitsplatz', 'Beschreibung_Vorgang']
-    mappingInfo = dict()
-    for col in columnsToConvert:
-        if col in combinedData.columns:
-            temp = convertTextColumnToNumbers(combinedData, col)
-            mappingInfo[col] = temp[1]
-
-    for index, row in trainData_processed.iterrows():
-            for key, value in mappingInfo.items():
-                try:
-                    trainData_processed.at[index, key]=value[row[key]]
-                except:
-                    print(key)
-                    print(row[key])
-
-    for index, row in predData_processed.iterrows():
-        for key, value in mappingInfo.items():
-            try:
+                currentDict = mappingInfo[key]
+                highestValue = 0
+                for key2, value2 in currentDict.items():
+                    if int(value2) > highestValue:
+                        highestValue = int(value2)
+                highestValue += 1
+                currentDict[row[key]] = highestValue
+                mappingInfo[key] = currentDict
                 predData_processed.at[index, key]=value[row[key]]
-            except:
-                print(key)
-                print(row[key])
 
-    colsToClassify = ['Fertigungshilfsmittel', 'Stichprobenverfahren', 'Lenkungsmethode', 'Merkmalsgewichtung']
-    results = []
-    for col in colsToClassify:
-        X_train = trainData_processed.drop(colsToClassify, axis=1)
-        X_test = predData_processed.drop(colsToClassify, axis=1)
-        y_train = trainData_processed[col].astype(int)
-        y_test = predData_processed[col].astype(int)
+    predData_processed = predData_processed.drop(colsToPredict, axis=1)
+    from sklearn.preprocessing import StandardScaler
+    scaler = StandardScaler()
+    predData_processed = scaler.fit_transform(predData_processed)
 
-        from sklearn.preprocessing import StandardScaler
-        scaler = StandardScaler()
-        X_train = scaler.fit_transform(X_train)
-        X_test = scaler.transform(X_test)
+    predictions = model.predict(predData_processed)
 
-        if modelType == 'rf':
-            res = randomForest(X_train, X_test, y_train, y_test)
-        elif modelType == 'svm':
-            res = supportVectorMachine(X_train, X_test, y_train, y_test)
-        elif modelType == 'neuralNetwork':
-            res = neuralNetwork(X_train, X_test, y_train, y_test)
-        elif modelType == 'naiveBayes':
-            res = naiveBayes(X_train, X_test, y_train, y_test)
-        elif modelType == 'knn':
-            res = kNearestNeighbor(X_train, X_test, y_train, y_test)
+    predictions_text = []
+    for idx, pred in enumerate(predictions):
+        mapping = mappingInfo[col]
+        for key, val in mapping.items():
+            if val == predictions[idx]:
+                predictions_text.append(key)
 
-        preds = res[1]
-        preds_text = []
-        for idx, pred in enumerate(preds):
-            mapping = mappingInfo[col]
-            for key, val in mapping.items():
-                if val == preds[idx]:
-                    preds_text.append(key)
-        res = list(res)
-        res.append(preds_text)
-        res = tuple(res)
+    return predictions_text
 
-        results.append(res)
-    return results
-
-
-def createPrediction2(trainData, predData, modelType): 
-
+def trainNewModel(trainData, modelType, col): 
     trainData_processed = prepareRawData(trainData)
-    predData_processed = prepareRawData(predData)
+    map, trainData_processed = createMappingInfo(trainData_processed)
 
-    #konvertiere textwerte in angegebenen spalten zu zahlen, speichere werte für spätere rück-umwandlung in mappingInfo
-    print("starting to map")
-    combinedData = pd.concat([trainData_processed, predData_processed])
-    columnsToConvert = ['Prüfmerkmal_Text', 'Fertigungshilfsmittel', 'Merkmalsgewichtung', 'Maßeinheit', 'Stichprobenverfahren', 'Vorgang', 'Lenkungsmethode', 'Plangruppe', 'Knotenplan', 'Verbindung', 'Arbeitsplatz', 'Beschreibung_Vorgang']
-    mappingInfo = dict()
-    for col in columnsToConvert:
-        if col in combinedData.columns:
-            temp = convertTextColumnToNumbers(combinedData, col)
-            mappingInfo[col] = temp[1]
+    import pickle
+    with open('misc//mappingInfo.pkl', 'wb') as f:
+        pickle.dump(map, f)
 
-    for index, row in trainData_processed.iterrows():
-            for key, value in mappingInfo.items():
-                try:
-                    trainData_processed.at[index, key]=value[row[key]]
-                except:
-                    print(key)
-                    print(row[key])
-
-    for index, row in predData_processed.iterrows():
-        for key, value in mappingInfo.items():
-            try:
-                predData_processed.at[index, key]=value[row[key]]
-            except:
-                print(key)
-                print(row[key])
-
-    colsToClassify = ['Fertigungshilfsmittel', 'Stichprobenverfahren', 'Lenkungsmethode', 'Merkmalsgewichtung']
-    results = []
-    for col in colsToClassify:
-        X_train = trainData_processed.drop(colsToClassify, axis=1)
-        X_test = predData_processed.drop(colsToClassify, axis=1)
-        y_train = trainData_processed[col].astype(int)
-        y_test = predData_processed[col].astype(int)
-
-        from sklearn.preprocessing import StandardScaler
-        scaler = StandardScaler()
-        X_train = scaler.fit_transform(X_train)
-        X_test = scaler.transform(X_test)
-
-        if modelType == 'rf':
-            res = randomForest(X_train, X_test, y_train, y_test)
-        elif modelType == 'svm':
-            res = supportVectorMachine(X_train, X_test, y_train, y_test)
-        elif modelType == 'neuralNetwork':
-            res = neuralNetwork(X_train, X_test, y_train, y_test)
-        elif modelType == 'naiveBayes':
-            res = naiveBayes(X_train, X_test, y_train, y_test)
-        elif modelType == 'knn':
-            res = kNearestNeighbor(X_train, X_test, y_train, y_test)
-
-        preds = res[1]
-        preds_text = []
-        for idx, pred in enumerate(preds):
-            mapping = mappingInfo[col]
-            for key, val in mapping.items():
-                if val == preds[idx]:
-                    preds_text.append(key)
-        res = list(res)
-        res.append(preds_text)
-        res = tuple(res)
-
-        results.append(res)
-    return results
-
-def trainNewModel(trainData, modelType, col, cols): 
-    trainData_processed = prepareRawData(trainData)
-    
-    columnsToConvert = ['Prüfmerkmal_Text', 'Fertigungshilfsmittel', 'Merkmalsgewichtung', 'Maßeinheit', 'Stichprobenverfahren', 'Vorgang', 'Lenkungsmethode', 'Plangruppe', 'Knotenplan', 'Verbindung', 'Arbeitsplatz', 'Beschreibung_Vorgang']
-    for col in columnsToConvert:
-        if col in trainData_processed.columns:
-            temp = convertTextColumnToNumbers(trainData_processed, col)
-            trainData_processed = temp[0]
-
-    X = trainData_processed.drop(cols  , axis=1)
+    X = trainData_processed.drop(colsToPredict, axis=1)
     y = trainData_processed[col].astype(int)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
@@ -245,7 +69,6 @@ def trainNewModel(trainData, modelType, col, cols):
 
 def prepareRawData(data):
     usedCols = ['Prüfmerkmal_Text', 'Fertigungshilfsmittel', 'Sollwert', 'Merkmalsgewichtung', 'Maßeinheit', 'Oberer_Grenzwert', 'Unterer_Grenzwert', 'Nachkommastellen', 'Stichprobenverfahren', 'Vorgang', 'Lenkungsmethode', 'Plangruppe', 'Knotenplan', 'Verbindung', 'Arbeitsplatz', 'Beschreibung_Vorgang']
-
     #entferne qualitative merkmale
     if 'Qualitatives_Merkmal' in data.columns:
         data.drop(data[data['Qualitatives_Merkmal'] == "X"].index, inplace = True)
@@ -254,7 +77,6 @@ def prepareRawData(data):
     #fülle prüfmerkmals-text mit werten aus anderer spalte falls nötig
     if 'Prüfmerkmal_Text_Voll' in data.columns:
         for index, row in data.iterrows():
-            #if row['Prüfmerkmal_Text'].isna():
             if not isinstance(row['Prüfmerkmal_Text'], str):
                 newval = str(row['Prüfmerkmal_Text_Voll']).split(" ")
                 newval = newval[0]
@@ -299,7 +121,18 @@ def prepareRawData(data):
 
     return data
 
+def createMappingInfo(data):
+    columnsToConvert = ['Prüfmerkmal_Text', 'Fertigungshilfsmittel', 'Merkmalsgewichtung', 'Maßeinheit', 'Stichprobenverfahren', 'Vorgang', 'Lenkungsmethode', 'Plangruppe', 'Knotenplan', 'Verbindung', 'Arbeitsplatz', 'Beschreibung_Vorgang']
+    mappingInfo = dict()
+    for col in columnsToConvert:
+        if col in data.columns:
+            temp = convertTextColumnToNumbers(data, col)
+            data = temp[0]
+            mappingInfo[col] = temp[1]
+    return mappingInfo, data
+
 def convertTextColumnToNumbers(data, colname):
+    #wandelt eine spalte mit textwerten in einem dataframe in zahlen um
     list_uniqueValues = data[colname].unique()
     map_uniqueValues = dict()
     intTemp = 1
@@ -309,7 +142,6 @@ def convertTextColumnToNumbers(data, colname):
     for index, row in data.iterrows():
         data.at[index,colname]=map_uniqueValues.get(row[colname])
     return data, map_uniqueValues
-
 
 def randomForest(X_train, X_test, y_train, y_test):
     from sklearn.ensemble import RandomForestClassifier
@@ -370,7 +202,7 @@ def kNearestNeighbor(X_train, X_test, y_train, y_test):
 
 def getUniqueValues(trainData):
     uniqueVals = {}
-    cols = ['Fertigungshilfsmittel', 'Stichprobenverfahren', 'Lenkungsmethode', 'Merkmalsgewichtung']
-    for col in cols:     
+    #cols = ['Fertigungshilfsmittel', 'Stichprobenverfahren', 'Lenkungsmethode', 'Merkmalsgewichtung']
+    for col in colsToPredict:     
         uniqueVals[col] = trainData[col].unique()
     return uniqueVals
