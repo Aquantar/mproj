@@ -5,13 +5,6 @@ from io import BytesIO
 import xlsxwriter
 from pickle import load, dump
 
-#use this for quick testing to not wait for real predictions (overwrite results variable with this)
-predictionDummy = {'Fertigungshilfsmittel': ['MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'FORM- UND LAGEMESSGERÄT', 'MESSUHR', 'MESSUHR', 'Konturenmessgerät', 'FORM- UND LAGEMESSGERÄT', 'Konturenmessgerät', 'Rauhigkeitsmessgerät', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR'],
-                   'Stichprobenverfahren': ['1/1', '2/30', '2/30', '1/1', '1/1', '2/30', '2/30', '2/30', '2/30', '1/222', '1/1', '1/444', '2/30', '1/1', '1/444', '1/444', '1/444', '1/222', '1/120', '2/30', '2/30', '1/120', '1/120', '2/30', '2/30', '2/30', '2/30', '1/222', '1/1'],
-                   'Lenkungsmethode': [0.0, 0.0, 0.0, 33.0, 33.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 33.0, 0.0, 0.0, 0.0, 20.0, 20.0, 20.0, 33.0, 33.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0],
-                   'Merkmalsgewichtung': [0, 0, 0, 'HM', 'HM', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'HM', 'HM', 0, 0, 0, 0, 0, 0]
-                  }
-
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
@@ -30,8 +23,6 @@ def prediction_results():
         conversionMap = load(open('misc//conversionMap.pkl', 'rb'))
         scaler = load(open('misc//scaler.pkl', 'rb'))
         for col in outputCols:
-            #with gzip.open('models//{}.pkl'.format(col), 'rb') as file:
-            #    model = pickle.load(file)
             model = load(gzip.open('models//{}.pkl'.format(col), 'rb'))
             singleColResults = createPrediction(model, predictionInput, col, conversionMap, scaler)  
             results[col] = singleColResults
@@ -55,7 +46,6 @@ def prediction_results_confirmed():
         list3 = []
         list4 = []
         for key, value in choicesOutput.items(multi=True):
-            #print(value)
             if key == "Fertigungshilfsmittel":
                 list1.append(value)
             if key == "Stichprobenverfahren":
@@ -113,8 +103,6 @@ def model_training():
         import pickle
         for col in outputCols:
             model, scaler, conversionMap = trainNewModel(trainData, col)                                                                                              
-            #with gzip.open('models//{}.pkl'.format(col),'wb') as f:
-            #    pickle.dump(model[0],f,protocol=pickle.HIGHEST_PROTOCOL)
             dump(model, gzip.open('models//{}.pkl'.format(col), 'wb'))
             dump(scaler, open('misc//scaler.pkl', 'wb'))
             dump(conversionMap, open('misc//conversionMap.pkl', 'wb'))
