@@ -1,71 +1,78 @@
-from app import app, colsToPredict
+from app import app, inputCols, outputCols, allCols
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
 
-def createPrediction(model, predData, col, mappingInfo): 
-    global colsToPredict
-    predData_processed = prepareRawData(predData)
-
-    for index, row in predData_processed.iterrows():
-        for key, value in mappingInfo.items():
-            try:
-                predData_processed.at[index, key]=value[row[key]]
-            except:
-                currentDict = mappingInfo[key]
-                highestValue = 0
-                for key2, value2 in currentDict.items():
-                    if int(value2) > highestValue:
-                        highestValue = int(value2)
-                highestValue += 1
-                currentDict[row[key]] = highestValue
-                mappingInfo[key] = currentDict
-                predData_processed.at[index, key]=value[row[key]]
-
-    predData_processed = predData_processed.drop(colsToPredict, axis=1)
-    from sklearn.preprocessing import StandardScaler
-    scaler = StandardScaler()
-    predData_processed = scaler.fit_transform(predData_processed)
-
-    predictions = model.predict(predData_processed)
-
+def createPrediction(model, predData, outputFeature, conversionMap, scaler): 
+    predData = prepareRawData(predData)
+    predData = predData.drop(outputCols, axis=1)
+    for index, row in predData.iterrows():
+        for key, value in conversionMap.items():
+            if key in predData.columns:
+                try:
+                    predData.at[index, key]=value[row[key]]
+                except:
+                    currentDict = conversionMap[key]
+                    highestValue = 0
+                    for key2, value2 in currentDict.items():
+                        if value2 > highestValue:
+                            highestValue = value2
+                    highestValue += 1
+                    currentDict[row[key]] = highestValue
+                    conversionMap[key] = currentDict
+                    predData.at[index, key]=value[row[key]]
+    predData = predData.values.tolist()
+    predData = scaler.transform(predData)
+    preds = model.predict(predData)
+    
     predictions_text = []
-    for idx, pred in enumerate(predictions):
-        mapping = mappingInfo[col]
-        for key, val in mapping.items():
-            if val == predictions[idx]:
-                predictions_text.append(key)
+    for idx, pred in enumerate(preds):
+        if outputFeature in conversionMap:
+            mapping = conversionMap[outputFeature]
+            for key, val in mapping.items():
+                if val == preds[idx]:
+                    predictions_text.append(key)
+        else:
+            predictions_text.append(str(pred))
 
     return predictions_text
 
-def trainNewModel(trainData, modelType, col): 
-    trainData_processed = prepareRawData(trainData)
-    map, trainData_processed = createMappingInfo(trainData_processed)
+def trainNewModel(trainData, outputFeature): 
+    trainData = prepareRawData(trainData)
 
-    import pickle
-    with open('misc//mappingInfo.pkl', 'wb') as f:
-        pickle.dump(map, f)
+    conversionMap = dict()
+    for col in allCols:
+        if col in trainData.columns:
+            conversionOutput = convertTextColumnToNumbers(trainData, col)
+            trainData = conversionOutput[0]
+            trainData[col] = pd.to_numeric(trainData[col])
+            conversionMap[col] = conversionOutput[1]
 
-    X = trainData_processed.drop(colsToPredict, axis=1)
-    y = trainData_processed[col].astype(int)
+    X = trainData.drop(outputCols, axis=1).values.tolist()
+    y = trainData[outputFeature].values.tolist()
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-    from sklearn.preprocessing import StandardScaler
-    scaler = StandardScaler()
-    X_train = scaler.fit_transform(X_train)
+    scaler = MinMaxScaler()
+    scaler.fit(X_train)
+    X_train = scaler.transform(X_train)
     X_test = scaler.transform(X_test)
+    
+    res = randomForest(X_train, X_test, y_train, y_test)
 
-    if modelType == 'rf':
-        res = randomForest(X_train, X_test, y_train, y_test)
-    elif modelType == 'svm':
-        res = supportVectorMachine(X_train, X_test, y_train, y_test)
-    elif modelType == 'neuralNetwork':
-        res = neuralNetwork(X_train, X_test, y_train, y_test)
-    elif modelType == 'naiveBayes':
-        res = naiveBayes(X_train, X_test, y_train, y_test)
-    elif modelType == 'knn':
-        res = kNearestNeighbor(X_train, X_test, y_train, y_test)
+    print("Accuracy for " + str(outputFeature) + ": " + str(res[2]))       
 
-    return res
+    return res[0], scaler, conversionMap
+
+def randomForest(X_train, X_test, y_train, y_test):
+    from sklearn.ensemble import RandomForestClassifier
+    from sklearn.metrics import accuracy_score
+
+    model = RandomForestClassifier(criterion='entropy')
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+
+    return model, y_pred, accuracy
 
 def prepareRawData(data):
     usedCols = ['Prüfmerkmal_Text', 'Fertigungshilfsmittel', 'Sollwert', 'Merkmalsgewichtung', 'Maßeinheit', 'Oberer_Grenzwert', 'Unterer_Grenzwert', 'Nachkommastellen', 'Stichprobenverfahren', 'Vorgang', 'Lenkungsmethode', 'Plangruppe', 'Knotenplan', 'Verbindung', 'Arbeitsplatz', 'Beschreibung_Vorgang']
@@ -94,6 +101,7 @@ def prepareRawData(data):
     data = data.fillna(0)
 
     #formatiere zahlen zu korrektem dezimalformat (, statt .) und wandle in float um
+    
     for index, row in data.iterrows():
         data.at[index,'Sollwert']=str(row['Sollwert']).replace(',','.')
     for index, row in data.iterrows():
@@ -106,7 +114,6 @@ def prepareRawData(data):
         data.at[index,'Unterer_Grenzwert']=str(row['Unterer_Grenzwert']).replace(',','.')
     for index, row in data.iterrows():
         data.at[index,'Unterer_Grenzwert']=float(row['Unterer_Grenzwert'])
-
     #wandle zellen "Unterer Grenzwert" und "Oberer Grenzwert" in differenzen statt absolute zahlen um
     list_lower = []
     list_upper = []
@@ -117,22 +124,15 @@ def prepareRawData(data):
     data['Oberer_Grenzwert'] = list_upper
 
     #wandle spalte "nachkommastellen" in integer um
-    data['Nachkommastellen'] = data['Nachkommastellen'].astype(int)
+    #data['Nachkommastellen'] = data['Nachkommastellen'].astype(int)
+
+    #wandle alle spalten in string um
+    data = data.astype(str)
 
     return data
 
-def createMappingInfo(data):
-    columnsToConvert = ['Prüfmerkmal_Text', 'Fertigungshilfsmittel', 'Merkmalsgewichtung', 'Maßeinheit', 'Stichprobenverfahren', 'Vorgang', 'Lenkungsmethode', 'Plangruppe', 'Knotenplan', 'Verbindung', 'Arbeitsplatz', 'Beschreibung_Vorgang']
-    mappingInfo = dict()
-    for col in columnsToConvert:
-        if col in data.columns:
-            temp = convertTextColumnToNumbers(data, col)
-            data = temp[0]
-            mappingInfo[col] = temp[1]
-    return mappingInfo, data
-
 def convertTextColumnToNumbers(data, colname):
-    #wandelt eine spalte mit textwerten in einem dataframe in zahlen um
+    #wandelt eine spalte mit textwerten in einem dataframe in zahlen um und speichert text/zahlenpaare für spätere rückwandlung
     list_uniqueValues = data[colname].unique()
     map_uniqueValues = dict()
     intTemp = 1
@@ -143,66 +143,8 @@ def convertTextColumnToNumbers(data, colname):
         data.at[index,colname]=map_uniqueValues.get(row[colname])
     return data, map_uniqueValues
 
-def randomForest(X_train, X_test, y_train, y_test):
-    from sklearn.ensemble import RandomForestClassifier
-    from sklearn.metrics import accuracy_score
-
-    model = RandomForestClassifier(criterion='entropy')
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
-
-    return model, y_pred, accuracy
-
-def supportVectorMachine(X_train, X_test, y_train, y_test):
-    from sklearn.svm import SVC
-    from sklearn.multiclass import OneVsOneClassifier
-    from sklearn.metrics import accuracy_score
-
-    model = OneVsOneClassifier(SVC(C=12))
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
-
-    return model, y_pred, accuracy
-
-def neuralNetwork(X_train, X_test, y_train, y_test):
-    from sklearn.neural_network import MLPClassifier
-    from sklearn.metrics import accuracy_score
-
-    model = MLPClassifier(solver='adam', max_iter=2000, alpha=0.001,
-                    hidden_layer_sizes=(15,), random_state=1)
-    model.fit(X_train,y_train)
-    y_pred = model.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
-
-    return model, y_pred, accuracy
-
-def naiveBayes(X_train, X_test, y_train, y_test):
-    from sklearn.naive_bayes import BernoulliNB
-    from sklearn.metrics import accuracy_score
-
-    model = BernoulliNB(binarize=True)
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
-
-    return model, y_pred, accuracy
-
-def kNearestNeighbor(X_train, X_test, y_train, y_test):
-    from sklearn.neighbors import KNeighborsClassifier
-    from sklearn.metrics import accuracy_score
-
-    model = KNeighborsClassifier(n_neighbors=40, weights="distance", algorithm="ball_tree")
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
-
-    return model, y_pred, accuracy
-
-def getUniqueValues(trainData):
+def getUniqueValues(data):
     uniqueVals = {}
-    #cols = ['Fertigungshilfsmittel', 'Stichprobenverfahren', 'Lenkungsmethode', 'Merkmalsgewichtung']
-    for col in colsToPredict:     
-        uniqueVals[col] = trainData[col].unique()
+    for col in outputCols:     
+        uniqueVals[col] = data[col].unique()
     return uniqueVals

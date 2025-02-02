@@ -1,8 +1,9 @@
-from app import app, results, predictionInput, colsToPredict
+from app import app, results, predictionInput, inputCols, outputCols
 from flask import Flask, render_template, request, url_for, redirect, make_response
 from app.functions import *
 from io import BytesIO
 import xlsxwriter
+from pickle import load, dump
 
 #use this for quick testing to not wait for real predictions (overwrite results variable with this)
 predictionDummy = {'Fertigungshilfsmittel': ['MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'FORM- UND LAGEMESSGERÄT', 'MESSUHR', 'MESSUHR', 'Konturenmessgerät', 'FORM- UND LAGEMESSGERÄT', 'Konturenmessgerät', 'Rauhigkeitsmessgerät', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR'],
@@ -20,22 +21,23 @@ def index():
 def prediction_results():
     global results
     global predictionInput
-    global colsToPredict
+    global outputCols
     if request.method == 'POST':
         import pickle
         import gzip
         predictionInput = request.files['input_prediction']
         predictionInput = pd.read_excel(predictionInput)
-        trainData = pd.read_excel('data//traindata.xlsx') 
-        with open('misc//mappingInfo.pkl', 'rb') as file:
-                mappingInfo = pickle.load(file) 
-        for col in colsToPredict:
-            with gzip.open('models//{}.pkl'.format(col), 'rb') as file:
-                model = pickle.load(file)
-            singleColResults = createPrediction(model, predictionInput, col, mappingInfo)  
+        conversionMap = load(open('misc//conversionMap.pkl', 'rb'))
+        scaler = load(open('misc//scaler.pkl', 'rb'))
+        for col in outputCols:
+            #with gzip.open('models//{}.pkl'.format(col), 'rb') as file:
+            #    model = pickle.load(file)
+            model = load(gzip.open('models//{}.pkl'.format(col), 'rb'))
+            singleColResults = createPrediction(model, predictionInput, col, conversionMap, scaler)  
             results[col] = singleColResults
         print(results)           
-                                            
+
+        trainData = pd.read_excel('data//traindata.xlsx')  
         unique_values = getUniqueValues(trainData)
         featureCount = len(results["Fertigungshilfsmittel"])
         
@@ -102,19 +104,20 @@ def prediction_results_confirmed():
 
 @app.route('/model_training', methods=['GET', 'POST'])
 def model_training():
-    global colsToPredict
+    global outputCols
     if request.method == 'POST':
         import pickle
         import gzip
         file_training = request.files['input_training']
         trainData = pd.read_excel(file_training)
-        modelType = 'rf'
         import pickle
-        for col in colsToPredict:
-            model = trainNewModel(trainData, modelType, col)  
-            print("Accuracy for " + str(col) + ": " + str(model[2]))                                                                                                     
-            with gzip.open('models//{}.pkl'.format(col),'wb') as f:
-                pickle.dump(model[0],f,protocol=pickle.HIGHEST_PROTOCOL)
+        for col in outputCols:
+            model, scaler, conversionMap = trainNewModel(trainData, col)                                                                                              
+            #with gzip.open('models//{}.pkl'.format(col),'wb') as f:
+            #    pickle.dump(model[0],f,protocol=pickle.HIGHEST_PROTOCOL)
+            dump(model, gzip.open('models//{}.pkl'.format(col), 'wb'))
+            dump(scaler, open('misc//scaler.pkl', 'wb'))
+            dump(conversionMap, open('misc//conversionMap.pkl', 'wb'))
         return render_template('index.html')
     return  #diese route wird aktuell nie ohne einen POST trigger aufgerufen, deswegen hier einfach return atm
 
