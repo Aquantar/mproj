@@ -1,77 +1,44 @@
-from app import app, results, inputCols, outputCols
+from app import app, results, predictionInput, inputCols, outputCols
 from flask import Flask, render_template, request, url_for, redirect, make_response
 from app.functions import *
 from io import BytesIO
 import xlsxwriter
-import os
-import pandas as pd
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Basisverzeichnis
-DATA_PATH = os.path.join(BASE_DIR, "..", "data")  # Pfad zum data-Ordner
-
-optionen = ["Option 1", "Option 2", "Option 3", "Option 4"]
-predictionDummy = {'Fertigungshilfsmittel': ['MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'FORM- UND LAGEMESSGERÄT', 'MESSUHR', 'MESSUHR', 'Konturenmessgerät', 'FORM- UND LAGEMESSGERÄT', 'Konturenmessgerät', 'Rauhigkeitsmessgerät', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR', 'MESSUHR'],
-                   'Stichprobenverfahren': ['1/1', '2/30', '2/30', '1/1', '1/1', '2/30', '2/30', '2/30', '2/30', '1/222', '1/1', '1/444', '2/30', '1/1', '1/444', '1/444', '1/444', '1/222', '1/120', '2/30', '2/30', '1/120', '1/120', '2/30', '2/30', '2/30', '2/30', '1/222', '1/1'],
-                   'Lenkungsmethode': [0.0, 0.0, 0.0, 33.0, 33.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 33.0, 0.0, 0.0, 0.0, 20.0, 20.0, 20.0, 33.0, 33.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0],
-                   'Merkmalsgewichtung': [0, 0, 0, 'HM', 'HM', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'HM', 'HM', 0, 0, 0, 0, 0, 0]
-                  }
+from pickle import load, dump
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
 
-"""
 @app.route('/prediction_results', methods=['GET', 'POST'])
 def prediction_results():
     global results
+    global predictionInput
+    global outputCols
     if request.method == 'POST':
-        file_prediction = request.files['input_prediction']
-        
-        trainData = pd.read_excel(os.path.join(DATA_PATH, "traindata.xlsx")) #änderung hier pfad
-        #trainData = pd.read_excel('data//traindata.xlsx')
-        predData = pd.read_excel(file_prediction)
-        modelType = 'rf'
-        #results = createPrediction(trainData, predData, modelType)         IST AUSKOMMENTIERT WEIL ES AKTUELL ZU LANGE DAUERT
-                                                                             #FÜRS ERSTE EINFACH DIESE RESULTS BENUTZEN, SIND DIE DUMMY WERTE VON OBEN
-        
-        results = predictionDummy                                          
+        import pickle
+        import gzip
+        predictionInput = request.files['input_prediction']
+        predictionInput = pd.read_excel(predictionInput)
+        conversionMap = load(open('misc//conversionMap.pkl', 'rb'))
+        scaler = load(open('misc//scaler.pkl', 'rb'))
+        for col in outputCols:
+            model = load(gzip.open('models//{}.pkl'.format(col), 'rb'))
+            singleColResults = createPrediction(model, predictionInput, col, conversionMap, scaler)  
+            results[col] = singleColResults
+        print(results)           
+
+        trainData = pd.read_excel('data//traindata.xlsx')  
         unique_values = getUniqueValues(trainData)
         featureCount = len(results["Fertigungshilfsmittel"])
         
-        return render_template('prediction_results.html', uniqueVals=unique_values, results=results, featureCount = featureCount, inputCols=inputCols, outputCols=outputCols)
-    return
-"""
+        return render_template('prediction_results.html', uniqueVals=unique_values, results=results, featureCount = featureCount)
+    return  #diese route sollte nie ohne einen POST trigger aufgerufen werden, deswegen hier einfach return atm
 
-@app.route('/prediction_results', methods=['GET', 'POST'])
-def prediction_results():
-    global results
-    if request.method == 'POST':
-        file_prediction = request.files['input_prediction']
-        
-        trainData = pd.read_excel(os.path.join(DATA_PATH, "traindata.xlsx"))
-        predData = pd.read_excel(file_prediction)
-        
-        # Konvertiere die Excel-Daten in ein Dictionary
-        results = predData.to_dict(orient='list')
-        
-        unique_values = getUniqueValues(trainData)
-        featureCount = len(predData)  # Anzahl der Zeilen in der Excel-Datei
-        
-        return render_template(
-            'prediction_results.html',
-            uniqueVals=unique_values,
-            results=results,
-            featureCount=featureCount,
-            inputCols=inputCols,
-            outputCols=outputCols
-        )
-    return
-
-"""
 @app.route('/prediction_results_confirmed', methods=['GET', 'POST'])
 def prediction_results_confirmed():
     global results
+    global predictionInput
     if request.method == 'POST':
         choicesOutput = request.form
         list1 = []
@@ -87,26 +54,25 @@ def prediction_results_confirmed():
                 list3.append(value)
             if key == "Merkmalsgewichtung":
                 list4.append(value)
-        outputForm = pd.read_excel(os.path.join(DATA_PATH, "testdata_control.xlsx")) #änderung hier pfad
-        #outputForm = pd.read_excel('data//testdata_control.xlsx')
-        outputForm['Fertigungshilfsmittel'] = list1
-        outputForm['Stichprobenverfahren'] = list2
-        outputForm['Lenkungsmethode'] = list3
-        outputForm['Merkmalsgewichtung'] = list4 
+        predictionOutput = predictionInput
+        predictionOutput['Fertigungshilfsmittel'] = list1
+        predictionOutput['Stichprobenverfahren'] = list2
+        predictionOutput['Lenkungsmethode'] = list3
+        predictionOutput['Merkmalsgewichtung'] = list4 
 
         sio = BytesIO()
         outputName = "output"
         writerImportsheet = pd.ExcelWriter("{}.xlsx".format(outputName), engine="xlsxwriter")
-        outputForm.to_excel(writerImportsheet, sheet_name="Sheet1", index=False)
+        predictionOutput.to_excel(writerImportsheet, sheet_name="Sheet1", index=False)
         workbook = xlsxwriter.Workbook(sio)
-        sheet = workbook.add_worksheet(u'sheet1')
+        sheet = workbook.add_worksheet(u'Sheet1')
 
         #Header
-        columns = list(outputForm.columns.values) 
+        columns = list(predictionOutput.columns.values) 
         iter = 0
         for col in columns:
             sheet.write(0, iter, col)
-            full_column = outputForm.iloc[:, iter]
+            full_column = predictionOutput.iloc[:, iter]
             row = 0
             while row < len(full_column):
                 try:
@@ -124,80 +90,25 @@ def prediction_results_confirmed():
         resp.headers["Content-Disposition"] = "attachment; filename={}.xlsx".format(outputName)
         resp.headers['Content-Type'] = 'application/x-xlsx'
         return resp
-    return
-"""
-"""
-@app.route('/prediction_results_confirmed', methods=['GET', 'POST'])
-def prediction_results_confirmed():
-    global results
+    return #diese route sollte auch nie ohne POST aufgerufen werden können, aber vllt automatisch zurück zu index redirecten nachdem POST fertig ist?
+
+@app.route('/model_training', methods=['GET', 'POST'])
+def model_training():
+    global outputCols
     if request.method == 'POST':
-        choicesOutput = request.form
-        outputForm = pd.read_excel(os.path.join(DATA_PATH, "testdata_control.xlsx"))
-
-        # Dynamische Verarbeitung der Input- und Output-Spalten
-        for col in inputCols + outputCols:
-            values = [choicesOutput.get(f"{col}_{i}") for i in range(len(results['Fertigungshilfsmittel']))]
-            outputForm[col] = values
-
-        # Excel-Datei generieren
-        sio = BytesIO()
-        outputName = "output"
-        writerImportsheet = pd.ExcelWriter("{}.xlsx".format(outputName), engine="xlsxwriter")
-        outputForm.to_excel(writerImportsheet, sheet_name="Sheet1", index=False)
-        workbook = xlsxwriter.Workbook(sio)
-        sheet = workbook.add_worksheet(u'sheet1')
-
-        # Header und Daten schreiben
-        columns = list(outputForm.columns.values)
-        for col_idx, col in enumerate(columns):
-            sheet.write(0, col_idx, col)
-            for row_idx, value in enumerate(outputForm[col]):
-                sheet.write(row_idx + 1, col_idx, value)
-
-        workbook.close()
-        sio.seek(0)
-
-        # Datei als Download bereitstellen
-        resp = make_response(sio.getvalue())
-        resp.headers["Content-Disposition"] = "attachment; filename={}.xlsx".format(outputName)
-        resp.headers['Content-Type'] = 'application/x-xlsx'
-        return resp
-    return
-"""
-
-@app.route('/prediction_results_confirmed', methods=['GET', 'POST'])
-def prediction_results_confirmed():
-    global results
-    if request.method == 'POST':
-        choicesOutput = request.form
-        outputForm = pd.read_excel(os.path.join(DATA_PATH, "testdata_control.xlsx"))
-
-        # Dynamische Verarbeitung der Input- und Output-Spalten
-        for col in inputCols + outputCols:
-            values = [choicesOutput.get(f"{col}_{i}") for i in range(len(results['Fertigungshilfsmittel']))]
-            outputForm[col] = values
-
-        # Excel-Datei generieren
-        sio = BytesIO()
-        outputName = "output"
-        writer = pd.ExcelWriter(sio, engine="xlsxwriter")
-        outputForm.to_excel(writer, sheet_name="Sheet1", index=False)
-        writer.close()
-        sio.seek(0)
-
-        # Datei als Download bereitstellen
-        resp = make_response(sio.getvalue())
-        resp.headers["Content-Disposition"] = f"attachment; filename={outputName}.xlsx"
-        resp.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        return resp
-    return
+        import pickle
+        import gzip
+        file_training = request.files['input_training']
+        trainData = pd.read_excel(file_training)
+        import pickle
+        for col in outputCols:
+            model, scaler, conversionMap = trainNewModel(trainData, col)                                                                                              
+            dump(model, gzip.open('models//{}.pkl'.format(col), 'wb'))
+            dump(scaler, open('misc//scaler.pkl', 'wb'))
+            dump(conversionMap, open('misc//conversionMap.pkl', 'wb'))
+        return render_template('index.html')
+    return  #diese route wird aktuell nie ohne einen POST trigger aufgerufen, deswegen hier einfach return atm
 
 @app.route('/monitoring', methods=['GET', 'POST'])
 def monitoring():
-    if request.method == 'POST':
-        # do stuff when the form is submitted
-        # redirect to end the POST handling
-        # the redirect can be to the same route or somewhere else
-        return redirect(url_for('monitoring'))
-    # show the form, it wasn't submitted
     return render_template('monitoring.html')

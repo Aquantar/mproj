@@ -13,49 +13,49 @@
         h1 {
             color: #333;
         }
-        h2 {
-            color: #007BFF;
-        }
-        p {
-            color: #555;
-        }
-        .file-upload {
-            margin: 20px auto;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            max-width: 400px;
-            background-color: #f9f9f9;
-        }
-        input[type="file"], .btn {
-            margin-top: 10px;
+        input[type="file"], button {
+            margin-top: 20px;
             padding: 10px;
             font-size: 16px;
-            width: 100%;
         }
-        .btn {
-            background-color: #007BFF;
+        a button {
+            text-decoration: none;
             color: white;
+            background-color: #007BFF;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
-        .btn:hover {
+        a button:hover {
             background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <h1>Decision Support System</h1>
-    <p>Laden Sie hier ihre Excel-Datei hoch um die Vorhersagen zu erhalten.</p>
+    <p>Info</p>
 
-    <div class="file-upload">
-        <h2>Upload File for Prediction</h2>
-        <p>Select an Excel file (.xlsx, .xls) to make a prediction.</p>
-        <form action="/prediction_results" method="POST" enctype="multipart/form-data">
-            <input type="file" name="input_prediction" accept=".xlsx, .xls" required>
-            <input type="submit" class="btn" value="Submit">
-        </form>
-    </div>
+    <form action="/prediction_results" method="POST" enctype="multipart/form-data">
+        <input type="file" name="input_prediction" accept=".xlsx, .xls" required>
+        <input type="submit" value="Submit">
+    </form>
+
+    <form action="/model_training" method="POST" enctype="multipart/form-data">
+        <input type="file" name="input_training" accept=".xlsx, .xls" required>
+        <input type="submit" value="Submit">
+    </form>
+<!--
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="input_training" accept=".xlsx, .xls" required>
+        <input type="submit" value="Submit">
+    </form>
+-->
+<!--
+    <form action="/auswertungen" method="post" enctype="multipart/form-data">
+        <input type="file" name="input" accept=".xlsx, .xls" required>
+        <button type="submit">Upload Excel File</button>
+    </form>
+-->
 </body>
 </html>
+

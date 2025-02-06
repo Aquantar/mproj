@@ -34,60 +34,71 @@
 <body>
     <h1>Auswertungen</h1>
     <form action="/prediction_results_confirmed" method="POST">
-        <table>
-            <thead>
-                <tr>
-                    <th>Weitere Informationen</th>
-
-                    <!-- Dynamisch: Input-Spalten -->
-                    {% for col in inputCols %}
-                        <th>{{ col }}</th>
-                    {% endfor %}
-
-                    <!-- Vorhandene Output-Spalten -->
-                    <th>Fertigungshilfsmittel</th>
-                    <th>Stichprobenverfahren</th>
-                    <th>Lenkungsmethode</th>
-                    <th>Merkmalsgewichtung</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for i in range(0, featureCount) %}
-                <tr>
-                    <td>Wert {{ i + 1 }}</td>
-            
-                    <!-- Dynamische Eingabefelder für Input-Spalten -->
-                    {% for col in inputCols %}
-                        <td>
-                            <input type="text" name="{{ col }}_{{ i }}" 
-                                   value="{{ results[col][i] if results.get(col) and i < results[col]|length else '' }}">
-                        </td>
-                    {% endfor %}
-            
-                    <!-- Dropdowns für Output-Spalten -->
-                    {% for col in outputCols %}
-                        <td>
-                            <select name="{{ col }}_{{ i }}">
-                                {% for option in uniqueVals.get(col, []) %}
-                                    <option value="{{ option }}" 
-                                        {% if option == results[col][i] %} selected {% endif %}>
-                                        {{ option }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <input type="submit" value="Submit">
+    <table>
+        <thead>
+            <tr>
+                <th>Weitere Informationen</th>
+                <th>Fertigungshilfsmittel</th>
+                <th>Stichprobenverfahren</th>
+                <th>Lenkungsmethode</th>
+                <th>Merkmalsgewichtung</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in range(0, featureCount) %}
+            <tr>
+                <td>Wert {{ i + 1 }}</td>
+                <td>
+                    <select name="Fertigungshilfsmittel">
+                        {% for option in uniqueVals['Fertigungshilfsmittel'] %}
+                        <option value="{{ option }}" 
+                                {% if option == results['Fertigungshilfsmittel'][i] %} selected {% endif %}>
+                            {{ option }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <select name="Stichprobenverfahren">
+                        {% for option in uniqueVals['Stichprobenverfahren'] %}
+                        <option value="{{ option }}" 
+                                {% if option == results['Stichprobenverfahren'][i] %} selected {% endif %}>
+                            {{ option }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <select name="Lenkungsmethode">
+                        {% for option in uniqueVals['Lenkungsmethode'] %}
+                        <option value="{{ option }}" 
+                                {% if option == results['Lenkungsmethode'][i] %} selected {% endif %}>
+                            {{ option }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <select name="Merkmalsgewichtung">
+                        {% for option in uniqueVals['Merkmalsgewichtung'] %}
+                        <option value="{{ option }}" 
+                                {% if option == results['Merkmalsgewichtung'][i] %} selected {% endif %}>
+                            {{ option }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <input type="submit" value="Submit">
     </form>
 
     <div class="button-container">
-        <button type="button" onclick="window.location.href='/endansicht'">Zur Endansicht</button>
-        <button type="button" onclick="window.location.href='/html'">Zurück zur Startseite</button>
-        <button type="button" onclick="window.location.href='/monitoring'">Zum Monitoring</button>
+        <button onclick="window.location.href='/endansicht'">Zur Endansicht</button>
+        <button onclick="window.location.href='/html'">Zurück zur Startseite</button>
+        <button onclick="window.location.href='/monitoring'">Zum Monitoring</button>
     </div>
 </body>
 </html>
