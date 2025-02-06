@@ -154,7 +154,7 @@ def convertPredDataToDataframe(data):
     allCols = ['Produktmerkmal', 'Prozesselement', 'Maschine', 'Spezifikation', 'Unterer_Grenzwert', 'Oberer_Grenzwert', 'Reaktionsplan', 'Prüfmittel', 'Stichproben-\nverfahren', 'Lenkungsmethode']
 
     #prozesselement = dataAll.iloc[]
-
+    print("test")
 
 
     print(data)
