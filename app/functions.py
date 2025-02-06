@@ -4,6 +4,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 
 def createPrediction(model, predData, outputFeature, conversionMap, scaler): 
+
+    #predData = convertPredDataToDataframe(predData)
+
     predData = prepareRawData(predData)
     predData = predData.drop(outputCols, axis=1)
     for index, row in predData.iterrows():
@@ -75,7 +78,6 @@ def randomForest(X_train, X_test, y_train, y_test):
     return model, y_pred, accuracy
 
 def prepareRawData(data):
-    usedCols = ['Prüfmerkmal_Text', 'Fertigungshilfsmittel', 'Sollwert', 'Merkmalsgewichtung', 'Maßeinheit', 'Oberer_Grenzwert', 'Unterer_Grenzwert', 'Nachkommastellen', 'Stichprobenverfahren', 'Vorgang', 'Lenkungsmethode', 'Plangruppe', 'Knotenplan', 'Verbindung', 'Arbeitsplatz', 'Beschreibung_Vorgang']
     #entferne qualitative merkmale
     if 'Qualitatives_Merkmal' in data.columns:
         data.drop(data[data['Qualitatives_Merkmal'] == "X"].index, inplace = True)
@@ -84,17 +86,13 @@ def prepareRawData(data):
     #fülle prüfmerkmals-text mit werten aus anderer spalte falls nötig
     if 'Prüfmerkmal_Text_Voll' in data.columns:
         for index, row in data.iterrows():
-            if not isinstance(row['Prüfmerkmal_Text'], str):
-                newval = str(row['Prüfmerkmal_Text_Voll']).split(" ")
-                newval = newval[0]
-                data.at[index,'Prüfmerkmal_Text']=newval
-            else:
-                pass
-        data = data.drop(['Prüfmerkmal_Text_Voll'], axis=1)
+            newval = str(row['Prüfmerkmal_Text_Voll']).split(" ")
+            newval = newval[0]
+            data.at[index,'Prüfmerkmal_Text_Voll']=newval
 
     #entferne nicht verwendete spalten
     for col in data.columns:
-        if col not in usedCols:
+        if col not in allCols:
             data = data.drop([col], axis=1)
 
     #fülle leere zellen mit 0
@@ -148,3 +146,17 @@ def getUniqueValues(data):
     for col in outputCols:     
         uniqueVals[col] = data[col].unique()
     return uniqueVals
+
+def convertPredDataToDataframe(data):
+    dataAll = pd.read_excel(data)
+    #dataFeatures = pd.read_excel(data, skiprows=10)
+
+    allCols = ['Produktmerkmal', 'Prozesselement', 'Maschine', 'Spezifikation', 'Unterer_Grenzwert', 'Oberer_Grenzwert', 'Reaktionsplan', 'Prüfmittel', 'Stichproben-\nverfahren', 'Lenkungsmethode']
+
+    prozesselement = dataAll.iloc[]
+
+
+
+    print(data)
+
+    return data
