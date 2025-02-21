@@ -16,10 +16,8 @@ def prediction_results():
     global predictionInput
     global outputCols
     if request.method == 'POST':
-        import pickle
         import gzip
         predictionInput = request.files['input_prediction']
-        predictionInput = pd.read_excel(predictionInput)
         conversionMap = load(open('misc//conversionMap.pkl', 'rb'))
         scaler = load(open('misc//scaler.pkl', 'rb'))
         for col in outputCols:
@@ -28,11 +26,12 @@ def prediction_results():
             results[col] = singleColResults
         print(results)           
 
-        trainData = pd.read_excel('data//traindata.xlsx')  
+        trainData = pd.read_excel('data//traindata_newcols.xlsx')  
         unique_values = getUniqueValues(trainData)
-        featureCount = len(results["Fertigungshilfsmittel"])
+        print(unique_values)
+        featureCount = len(results["Prüfmittel"])
         
-        return render_template('prediction_results.html', uniqueVals=unique_values, results=results, featureCount = featureCount)
+        return render_template('prediction_results.html', uniqueVals=unique_values, results=results, featureCount= featureCount)
     return  #diese route sollte nie ohne einen POST trigger aufgerufen werden, deswegen hier einfach return atm
 
 @app.route('/prediction_results_confirmed', methods=['GET', 'POST'])
@@ -46,19 +45,16 @@ def prediction_results_confirmed():
         list3 = []
         list4 = []
         for key, value in choicesOutput.items(multi=True):
-            if key == "Fertigungshilfsmittel":
+            if key == "Prüfmittel":
                 list1.append(value)
             if key == "Stichprobenverfahren":
                 list2.append(value)
             if key == "Lenkungsmethode":
                 list3.append(value)
-            if key == "Merkmalsgewichtung":
-                list4.append(value)
         predictionOutput = predictionInput
-        predictionOutput['Fertigungshilfsmittel'] = list1
+        predictionOutput['Prüfmittel'] = list1
         predictionOutput['Stichprobenverfahren'] = list2
         predictionOutput['Lenkungsmethode'] = list3
-        predictionOutput['Merkmalsgewichtung'] = list4 
 
         sio = BytesIO()
         outputName = "output"
@@ -96,7 +92,6 @@ def prediction_results_confirmed():
 def model_training():
     global outputCols
     if request.method == 'POST':
-        import pickle
         import gzip
         file_training = request.files['input_training']
         trainData = pd.read_excel(file_training)

@@ -5,10 +5,9 @@ from sklearn.preprocessing import MinMaxScaler
 
 def createPrediction(model, predData, outputFeature, conversionMap, scaler): 
 
-    #predData = convertPredDataToDataframe(predData)
-
+    predData = convertPredDataToDataframe(predData)
     predData = prepareRawData(predData)
-    predData = predData.drop(outputCols, axis=1)
+    #predData = predData.drop(outputCols, axis=1)
     for index, row in predData.iterrows():
         for key, value in conversionMap.items():
             if key in predData.columns:
@@ -84,11 +83,11 @@ def prepareRawData(data):
         data = data.drop(['Qualitatives_Merkmal'], axis=1)
 
     #fülle prüfmerkmals-text mit werten aus anderer spalte falls nötig
-    if 'Prüfmerkmal_Text_Voll' in data.columns:
+    if 'Produktmerkmal_Text' in data.columns:
         for index, row in data.iterrows():
-            newval = str(row['Prüfmerkmal_Text_Voll']).split(" ")
+            newval = str(row['Produktmerkmal_Text']).split(" ")
             newval = newval[0]
-            data.at[index,'Prüfmerkmal_Text_Voll']=newval
+            data.at[index,'Produktmerkmal_Text']=newval
 
     #entferne nicht verwendete spalten
     for col in data.columns:
@@ -99,11 +98,14 @@ def prepareRawData(data):
     data = data.fillna(0)
 
     #formatiere zahlen zu korrektem dezimalformat (, statt .) und wandle in float um
-    
+
     for index, row in data.iterrows():
-        data.at[index,'Sollwert']=str(row['Sollwert']).replace(',','.')
+        data.at[index,'Spezifikation']=str(row['Spezifikation']).replace(',','.')
     for index, row in data.iterrows():
-        data.at[index,'Sollwert']=float(row['Sollwert'])
+        if " " in str(row['Spezifikation']):
+            data.at[index,'Spezifikation']=str(row['Spezifikation']).split(" ")[0]
+    for index, row in data.iterrows():
+        data.at[index,'Spezifikation']=float(row['Spezifikation'])
     for index, row in data.iterrows():
         data.at[index,'Oberer_Grenzwert']=str(row['Oberer_Grenzwert']).replace(',','.')
     for index, row in data.iterrows():
@@ -112,12 +114,13 @@ def prepareRawData(data):
         data.at[index,'Unterer_Grenzwert']=str(row['Unterer_Grenzwert']).replace(',','.')
     for index, row in data.iterrows():
         data.at[index,'Unterer_Grenzwert']=float(row['Unterer_Grenzwert'])
+
     #wandle zellen "Unterer Grenzwert" und "Oberer Grenzwert" in differenzen statt absolute zahlen um
     list_lower = []
     list_upper = []
     for index, row in data.iterrows():
-        list_lower.append(row['Sollwert']-row['Unterer_Grenzwert'])
-        list_upper.append(row['Oberer_Grenzwert']-row['Sollwert'])
+        list_lower.append(row['Spezifikation']-row['Unterer_Grenzwert'])
+        list_upper.append(row['Oberer_Grenzwert']-row['Spezifikation'])
     data['Unterer_Grenzwert'] = list_lower
     data['Oberer_Grenzwert'] = list_upper
 
@@ -143,20 +146,28 @@ def convertTextColumnToNumbers(data, colname):
 
 def getUniqueValues(data):
     uniqueVals = {}
-    for col in outputCols:     
-        uniqueVals[col] = data[col].unique()
+    for col in outputCols:    
+        uniqueList =  data[col].unique()
+        print(uniqueList)
+        uniqueList = [str(r) for r in uniqueList]    
+        uniqueVals[col] = uniqueList
     return uniqueVals
 
 def convertPredDataToDataframe(data):
+    pd.set_option('display.max_columns', None)
     dataAll = pd.read_excel(data)
-    #dataFeatures = pd.read_excel(data, skiprows=10)
+    data = pd.read_excel(data, skiprows=11)
+    data = data.drop(data.columns[[0, 1, 2, 3, 4, 5, 8, 9, 12, 14, 15, 16, 17, 18]],axis=1)
+    data = data.rename(columns={"Unnamed: 6": "Produktmerkmal", "Unnamed: 7": "Produktmerkmal_Text", "Unnamed: 10": "Spezifikation", "Unnamed: 11": "Unterer_Grenzwert", "Unnamed: 13": "Oberer_Grenzwert"})
+    data = data[data['Produktmerkmal'].notna()]
+    
+    prozesselement = dataAll.iloc[11,2]
+    maschine = dataAll.iloc[11,5]
+    arbeitsplatz = dataAll.iloc[2,6]
 
-    allCols = ['Produktmerkmal', 'Prozesselement', 'Maschine', 'Spezifikation', 'Unterer_Grenzwert', 'Oberer_Grenzwert', 'Reaktionsplan', 'Prüfmittel', 'Stichproben-\nverfahren', 'Lenkungsmethode']
-
-    #prozesselement = dataAll.iloc[]
-    print("test")
-
-
+    data["Prozesselement"] = prozesselement
+    data["Maschine"] = maschine
+    data["Arbeitsplatz"] = arbeitsplatz.split("\n")[1]
     print(data)
 
     return data

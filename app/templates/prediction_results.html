@@ -38,10 +38,9 @@
         <thead>
             <tr>
                 <th>Weitere Informationen</th>
-                <th>Fertigungshilfsmittel</th>
+                <th>Prüfmittel</th>
                 <th>Stichprobenverfahren</th>
                 <th>Lenkungsmethode</th>
-                <th>Merkmalsgewichtung</th>
             </tr>
         </thead>
         <tbody>
@@ -49,10 +48,10 @@
             <tr>
                 <td>Wert {{ i + 1 }}</td>
                 <td>
-                    <select name="Fertigungshilfsmittel">
-                        {% for option in uniqueVals['Fertigungshilfsmittel'] %}
+                    <select name="Prüfmittel">
+                        {% for option in uniqueVals['Prüfmittel'] %}
                         <option value="{{ option }}" 
-                                {% if option == results['Fertigungshilfsmittel'][i] %} selected {% endif %}>
+                                {% if option == results['Prüfmittel'][i] %} selected {% endif %}>
                             {{ option }}
                         </option>
                         {% endfor %}
@@ -73,16 +72,6 @@
                         {% for option in uniqueVals['Lenkungsmethode'] %}
                         <option value="{{ option }}" 
                                 {% if option == results['Lenkungsmethode'][i] %} selected {% endif %}>
-                            {{ option }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </td>
-                <td>
-                    <select name="Merkmalsgewichtung">
-                        {% for option in uniqueVals['Merkmalsgewichtung'] %}
-                        <option value="{{ option }}" 
-                                {% if option == results['Merkmalsgewichtung'][i] %} selected {% endif %}>
                             {{ option }}
                         </option>
                         {% endfor %}
