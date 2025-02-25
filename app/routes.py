@@ -28,7 +28,7 @@ def prediction_results():
             results[col] = singleColResults
         print(results)           
 
-        trainData = pd.read_excel('data//traindata_newcols.xlsx')  
+        trainData = pd.read_excel('models//model1//currentTrainData.xlsx')  
         unique_values = getUniqueValues(trainData)
         print(unique_values)
         featureCount = len(results["Prüfmittel"])
@@ -113,14 +113,23 @@ def model_training():
         trainDataNew = pd.read_excel('data//stashedTrainData.xlsx')
         trainData = pd.concat([trainData, trainDataNew])
 
+        accuracyList = []
         for col in outputCols:
-            model, scaler, conversionMap = trainNewModel(trainData, col)                                                                                              
+            model, scaler, conversionMap, accuracy = trainNewModel(trainData, col)                                                                                              
             dump(model, gzip.open('models//model1//{}.pkl'.format(col), 'wb'))
             dump(scaler, open('models//model1//scaler.pkl', 'wb'))
             dump(conversionMap, open('models//model1//conversionMap.pkl', 'wb'))
+            accuracyList.append(accuracy)
 
         trainData.to_excel("models//model1//currentTrainData.xlsx") 
         trainDataNew[0:0].to_excel("data//stashedTrainData.xlsx")
+
+        modelMetrics = pd.read_excel('models//modelData.xlsx')
+        modelID = len(modelMetrics)+1
+        from datetime import datetime
+        newrow = [modelID, datetime.today().strftime('%Y-%m-%d'), accuracy[0], accuracy[1], accuracy[2]]
+        modelMetrics = modelMetrics.loc[len(modelMetrics)] = newrow
+        modelMetrics.to_excel("models//modelData.xlsx")
 
         return render_template('index.html')
     return  #diese route wird aktuell nie ohne einen POST trigger aufgerufen, deswegen hier einfach return atm

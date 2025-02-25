@@ -62,7 +62,7 @@ def trainNewModel(trainData, outputFeature):
 
     print("Accuracy for " + str(outputFeature) + ": " + str(res[2]))       
 
-    return res[0], scaler, conversionMap
+    return res[0], scaler, conversionMap, res[2]
 
 def randomForest(X_train, X_test, y_train, y_test):
     from sklearn.ensemble import RandomForestClassifier
