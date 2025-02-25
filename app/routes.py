@@ -112,6 +112,7 @@ def model_training():
         trainData = pd.read_excel('models//model1//currentTrainData.xlsx')
         trainDataNew = pd.read_excel('data//stashedTrainData.xlsx')
         trainData = pd.concat([trainData, trainDataNew])
+        trainData = trainData.dropna(how="all")
 
         accuracyList = []
         for col in outputCols:
@@ -127,8 +128,8 @@ def model_training():
         modelMetrics = pd.read_excel('models//modelData.xlsx')
         modelID = len(modelMetrics)+1
         from datetime import datetime
-        newrow = [modelID, datetime.today().strftime('%Y-%m-%d'), accuracy[0], accuracy[1], accuracy[2]]
-        modelMetrics = modelMetrics.loc[len(modelMetrics)] = newrow
+        newrow = [modelID, datetime.today().strftime('%Y-%m-%d'), accuracyList[0], accuracyList[1], accuracyList[2]]
+        modelMetrics.loc[len(modelMetrics)] = newrow
         modelMetrics.to_excel("models//modelData.xlsx")
 
         return render_template('index.html')
