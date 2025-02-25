@@ -4,6 +4,8 @@ from app.functions import *
 from io import BytesIO
 import xlsxwriter
 from pickle import load, dump
+import shutil
+import os
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -18,10 +20,10 @@ def prediction_results():
     if request.method == 'POST':
         import gzip
         predictionInput = request.files['input_prediction']
-        conversionMap = load(open('misc//conversionMap.pkl', 'rb'))
-        scaler = load(open('misc//scaler.pkl', 'rb'))
+        conversionMap = load(open('models//model1//conversionMap.pkl', 'rb'))
+        scaler = load(open('models//model1//scaler.pkl', 'rb'))
         for col in outputCols:
-            model = load(gzip.open('models//{}.pkl'.format(col), 'rb'))
+            model = load(gzip.open('models//model1//{}.pkl'.format(col), 'rb'))
             singleColResults = createPrediction(model, predictionInput, col, conversionMap, scaler)  
             results[col] = singleColResults
         print(results)           
@@ -93,14 +95,33 @@ def model_training():
     global outputCols
     if request.method == 'POST':
         import gzip
-        file_training = request.files['input_training']
-        trainData = pd.read_excel(file_training)
+        #file_training = request.files['input_training']
+        #trainData = pd.read_excel(file_training)
         import pickle
+
+        dir1 = 'models//model1'
+        dir2 = 'models//model2'
+        dir3 = 'models//model3'
+
+        for fileName in os.listdir(dir2):
+            shutil.copy(os.path.join(dir2, fileName), dir3)
+
+        for fileName in os.listdir(dir1):
+            shutil.copy(os.path.join(dir1, fileName), dir2)
+
+        trainData = pd.read_excel('models//model1//currentTrainData.xlsx')
+        trainDataNew = pd.read_excel('data//stashedTrainData.xlsx')
+        trainData = pd.concat([trainData, trainDataNew])
+
         for col in outputCols:
             model, scaler, conversionMap = trainNewModel(trainData, col)                                                                                              
-            dump(model, gzip.open('models//{}.pkl'.format(col), 'wb'))
-            dump(scaler, open('misc//scaler.pkl', 'wb'))
-            dump(conversionMap, open('misc//conversionMap.pkl', 'wb'))
+            dump(model, gzip.open('models//model1//{}.pkl'.format(col), 'wb'))
+            dump(scaler, open('models//model1//scaler.pkl', 'wb'))
+            dump(conversionMap, open('models//model1//conversionMap.pkl', 'wb'))
+
+        trainData.to_excel("models//model1//currentTrainData.xlsx") 
+        trainDataNew[0:0].to_excel("data//stashedTrainData.xlsx")
+
         return render_template('index.html')
     return  #diese route wird aktuell nie ohne einen POST trigger aufgerufen, deswegen hier einfach return atm
 

@@ -4,7 +4,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 
 def createPrediction(model, predData, outputFeature, conversionMap, scaler): 
-
     predData = convertPredDataToDataframe(predData)
     predData = prepareRawData(predData)
     #predData = predData.drop(outputCols, axis=1)
