@@ -33,45 +33,60 @@
 </head>
 <body>
     <h1>Auswertungen</h1>
+    <pre>{{ predictionInput }}</pre>
     <form action="/prediction_results_confirmed" method="POST">
     <table>
         <thead>
             <tr>
-                <th>Weitere Informationen</th>
+                <th>Produktmerkmal</th>
+                <th>Produktmerkmal_Text</th>
+                <th>Spezifikation</th>
+                <th>Unterer_Grenzwert</th>
+                <th>Oberer_Grenzwert</th>
+                <th>Prozesselement</th>
+                <th>Maschine</th>
                 <th>Prüfmittel</th>
                 <th>Stichprobenverfahren</th>
                 <th>Lenkungsmethode</th>
             </tr>
         </thead>
         <tbody>
-            {% for i in range(0, featureCount) %}
+            {% for i in range(featureCount) %}
             <tr>
-                <td>Wert {{ i + 1 }}</td>
+                <!-- Fixspalten von predictionInput -->
+                <td>{{ predictionInput[i].get('Produktmerkmal', 'Fehlend') }}</td>
+                <td>{{ predictionInput[i].get('Produktmerkmal_Text', 'Fehlend') }}</td>
+                <td>{{ predictionInput[i].get('Spezifikation', 'Fehlend') }}</td>
+                <td>{{ predictionInput[i].get('Unterer_Grenzwert', 'Fehlend') }}</td>
+                <td>{{ predictionInput[i].get('Oberer_Grenzwert', 'Fehlend') }}</td>
+                <td>{{ predictionInput[i].get('Prozesselement', 'Fehlend') }}</td>
+                <td>{{ predictionInput[i].get('Maschine', 'Fehlend') }}</td>
+        
+                <!-- Dropdowns für vorhergesagte Werte -->
                 <td>
                     <select name="Prüfmittel">
                         {% for option in uniqueVals['Prüfmittel'] %}
-                        <option value="{{ option }}" 
-                                {% if option == results['Prüfmittel'][i] %} selected {% endif %}>
+                        <option value="{{ option }}" {% if option == results['Prüfmittel'][i] %} selected {% endif %}>
                             {{ option }}
                         </option>
                         {% endfor %}
                     </select>
                 </td>
+        
                 <td>
                     <select name="Stichprobenverfahren">
                         {% for option in uniqueVals['Stichprobenverfahren'] %}
-                        <option value="{{ option }}" 
-                                {% if option == results['Stichprobenverfahren'][i] %} selected {% endif %}>
+                        <option value="{{ option }}" {% if option == results['Stichprobenverfahren'][i] %} selected {% endif %}>
                             {{ option }}
                         </option>
                         {% endfor %}
                     </select>
                 </td>
+        
                 <td>
                     <select name="Lenkungsmethode">
                         {% for option in uniqueVals['Lenkungsmethode'] %}
-                        <option value="{{ option }}" 
-                                {% if option == results['Lenkungsmethode'][i] %} selected {% endif %}>
+                        <option value="{{ option }}" {% if option == results['Lenkungsmethode'][i] %} selected {% endif %}>
                             {{ option }}
                         </option>
                         {% endfor %}

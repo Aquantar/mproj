@@ -22,10 +22,13 @@ def prediction_results():
         predictionInput = request.files['input_prediction']
         conversionMap = load(open('models//model1//conversionMap.pkl', 'rb'))
         scaler = load(open('models//model1//scaler.pkl', 'rb'))
+        predInputFormatted = convertPredDataToDataframe(predictionInput)
+        print(predInputFormatted.head())  # erste zeilen anzeigen
         for col in outputCols:
             model = load(gzip.open('models//model1//{}.pkl'.format(col), 'rb'))
             singleColResults = createPrediction(model, predictionInput, col, conversionMap, scaler)  
             results[col] = singleColResults
+            predInputFormatted[col] = singleColResults
         print(results)           
 
         trainData = pd.read_excel('models//model1//currentTrainData.xlsx')  
@@ -33,7 +36,7 @@ def prediction_results():
         print(unique_values)
         featureCount = len(results["Prüfmittel"])
         
-        return render_template('prediction_results.html', uniqueVals=unique_values, results=results, featureCount= featureCount)
+        return render_template('prediction_results.html', uniqueVals=unique_values, results=results, featureCount= featureCount, predictionInput=predInputFormatted.to_dict(orient='records'))
     return  #diese route sollte nie ohne einen POST trigger aufgerufen werden, deswegen hier einfach return atm
 
 @app.route('/prediction_results_confirmed', methods=['GET', 'POST'])
