@@ -1,4 +1,4 @@
-from app import app, results, predictionInput, inputCols, outputCols
+from app import app, results, predictionInput, inputCols, outputCols, predInputFormatted
 from flask import Flask, render_template, request, url_for, redirect, make_response
 from app.functions import *
 from io import BytesIO
@@ -17,23 +17,20 @@ def prediction_results():
     global results
     global predictionInput
     global outputCols
+    global predInputFormatted
     if request.method == 'POST':
         import gzip
         predictionInput = request.files['input_prediction']
         conversionMap = load(open('models//model1//conversionMap.pkl', 'rb'))
         scaler = load(open('models//model1//scaler.pkl', 'rb'))
         predInputFormatted = convertPredDataToDataframe(predictionInput)
-        print(predInputFormatted.head())  # erste zeilen anzeigen
         for col in outputCols:
             model = load(gzip.open('models//model1//{}.pkl'.format(col), 'rb'))
             singleColResults = createPrediction(model, predictionInput, col, conversionMap, scaler)  
             results[col] = singleColResults
             predInputFormatted[col] = singleColResults
-        print(results)           
-
         trainData = pd.read_excel('models//model1//currentTrainData.xlsx')  
         unique_values = getUniqueValues(trainData)
-        print(unique_values)
         featureCount = len(results["Prüfmittel"])
         
         return render_template('prediction_results.html', uniqueVals=unique_values, results=results, featureCount= featureCount, predictionInput=predInputFormatted.to_dict(orient='records'))
@@ -43,6 +40,7 @@ def prediction_results():
 def prediction_results_confirmed():
     global results
     global predictionInput
+    global predInputFormatted
     if request.method == 'POST':
         choicesOutput = request.form
         list1 = []
@@ -56,18 +54,27 @@ def prediction_results_confirmed():
                 list2.append(value)
             if key == "Lenkungsmethode":
                 list3.append(value)
-        predictionOutput = predictionInput
+        #predictionOutput = predictionInput
+        predictionOutput = predInputFormatted
+        print(predictionOutput)
         predictionOutput['Prüfmittel'] = list1
         predictionOutput['Stichprobenverfahren'] = list2
         predictionOutput['Lenkungsmethode'] = list3
 
+        #add new rows to stashed data file
+        #trainData = pd.read_excel('models//model1//currentTrainData.xlsx')
+        #print(trainData)
+        #for index, row in predictionOutput.iterrows():
+
+         
+
+        #export results to excel and download
         sio = BytesIO()
         outputName = "output"
         writerImportsheet = pd.ExcelWriter("{}.xlsx".format(outputName), engine="xlsxwriter")
         predictionOutput.to_excel(writerImportsheet, sheet_name="Sheet1", index=False)
         workbook = xlsxwriter.Workbook(sio)
         sheet = workbook.add_worksheet(u'Sheet1')
-
         #Header
         columns = list(predictionOutput.columns.values) 
         iter = 0
@@ -83,10 +90,8 @@ def prediction_results_confirmed():
                     row = row + 1
                     pass
             iter = iter + 1
-
         workbook.close()
         sio.seek(0)
-
         resp = make_response(sio.getvalue())
         resp.headers["Content-Disposition"] = "attachment; filename={}.xlsx".format(outputName)
         resp.headers['Content-Type'] = 'application/x-xlsx'

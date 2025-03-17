@@ -147,7 +147,7 @@ def getUniqueValues(data):
     uniqueVals = {}
     for col in outputCols:    
         uniqueList =  data[col].unique()
-        print(uniqueList)
+        #print(uniqueList)
         uniqueList = [str(r) for r in uniqueList]    
         uniqueVals[col] = uniqueList
     return uniqueVals
@@ -167,6 +167,6 @@ def convertPredDataToDataframe(data):
     data["Prozesselement"] = prozesselement
     data["Maschine"] = maschine
     data["Arbeitsplatz"] = arbeitsplatz.split("\n")[1]
-    print(data)
+    #print(data)
 
     return data
