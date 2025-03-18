@@ -16,7 +16,6 @@ def index():
 @app.route('/prediction_results', methods=['GET', 'POST'])
 def prediction_results():
     global results
-    global predictionInput
     global outputCols
     global predInputFormatted
     if request.method == 'POST':
@@ -40,7 +39,6 @@ def prediction_results():
 @app.route('/prediction_results_confirmed', methods=['GET', 'POST'])
 def prediction_results_confirmed():
     global results
-    global predictionInput
     global predInputFormatted
     if request.method == 'POST':
         choicesOutput = request.form
@@ -55,34 +53,29 @@ def prediction_results_confirmed():
                 list2.append(value)
             if key == "Lenkungsmethode":
                 list3.append(value)
-        #predictionOutput = predictionInput
         predictionOutput = predInputFormatted
-        print(predictionOutput)
         predictionOutput['Prüfmittel'] = list1
         predictionOutput['Stichprobenverfahren'] = list2
         predictionOutput['Lenkungsmethode'] = list3
 
-        #add new rows to stashed data file
-        #trainData = pd.read_excel('models//model1//currentTrainData.xlsx')
-        #print(trainData)
-        #for index, row in predictionOutput.iterrows():
-
-        trainData =pd.read_excel('models//model1//currentTrainData.xlsx')
+        trainData = pd.read_excel('models//model1//currentTrainData.xlsx')
         trainData = trainData.astype(str)
+        print("TRAIND DATA")
+        print(trainData)
         predictionOutput = predictionOutput.astype(str)
+        print("PREDOUT")
+        print(predictionOutput)
         newData = pd.merge(predictionOutput,trainData, indicator=True, how='outer').query('_merge=="left_only"').drop('_merge', axis=1)
+        print("newDat")
+        print(newData)
         stashedData = pd.read_excel('data//stashedTrainData.xlsx')
+        stashedData = stashedData.astype(str)
         stashedData = pd.concat([stashedData, newData]).drop_duplicates()
-        stashedData.drop(stashedData.columns[0],axis=1,inplace=True)
+        #stashedData.drop(stashedData.columns[0],axis=1,inplace=True)
         stashedData = stashedData.replace(['nan'], [""]) 
-        #outputName = "stashedTrainData"
-        #writerImportsheet = pd.ExcelWriter("{}.xlsx".format(outputName), engine="xlsxwriter")
-        #stashedData.to_excel(writerImportsheet, sheet_name="Sheet1", index=False)
-        #workbook.close()
         with pd.ExcelWriter("data//stashedTrainData.xlsx") as writer:
-            stashedData.to_excel(writer)  
+            stashedData.to_excel(writer, index=False)  
          
-
         #export results to excel and download
         sio = BytesIO()
         outputName = "output"
@@ -118,8 +111,6 @@ def model_training():
     global outputCols
     if request.method == 'POST':
         import gzip
-        #file_training = request.files['input_training']
-        #trainData = pd.read_excel(file_training)
         import pickle
 
         dir1 = 'models//model1'
@@ -145,16 +136,18 @@ def model_training():
             dump(conversionMap, open('models//model1//conversionMap.pkl', 'wb'))
             accuracyList.append(accuracy)
 
-        trainData.to_excel("models//model1//currentTrainData.xlsx") 
-        trainDataNew[0:0].to_excel("data//stashedTrainData.xlsx")
+        trainData.to_excel("models//model1//currentTrainData.xlsx", index=False) 
+        stashedTrainingDataOverride = pd.DataFrame(columns=list(trainData.columns.values))
+        stashedTrainingDataOverride.to_excel("data//stashedTrainData.xlsx", index=False)
 
-        #modelMetrics = pd.read_excel('models//modelData.xlsx')
-        #print(modelMetrics)
-        #modelID = len(modelMetrics)+1
-        #from datetime import datetime
-        #newrow = [modelID, datetime.today().strftime('%Y-%m-%d'), accuracyList[0], accuracyList[1], accuracyList[2]]
-        #modelMetrics.loc[len(modelMetrics)] = newrow
-        #modelMetrics.to_excel("models//modelData.xlsx")
+        modelMetrics = pd.read_excel('models//modelData.xlsx')
+        print(modelMetrics)
+        modelID = len(modelMetrics)+1
+        from datetime import datetime
+        newrow = [modelID, datetime.today().strftime('%Y-%m-%d'), accuracyList[0], accuracyList[1], accuracyList[2]]
+        print(newrow)
+        modelMetrics.loc[len(modelMetrics)] = newrow
+        modelMetrics.to_excel("models//modelData.xlsx", index=False)
 
         return render_template('index.html')
     return  #diese route wird aktuell nie ohne einen POST trigger aufgerufen, deswegen hier einfach return atm

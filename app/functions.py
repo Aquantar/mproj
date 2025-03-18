@@ -158,7 +158,7 @@ def convertPredDataToDataframe(data):
     data = pd.read_excel(data, skiprows=11)
     data = data.drop(data.columns[[0, 1, 2, 3, 4, 5, 8, 9, 12, 14, 15, 16, 17, 18]],axis=1)
     data = data.rename(columns={"Unnamed: 6": "Produktmerkmal", "Unnamed: 7": "Produktmerkmal_Text", "Unnamed: 10": "Spezifikation", "Unnamed: 11": "Unterer_Grenzwert", "Unnamed: 13": "Oberer_Grenzwert"})
-    data = data[data['Produktmerkmal'].notna()]
+    data = data[data['Produktmerkmal_Text'].notna()]
     
     prozesselement = dataAll.iloc[11,2]
     maschine = dataAll.iloc[11,5]
