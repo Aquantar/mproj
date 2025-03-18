@@ -6,6 +6,7 @@ import xlsxwriter
 from pickle import load, dump
 import shutil
 import os
+import pandas as pd
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -160,4 +161,28 @@ def model_training():
 
 @app.route('/monitoring', methods=['GET', 'POST'])
 def monitoring():
-    return render_template('monitoring.html')
+    return render_template("monitoring.html")
+    
+@app.route('/stasheddata', methods=['GET', 'POST'])
+def stasheddata():
+    file_path = os.path.join("data", "stashedTrainData.XLSX")
+
+    # Prüfen, ob Datei existiert
+    if not os.path.exists(file_path):
+        return render_template("stasheddata.html", data=None, error="Datei nicht gefunden")
+
+    try:
+        df = pd.read_excel(file_path, header=0, dtype=str)  # Alle Werte als Strings für Konsistenz
+        
+        if df.empty:
+            return render_template("stasheddata.html", data=None, error="Die Datei ist leer")
+        
+        # NaN-Werte ersetzen
+        df = df.fillna("--")
+
+        # HTML-kompatible Tabelle generieren
+        table_html = df.to_html(classes='table table-striped', index=False)
+        return render_template("stasheddata.html", data=table_html, error=None)
+
+    except Exception as e:
+        return render_template("stasheddata.html", data=None, error=str(e))

@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Model Monitor</title>
+    <title>Model Monitoring</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
+            text-align: center;
         }
         .container {
             max-width: 800px;
@@ -20,15 +21,16 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         h1 {
-            text-align: center;
             color: #333;
         }
         .info {
             margin-bottom: 20px;
         }
+        .button-container {
+            margin-top: 20px;
+            text-align: center;
+        }
         button {
-            display: block;
-            margin: 20px auto;
             padding: 10px 20px;
             background-color: #007BFF;
             color: white;
@@ -36,6 +38,7 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
+            margin: 10px;
         }
         button:hover {
             background-color: #0056b3;
@@ -43,17 +46,61 @@
         .result {
             margin-top: 20px;
             font-size: 18px;
-            text-align: center;
             color: #555;
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: black;
+        }
+
+        /* Tabelle */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
         }
     </style>
 </head>
 <body>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".xlsx, .xls" required>
-    </form>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <div class="container">
         <h1>Model Monitoring</h1>
         <div class="info">
@@ -67,22 +114,63 @@
         <canvas id="accuracyChart" width="800" height="400"></canvas>
     </div>
 
+    <!-- Buttons außerhalb der Box -->
+    <div class="button-container">
+        <button id="openModal">Mehr Details anzeigen</button>
+
+        <!-- Re-Train Models Button -->
+        <form action="/model_training" method="POST" style="display:inline;">
+            <input type="submit" value="Re-Train Models">
+        </form>
+    </div>
+
+    <!-- Modal Fenster mit Tabelle -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Modell-Details</h2>
+            
+            <!-- Tabelle -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produktmerkmal</th>
+                        <th>Produktmerkmal_Text</th>
+                        <th>Spezifikation</th>
+                        <th>Unterer_Grenzwert</th>
+                        <th>Oberer_Grenzwert</th>
+                        <th>Prozesselement</th>
+                        <th>Maschine</th>
+                        <th>Arbeitsplatz</th>
+                        <th>Prüfmittel</th>
+                        <th>Stichprobenverfahren</th>
+                        <th>Lenkungsmethode</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Die Zeilen werden per JavaScript eingefügt -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
         document.getElementById("calculateAccuracy").addEventListener("click", function() {
-            // Platzhalter für zukünftige Funktionalität
             const resultElement = document.getElementById("accuracyResult");
             resultElement.textContent = "Berechnung läuft... (Funktion noch nicht implementiert)";
         });
-    </script>
-    <script>
+
+        // Chart initialisieren
         const ctx = document.getElementById('accuracyChart').getContext('2d');
         const accuracyChart = new Chart(ctx, {
-            type: 'line', // Diagrammtyp
+            type: 'line',
             data: {
-                labels: ['Januar', 'Februar', 'März', 'April', 'Mai'], // X-Achse
+                labels: ['Januar', 'Februar', 'März', 'April', 'Mai'],
                 datasets: [{
                     label: 'Accuracy-Verlauf',
-                    data: [65, 59, 80, 81, 56], // Y-Achse
+                    data: [65, 59, 80, 81, 56],
                     borderColor: 'rgba(75, 192, 192, 1)',
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderWidth: 2,
@@ -110,19 +198,49 @@
                 }
             }
         });
-    
-        // Dynamische Aktualisierung des Diagramms
-        document.getElementById("calculateAccuracy").addEventListener("click", function() {
-            // Füge neuen Datenpunkt hinzu zufällig
-            const newLabel = 'Juni';
-            const newData = Math.floor(Math.random() * 100); // Zufallswert
-            accuracyChart.data.labels.push(newLabel);
-            accuracyChart.data.datasets[0].data.push(newData);
-            accuracyChart.update();
-        });
+
+        // Modal Steuerung
+        var modal = document.getElementById("detailModal");
+        var btn = document.getElementById("openModal");
+        var span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function() {
+            modal.style.display = "block";
+            loadTableData();
+        };
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        };
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        };
+
+        // Funktion zum Laden der Tabellendaten
+        function loadTableData() {
+            var tableBody = document.getElementById("tableBody");
+            tableBody.innerHTML = ""; // Leeren der Tabelle
+            
+            var data = [
+                {Produktmerkmal: "10", Produktmerkmal_Text: "Aussen-ø37,4", Spezifikation: "37,4 mm", Unterer_Grenzwert: "37,3", Oberer_Grenzwert: "37,5", Prozesselement: "Drehen", Maschine: "MS40-MGH", Arbeitsplatz: "REK W3", Prüfmittel: "MESSUHR", Stichprobenverfahren: "2/20", Lenkungsmethode: "20.0"},
+                {Produktmerkmal: "20", Produktmerkmal_Text: "Abstand 5,8", Spezifikation: "5,8 mm", Unterer_Grenzwert: "5,7", Oberer_Grenzwert: "5,9", Prozesselement: "Drehen", Maschine: "MS40-MGH", Arbeitsplatz: "REK W3", Prüfmittel: "Rauhigkeitsmessgerät", Stichprobenverfahren: "1/444", Lenkungsmethode: "20.0"}
+            ];
+
+            data.forEach(row => {
+                let tr = document.createElement("tr");
+                for (let key in row) {
+                    let td = document.createElement("td");
+                    td.textContent = row[key];
+                    tr.appendChild(td);
+                }
+                tableBody.appendChild(tr);
+            });
+        }
     </script>
-    <form action="/model_training" method="POST" enctype="multipart/form-data">
-        <input type="submit" value="Re-Train Models">
-    </form>
+    <button onclick="window.location.href='/stasheddata'">stasheddata anzeigen</button>
+
 </body>
 </html>
