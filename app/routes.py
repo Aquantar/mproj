@@ -66,6 +66,20 @@ def prediction_results_confirmed():
         #print(trainData)
         #for index, row in predictionOutput.iterrows():
 
+        trainData =pd.read_excel('models//model1//currentTrainData.xlsx')
+        trainData = trainData.astype(str)
+        predictionOutput = predictionOutput.astype(str)
+        newData = pd.merge(predictionOutput,trainData, indicator=True, how='outer').query('_merge=="left_only"').drop('_merge', axis=1)
+        stashedData = pd.read_excel('data//stashedTrainData.xlsx')
+        stashedData = pd.concat([stashedData, newData]).drop_duplicates()
+        stashedData.drop(stashedData.columns[0],axis=1,inplace=True)
+        stashedData = stashedData.replace(['nan'], [""]) 
+        #outputName = "stashedTrainData"
+        #writerImportsheet = pd.ExcelWriter("{}.xlsx".format(outputName), engine="xlsxwriter")
+        #stashedData.to_excel(writerImportsheet, sheet_name="Sheet1", index=False)
+        #workbook.close()
+        with pd.ExcelWriter("data//stashedTrainData.xlsx") as writer:
+            stashedData.to_excel(writer)  
          
 
         #export results to excel and download
@@ -133,12 +147,13 @@ def model_training():
         trainData.to_excel("models//model1//currentTrainData.xlsx") 
         trainDataNew[0:0].to_excel("data//stashedTrainData.xlsx")
 
-        modelMetrics = pd.read_excel('models//modelData.xlsx')
-        modelID = len(modelMetrics)+1
-        from datetime import datetime
-        newrow = [modelID, datetime.today().strftime('%Y-%m-%d'), accuracyList[0], accuracyList[1], accuracyList[2]]
-        modelMetrics.loc[len(modelMetrics)] = newrow
-        modelMetrics.to_excel("models//modelData.xlsx")
+        #modelMetrics = pd.read_excel('models//modelData.xlsx')
+        #print(modelMetrics)
+        #modelID = len(modelMetrics)+1
+        #from datetime import datetime
+        #newrow = [modelID, datetime.today().strftime('%Y-%m-%d'), accuracyList[0], accuracyList[1], accuracyList[2]]
+        #modelMetrics.loc[len(modelMetrics)] = newrow
+        #modelMetrics.to_excel("models//modelData.xlsx")
 
         return render_template('index.html')
     return  #diese route wird aktuell nie ohne einen POST trigger aufgerufen, deswegen hier einfach return atm

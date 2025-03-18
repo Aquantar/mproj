@@ -166,7 +166,7 @@ def convertPredDataToDataframe(data):
 
     data["Prozesselement"] = prozesselement
     data["Maschine"] = maschine
-    data["Arbeitsplatz"] = arbeitsplatz.split("\n")[1]
+    #data["Arbeitsplatz"] = arbeitsplatz.split("\n")[1]
     #print(data)
 
     return data
