@@ -29,6 +29,17 @@
             cursor: pointer;
             margin-right: 10px;
         }
+        select.green {
+            background-color: lightgreen;
+        }
+
+        select.yellow {
+            background-color: lightyellow;
+        }
+
+        select.red {
+            background-color: lightcoral;
+        }
     </style>
 </head>
 <body>
@@ -63,28 +74,55 @@
         
                 <!-- Dropdowns für vorhergesagte Werte -->
                 <td>
-                    <select name="Prüfmittel">
-                        {% for keyx,valuex in probaDict['Prüfmittel'][i].items() %}
-                        <option value="{{ valuex }}" {% if keyx == results['Prüfmittel'][i] %} selected {% endif %}>
-                            {{ valuex }}
+                    {% set confidence = probaDict['Prüfmittel'][i][0][2] %}
+                    <select name="Prüfmittel" class="
+                        {% if confidence >= 0.5 %}
+                            green
+                        {% elif confidence >= 0.25 %}
+                            yellow
+                        {% else %}
+                            red
+                        {% endif %}
+                    ">
+                        {% for tuple in probaDict['Prüfmittel'][i] %}
+                        <option value="{{ tuple[1] }}" {% if tuple[0] == results['Prüfmittel'][i] %} selected {% endif %}>
+                            {{ tuple[1] }}
                         </option>
                         {% endfor %}
                     </select>
                 </td>
                 <td>
-                    <select name="Stichprobenverfahren">
-                        {% for keyx,valuex in probaDict['Stichprobenverfahren'][i].items() %}
-                        <option value="{{ valuex }}" {% if keyx == results['Stichprobenverfahren'][i] %} selected {% endif %}>
-                            {{ valuex }}
+                    {% set confidence = probaDict['Stichprobenverfahren'][i][0][2] %}
+                    <select name="Stichprobenverfahren" class="
+                        {% if confidence >= 0.5 %}
+                            green
+                        {% elif confidence >= 0.25 %}
+                            yellow
+                        {% else %}
+                            red
+                        {% endif %}
+                    ">
+                        {% for tuple in probaDict['Stichprobenverfahren'][i] %}
+                        <option value="{{ tuple[1] }}" {% if tuple[0] == results['Stichprobenverfahren'][i] %} selected {% endif %}>
+                            {{ tuple[1] }}
                         </option>
                         {% endfor %}
                     </select>
                 </td>
                 <td>
-                    <select name="Lenkungsmethode">
-                        {% for keyx,valuex in probaDict['Lenkungsmethode'][i].items() %}
-                        <option value="{{ valuex }}" {% if keyx == results['Lenkungsmethode'][i] %} selected {% endif %}>
-                            {{ valuex }}
+                    {% set confidence = probaDict['Lenkungsmethode'][i][0][2] %}
+                    <select name="Lenkungsmethode" class="
+                        {% if confidence >= 0.5 %}
+                            green
+                        {% elif confidence >= 0.25 %}
+                            yellow
+                        {% else %}
+                            red
+                        {% endif %}
+                    ">
+                        {% for tuple in probaDict['Lenkungsmethode'][i] %}
+                        <option value="{{ tuple[1] }}" {% if tuple[0] == results['Lenkungsmethode'][i] %} selected {% endif %}>
+                            {{ tuple[1] }}
                         </option>
                         {% endfor %}
                     </select>

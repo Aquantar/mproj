@@ -36,19 +36,42 @@ def createPrediction(model, predData, outputFeature, conversionMap, scaler):
         else:
             predictions_text.append(str(pred))
 
+    #create probabilityList
     predProbabilities = model.predict_proba(predData)
     probaTuple = []
     for idx, predTuple in enumerate(predProbabilities):
-        tuple = {}
+        tuple = []
         for idx2, proba in enumerate(predProbabilities[idx]):
             if outputFeature in conversionMap:
                 mapping = conversionMap[outputFeature]
                 for key, val in mapping.items():
                     if val == idx2+1:
-                        tuple[key] = str(key) + " (" + str(int(round(proba,2)*100)) + "%)"
+                        tuple.append([key, str(key) + " (" + str(int(round(proba,2)*100)) + "%)", proba])
+                        #tuple[key] = str(key) + " (" + str(int(round(proba,2)*100)) + "%)"
             else:
                 print("???")
         probaTuple.append(tuple)
+
+    #sort probabilityList
+    sortedFull=[]
+    for idx,tuple in enumerate(probaTuple):
+        probaTupleSorted = []
+        for idx2, tuple2 in enumerate(probaTuple[idx]):
+            singleTuple = probaTuple[idx][idx2]
+            if len(probaTupleSorted) == 0:
+                probaTupleSorted.append(singleTuple)
+            else:
+                probaTupleSorted.append(singleTuple)
+                correctOrder = False
+                startIndex = len(probaTupleSorted)-1
+                while not correctOrder and startIndex!=0:
+                    if probaTupleSorted[startIndex][2] > probaTupleSorted[startIndex-1][2]:
+                        probaTupleSorted[startIndex-1], probaTupleSorted[startIndex] = probaTupleSorted[startIndex], probaTupleSorted[startIndex-1]
+                        startIndex = startIndex-1
+                    else:
+                        correctOrder = True
+        sortedFull.append(probaTupleSorted)
+    probaTuple = sortedFull
 
     return predictions_text, probaTuple
 
