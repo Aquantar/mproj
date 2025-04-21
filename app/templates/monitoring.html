@@ -102,10 +102,10 @@
 <body>
 
     <div class="container">
-        <h1>Model Monitoring</h1>
+        <h1>Administration</h1>
         <div class="info">
-            <p>Hier können Sie die Accuracy eines Modells berechnen und überwachen.</p>
-            <p>Drücken Sie den Button, um die Berechnung zu starten.</p>
+            <p>Der Chart zeigt die Genauigkeit trainierter Modelle im Zeitverlauf</p>
+            <p>Weiterhin kann ein neues Modell trainiert werden. In diesem Prozess werden neue Tupel, die noch nicht in das Training aufgenommen wurden, mit dem bestehenden Trainings-Set kombiniert</p>
         </div>
         <button id="calculateAccuracy">Accuracy berechnen</button>
         <div class="result" id="accuracyResult">
@@ -116,11 +116,9 @@
 
     <!-- Buttons außerhalb der Box -->
     <div class="button-container">
-        <button id="openModal">Mehr Details anzeigen</button>
-
         <!-- Re-Train Models Button -->
         <form action="/model_training" method="POST" style="display:inline;">
-            <input type="submit" value="Re-Train Models">
+            <input type="submit" value="Neue Modelle trainieren">
         </form>
     </div>
 
@@ -157,6 +155,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
+
         document.getElementById("calculateAccuracy").addEventListener("click", function() {
             const resultElement = document.getElementById("accuracyResult");
             resultElement.textContent = "Berechnung läuft... (Funktion noch nicht implementiert)";
@@ -167,12 +166,29 @@
         const accuracyChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Januar', 'Februar', 'März', 'April', 'Mai'],
+                labels: {{ modelIDs|tojson }},
                 datasets: [{
-                    label: 'Accuracy-Verlauf',
-                    data: [65, 59, 80, 81, 56],
+                    label: 'Prüfmittel',
+                    data: {{ accuracyData[0]|tojson }},
                     borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    //backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 2,
+                    fill: true
+                },
+                {
+                    label: 'Stichprobenverfahren',
+                    data: {{ accuracyData[1]|tojson }},
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    //backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 2,
+                    fill: true
+                },
+                
+                {
+                    label: 'Lenkungsmethode',
+                    data: {{ accuracyData[2]|tojson }},
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    //backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderWidth: 2,
                     fill: true
                 }]
@@ -240,7 +256,9 @@
             });
         }
     </script>
-    <button onclick="window.location.href='/stasheddata'">stasheddata anzeigen</button>
+    <button onclick="window.location.href='/stasheddata'">Neue Tupel verwalten</button>
+    <br>
+    <button onclick="window.location.href='/index'">Zurück</button>
 
 </body>
 </html>

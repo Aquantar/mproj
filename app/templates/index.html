@@ -33,30 +33,17 @@
 </head>
 <body>
     <h1>Decision Support System</h1>
-    <p>Info</p>
+    <p>Um eine Vorhersage durchzuführen, Input hochladen und auf "Vorhersage" klicken</p>
 
     <form action="/prediction_results" method="POST" enctype="multipart/form-data">
-        <input type="file" name="input_prediction" accept=".xlsx, .xls" required>
-        <input type="submit" value="Submit">
+        <input type="file" name="input_prediction" accept=".xlsx, .xls" required><br>
+        <input type="submit" value="Vorhersage">
     </form>
-<!--
-    <form action="/model_training" method="POST" enctype="multipart/form-data">
-        <input type="file" name="input_training" accept=".xlsx, .xls" required>
-        <input type="submit" value="Submit">
+    <br>_______________________________<br>
+    <form action="/monitoring" method="POST">
+        <button type="submit">Administration</button>
     </form>
--->
-<!--
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="input_training" accept=".xlsx, .xls" required>
-        <input type="submit" value="Submit">
-    </form>
--->
-<!--
-    <form action="/auswertungen" method="post" enctype="multipart/form-data">
-        <input type="file" name="input" accept=".xlsx, .xls" required>
-        <button type="submit">Upload Excel File</button>
-    </form>
--->
+
 </body>
 </html>
 

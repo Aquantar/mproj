@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 
 def createPrediction(model, predData, outputFeature, conversionMap, scaler): 
-    predData = convertPredDataToDataframe(predData)
+    #predData = convertPredDataToDataframe(predData)
     predData = prepareRawData(predData)
     #predData = predData.drop(outputCols, axis=1)
     for index, row in predData.iterrows():
@@ -25,6 +25,11 @@ def createPrediction(model, predData, outputFeature, conversionMap, scaler):
     predData = predData.values.tolist()
     predData = scaler.transform(predData)
     preds = model.predict(predData)
+
+    predProbabilities = model.predict_proba(predData)
+    df = pd.DataFrame(predProbabilities)
+    with pd.ExcelWriter("models//TEST.xlsx") as writer:
+        df.to_excel(writer, index=False)  
     
     predictions_text = []
     for idx, pred in enumerate(preds):
@@ -157,9 +162,23 @@ def convertPredDataToDataframe(data):
     dataAll = pd.read_excel(data)
     data = pd.read_excel(data, skiprows=11)
     data = data.drop(data.columns[[0, 1, 2, 3, 4, 5, 8, 9, 12, 14, 15, 16, 17, 18]],axis=1)
+
+    specificationList = data["Unnamed: 10"].tolist()
+    units = []
+    for idx, x in enumerate(specificationList):
+        try:
+            split = x.split(" ")
+            specificationList[idx] = split[0]
+            units.append(split[1])
+        except:
+            units.append("")
+
     data = data.rename(columns={"Unnamed: 6": "Produktmerkmal", "Unnamed: 7": "Produktmerkmal_Text", "Unnamed: 10": "Spezifikation", "Unnamed: 11": "Unterer_Grenzwert", "Unnamed: 13": "Oberer_Grenzwert"})
+    data["Masseinheit"] = units
     data = data[data['Produktmerkmal_Text'].notna()]
     
+
+
     prozesselement = dataAll.iloc[11,2]
     maschine = dataAll.iloc[11,5]
     arbeitsplatz = dataAll.iloc[2,6]
