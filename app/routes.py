@@ -24,17 +24,20 @@ def prediction_results():
         conversionMap = load(open('models//model1//conversionMap.pkl', 'rb'))   #load conversion map of current model
         scaler = load(open('models//model1//scaler.pkl', 'rb')) #load scaler of current model
         predInputFormatted = convertPredDataToDataframe(predictionInput) #take input file, convert into dataframe to be used for predictions
+        probaDict = {}
         for col in outputCols:  #perform prediction for each desired predicted feature
             model = load(gzip.open('models//model1//{}.pkl'.format(col), 'rb')) #load current model
-            singleColResults = createPrediction(model, predInputFormatted, col, conversionMap, scaler) #create predictions for current feature
+            singleColResults, probaTuple = createPrediction(model, predInputFormatted, col, conversionMap, scaler) #create predictions for current feature
             results[col] = singleColResults
+            probaDict[col] = probaTuple
+        #print(probaDict)
         for key, value in results.items():  #add output features to input
             predInputFormatted[key] = value
 
         trainData = pd.read_excel('models//model1//currentTrainData.xlsx')  #open train data to extract all unique values
         unique_values = getUniqueValues(trainData)
         
-        return render_template('prediction_results.html', uniqueVals=unique_values, results=results, featureCount=len(predInputFormatted.index), predictionInput=predInputFormatted.to_dict(orient='records'))
+        return render_template('prediction_results.html', uniqueVals=unique_values, results=results, featureCount=len(predInputFormatted.index), predictionInput=predInputFormatted.to_dict(orient='records'), probaDict=probaDict)
     return  #diese route sollte nie ohne einen POST trigger aufgerufen werden, deswegen hier einfach return atm
 
 @app.route('/prediction_results_confirmed', methods=['GET', 'POST'])

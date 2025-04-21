@@ -64,29 +64,27 @@
                 <!-- Dropdowns für vorhergesagte Werte -->
                 <td>
                     <select name="Prüfmittel">
-                        {% for option in uniqueVals['Prüfmittel'] %}
-                        <option value="{{ option }}" {% if option == results['Prüfmittel'][i] %} selected {% endif %}>
-                            {{ option }}
+                        {% for keyx,valuex in probaDict['Prüfmittel'][i].items() %}
+                        <option value="{{ valuex }}" {% if keyx == results['Prüfmittel'][i] %} selected {% endif %}>
+                            {{ valuex }}
                         </option>
                         {% endfor %}
                     </select>
                 </td>
-        
                 <td>
                     <select name="Stichprobenverfahren">
-                        {% for option in uniqueVals['Stichprobenverfahren'] %}
-                        <option value="{{ option }}" {% if option == results['Stichprobenverfahren'][i] %} selected {% endif %}>
-                            {{ option }}
+                        {% for keyx,valuex in probaDict['Stichprobenverfahren'][i].items() %}
+                        <option value="{{ valuex }}" {% if keyx == results['Stichprobenverfahren'][i] %} selected {% endif %}>
+                            {{ valuex }}
                         </option>
                         {% endfor %}
                     </select>
                 </td>
-        
                 <td>
                     <select name="Lenkungsmethode">
-                        {% for option in uniqueVals['Lenkungsmethode'] %}
-                        <option value="{{ option }}" {% if option == results['Lenkungsmethode'][i] %} selected {% endif %}>
-                            {{ option }}
+                        {% for keyx,valuex in probaDict['Lenkungsmethode'][i].items() %}
+                        <option value="{{ valuex }}" {% if keyx == results['Lenkungsmethode'][i] %} selected {% endif %}>
+                            {{ valuex }}
                         </option>
                         {% endfor %}
                     </select>

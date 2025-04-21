@@ -25,11 +25,6 @@ def createPrediction(model, predData, outputFeature, conversionMap, scaler):
     predData = predData.values.tolist()
     predData = scaler.transform(predData)
     preds = model.predict(predData)
-
-    predProbabilities = model.predict_proba(predData)
-    df = pd.DataFrame(predProbabilities)
-    with pd.ExcelWriter("models//TEST.xlsx") as writer:
-        df.to_excel(writer, index=False)  
     
     predictions_text = []
     for idx, pred in enumerate(preds):
@@ -41,7 +36,21 @@ def createPrediction(model, predData, outputFeature, conversionMap, scaler):
         else:
             predictions_text.append(str(pred))
 
-    return predictions_text
+    predProbabilities = model.predict_proba(predData)
+    probaTuple = []
+    for idx, predTuple in enumerate(predProbabilities):
+        tuple = {}
+        for idx2, proba in enumerate(predProbabilities[idx]):
+            if outputFeature in conversionMap:
+                mapping = conversionMap[outputFeature]
+                for key, val in mapping.items():
+                    if val == idx2+1:
+                        tuple[key] = str(key) + " (" + str(int(round(proba,2)*100)) + "%)"
+            else:
+                print("???")
+        probaTuple.append(tuple)
+
+    return predictions_text, probaTuple
 
 def trainNewModel(trainData, outputFeature): 
     trainData = prepareRawData(trainData)
