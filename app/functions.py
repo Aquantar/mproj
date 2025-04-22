@@ -47,7 +47,6 @@ def createPrediction(model, predData, outputFeature, conversionMap, scaler):
                 for key, val in mapping.items():
                     if val == idx2+1:
                         tuple.append([key, str(key) + " (" + str(int(round(proba,2)*100)) + "%)", proba])
-                        #tuple[key] = str(key) + " (" + str(int(round(proba,2)*100)) + "%)"
             else:
                 print("???")
         probaTuple.append(tuple)

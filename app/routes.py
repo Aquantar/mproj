@@ -7,6 +7,7 @@ from pickle import load, dump
 import shutil
 import os
 import pandas as pd
+import re
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -51,12 +52,14 @@ def prediction_results_confirmed():
         list2 = []
         list3 = []
         for key, value in choicesOutput.items(multi=True):
+            valTrimmed = re.sub(r' \(\d+%\)', '', value)
+            print(valTrimmed)
             if key == "Prüfmittel":
-                list1.append(value)
+                list1.append(valTrimmed)
             if key == "Stichprobenverfahren":
-                list2.append(value)
+                list2.append(valTrimmed)
             if key == "Lenkungsmethode":
-                list3.append(value)
+                list3.append(valTrimmed)
         predictionOutput = predInputFormatted
         predictionOutput['Prüfmittel'] = list1
         predictionOutput['Stichprobenverfahren'] = list2
