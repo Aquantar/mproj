@@ -8,7 +8,7 @@ import shutil
 import os
 import pandas as pd
 import re
-from flask_httpauth import HTTPBasicAuth
+"""from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
 
 auth = HTTPBasicAuth()
@@ -25,7 +25,7 @@ def verify_password(username, password):
 @app.route('/monitoring', methods=['GET', 'POST'])
 @auth.login_required
 def monitoring():
-    return render_template('monitoring.html')
+    return render_template('monitoring.html')"""
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -179,7 +179,7 @@ def model_training():
 
         return render_template("monitoring.html", accuracyData=accuracyData, modelIDs=modelIDs)
     return  #diese route wird aktuell nie ohne einen POST trigger aufgerufen, deswegen hier einfach return atm
-"""
+
 @app.route('/monitoring', methods=['GET', 'POST'])
 def monitoring():
     if request.method == 'POST':
@@ -195,7 +195,7 @@ def monitoring():
 
         return render_template("monitoring.html", accuracyData=accuracyData, modelIDs=modelIDs)
     return render_template("monitoring.html", accuracyData=[])
-    """
+    
 @app.route('/stasheddata', methods=['GET', 'POST'])
 def stasheddata():
     file_path = os.path.join("models", "stashedTrainData.xlsx")
