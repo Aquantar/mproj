@@ -8,10 +8,14 @@ import shutil
 import os
 import pandas as pd
 import re
-"""from flask_httpauth import HTTPBasicAuth
+from flask import flash, session
+from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
 
+app.secret_key = "dein_geheimer_schluessel"  # Für Flash-Nachrichten
+
 auth = HTTPBasicAuth()
+
 users = {
     "admin": generate_password_hash("meinpasswort", method='pbkdf2:sha256')
 }
@@ -22,10 +26,49 @@ def verify_password(username, password):
         return username
     return None
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if verify_password(username, password):
+            session['user'] = username
+            return redirect(url_for('monitoring'))
+        else:
+            flash("Falscher Benutzername oder Passwort. Bitte versuchen Sie es erneut.")
+            return redirect(url_for('login'))
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return render_template('logout.html')
+
+
 @app.route('/monitoring', methods=['GET', 'POST'])
-@auth.login_required
 def monitoring():
-    return render_template('monitoring.html')"""
+    if 'user' not in session:
+        return redirect(url_for('login'))
+
+    accuracyData = [[], [], []]
+    modelIDs = []
+
+    if request.method == 'POST':
+        try:
+            import pandas as pd
+            modelMetrics = pd.read_excel('models/modelData.xlsx')
+            accuracyData_1 = [float(i) for i in modelMetrics['accuracy_1'].tolist()]
+            accuracyData_2 = [float(i) for i in modelMetrics['accuracy_2'].tolist()]
+            accuracyData_3 = [float(i) for i in modelMetrics['accuracy_3'].tolist()]
+            accuracyData.append(accuracyData_1)
+            accuracyData.append(accuracyData_2)
+            accuracyData.append(accuracyData_3)
+            modelIDs = modelMetrics['modelID'].tolist()
+        except Exception as e:
+            print(f"Fehler beim Laden der Modelldaten: {e}")
+
+    return render_template("monitoring.html", accuracyData=accuracyData, modelIDs=modelIDs)
+
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -179,7 +222,7 @@ def model_training():
 
         return render_template("monitoring.html", accuracyData=accuracyData, modelIDs=modelIDs)
     return  #diese route wird aktuell nie ohne einen POST trigger aufgerufen, deswegen hier einfach return atm
-
+'''
 @app.route('/monitoring', methods=['GET', 'POST'])
 def monitoring():
     if request.method == 'POST':
@@ -195,7 +238,7 @@ def monitoring():
 
         return render_template("monitoring.html", accuracyData=accuracyData, modelIDs=modelIDs)
     return render_template("monitoring.html", accuracyData=[])
-    
+    '''
 @app.route('/stasheddata', methods=['GET', 'POST'])
 def stasheddata():
     file_path = os.path.join("models", "stashedTrainData.xlsx")

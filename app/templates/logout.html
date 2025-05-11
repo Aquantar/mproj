@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abmeldung - Model Monitoring</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 400px;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .container h1 {
+            margin-bottom: 30px;
+            color: #333;
+        }
+        .styled-button {
+            display: inline-block;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background-color: #005A8C;
+            border: 1px solid #005A8C;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 90, 140, 0.3);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .styled-button:hover {
+            background-color: #003b5c;
+            box-shadow: 0 8px 20px rgba(0, 58, 92, 0.6), 0 0 15px rgba(0, 90, 140, 0.8);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Abmeldung</h1>
+        <p>Sie wurden erfolgreich abgemeldet.</p>
+        <a href="/login"><button class="styled-button">Zurück zum Login</button></a>
+    </div>
+</body>
+</html>
