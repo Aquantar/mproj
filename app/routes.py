@@ -277,9 +277,26 @@ def stasheddata():
         # NaN-Werte ersetzen
         df = df.fillna("--")
 
+        df['Aktion'] = df.index.map(
+            lambda i: f'<form action="/delete_row" method="post" style="display:inline;"><input type="hidden" name="row_index" value="{i}"><button type="submit" style="padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin: 10px;">Löschen</button></form>'
+        )
+
         # HTML-kompatible Tabelle generieren
-        table_html = df.to_html(classes='table table-striped', index=False)
+        table_html = df.to_html(classes='table table-striped', index=False, escape=False)
         return render_template("stasheddata.html", data=table_html, error=None)
 
+    except Exception as e:
+        return render_template("stasheddata.html", data=None, error=str(e))
+    
+@app.route('/delete_row', methods=['POST'])
+def delete_row():
+    row_index = int(request.form['row_index'])
+    file_path = os.path.join("models", "stashedTrainData.xlsx")
+
+    try:
+        df = pd.read_excel(file_path, header=0, dtype=str)
+        df = df.drop(index=row_index)
+        df.to_excel(file_path, index=False)
+        return redirect(url_for('stasheddata'))
     except Exception as e:
         return render_template("stasheddata.html", data=None, error=str(e))

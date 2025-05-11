@@ -27,16 +27,22 @@
             background: #fff;
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
+            table-layout: auto;
         }
+
         th, td {
             padding: 12px;
             border: 1px solid #ddd;
             text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
         }
         th {
             background-color: #007BFF;
@@ -52,6 +58,7 @@
     <div class="container">
         <h1>Administration</h1>
         <p>Hier werden Daten-Tupel angezeigt, die noch nicht in das Modelltraining aufgenommen wurden</p>
+        <p>Nach der Prüfung dieser Tupel kann das Training eines neuen Modells unten angestoßen werden</p>
 
         <div class="data-box">
             {% if error %}
@@ -63,5 +70,25 @@
             {% endif %}
         </div>
     </div>
+
+    <!-- Buttons außerhalb der Box -->
+    <div class="button-container">
+        <!-- Re-Train Models Button -->
+        <form action="/model_training" method="POST" style="display:inline;">
+            <input type="submit" value="Neue Modelle trainieren" style="
+                padding: 10px 20px;
+                background-color: #007BFF;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+                margin: 10px;
+            ">
+        </form>
+    </div>
+
+    <br><br>
+
 </body>
 </html>

@@ -114,14 +114,6 @@
         <canvas id="accuracyChart" width="800" height="400"></canvas>
     </div>
 
-    <!-- Buttons außerhalb der Box -->
-    <div class="button-container">
-        <!-- Re-Train Models Button -->
-        <form action="/model_training" method="POST" style="display:inline;">
-            <input type="submit" value="Neue Modelle trainieren">
-        </form>
-    </div>
-
     <!-- Modal Fenster mit Tabelle -->
     <div id="detailModal" class="modal">
         <div class="modal-content">
@@ -256,7 +248,7 @@
             });
         }
     </script>
-    <button onclick="window.location.href='/stasheddata'">Neue Tupel verwalten</button>
+    <button onclick="window.location.href='/stasheddata'">Neue Daten verwalten</button>
     <br>
     <button onclick="window.location.href='/index'">Zurück</button>
 
