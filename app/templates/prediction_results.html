@@ -122,7 +122,7 @@
                     ">
                         {% for tuple in probaDict['Lenkungsmethode'][i] %}
                         <option value="{{ tuple[1] }}" {% if tuple[0] == results['Lenkungsmethode'][i] %} selected {% endif %}>
-                            {{ tuple[1] }}
+                            {{ tuple[3] }}
                         </option>
                         {% endfor %}
                     </select>

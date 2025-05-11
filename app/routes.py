@@ -69,7 +69,6 @@ def monitoring():
 
     return render_template("monitoring.html", accuracyData=accuracyData, modelIDs=modelIDs)
 
-
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
