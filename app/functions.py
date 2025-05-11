@@ -36,6 +36,10 @@ def createPrediction(model, predData, outputFeature, conversionMap, scaler):
         else:
             predictions_text.append(str(pred))
 
+    #prepare mapping for Lenkungsmethode
+    if outputFeature == "Lenkungsmethode":
+        mappingFrame = pd.read_excel('data//controlMethod_mappingInfo.xlsx')
+
     #create probabilityList
     predProbabilities = model.predict_proba(predData)
     probaTuple = []
@@ -46,7 +50,14 @@ def createPrediction(model, predData, outputFeature, conversionMap, scaler):
                 mapping = conversionMap[outputFeature]
                 for key, val in mapping.items():
                     if val == idx2+1:
-                        tuple.append([key, str(key) + " (" + str(int(round(proba,2)*100)) + "%)", proba])
+                        if outputFeature != "Lenkungsmethode":
+                            tuple.append([key, str(key) + " (" + str(int(round(proba,2)*100)) + "%)", proba,""])
+                        else:
+                            desc = mappingFrame.loc[mappingFrame['Lenkungsmethode'] == int(float(key)), 'Beschreibung']
+                            if len(desc) > 0:
+                                tuple.append([key, str(key) + " (" + str(int(round(proba,2)*100)) + "%)", proba, desc.item() + " (" + str(int(float(key))) + ")" + " (" + str(int(round(proba,2)*100)) + "%)"])
+                            else:
+                                tuple.append([key, str(key) + " (" + str(int(round(proba,2)*100)) + "%)", proba, str(int(float(key))) + " (" + str(int(round(proba,2)*100)) + "%)"])
             else:
                 print("???")
         probaTuple.append(tuple)
@@ -94,9 +105,24 @@ def trainNewModel(trainData, outputFeature):
     X_train = scaler.transform(X_train)
     X_test = scaler.transform(X_test)
     
-    res = randomForest(X_train, X_test, y_train, y_test)
+    modelDict = {}
 
-    print("Accuracy for " + str(outputFeature) + ": " + str(res[2]))       
+    modelDict["RF"] = randomForest(X_train, X_test, y_train, y_test)
+    print("Accuracy for " + str(outputFeature) + " (RF): " + str(modelDict["RF"][2]))   
+    modelDict["KNN"] = knn(X_train, X_test, y_train, y_test)
+    print("Accuracy for " + str(outputFeature) + " (KNN): " + str(modelDict["KNN"][2]))      
+    modelDict["SVM"] = svm(X_train, X_test, y_train, y_test)
+    print("Accuracy for " + str(outputFeature) + " (SVM): " + str(modelDict["SVM"][2]))  
+    modelDict["MLP"] = neuralNetwork(X_train, X_test, y_train, y_test)
+    print("Accuracy for " + str(outputFeature) + " (MLP): " + str(modelDict["MLP"][2]))  
+
+    keySelected = "RF"
+    for key, value in modelDict.items():
+        if value[2] > modelDict[keySelected][2]:
+            keySelected = key
+    
+    print("Selected model: " + str(keySelected))
+    res = modelDict[keySelected]   
 
     return res[0], scaler, conversionMap, res[2]
 
@@ -105,6 +131,63 @@ def randomForest(X_train, X_test, y_train, y_test):
     from sklearn.metrics import accuracy_score
 
     model = RandomForestClassifier(criterion='entropy')
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+
+    return model, y_pred, accuracy
+
+def knn(X_train, X_test, y_train, y_test):
+    from sklearn.neighbors import KNeighborsClassifier
+    from sklearn.metrics import accuracy_score
+    from sklearn.model_selection import GridSearchCV
+
+    param_grid = {'n_neighbors': [4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52],  
+                'weights': ['uniform', 'distance']}
+    grid = GridSearchCV(KNeighborsClassifier(), param_grid, refit = True, verbose = 3,n_jobs=-1) 
+    grid.fit(X_train, y_train) 
+
+    model = KNeighborsClassifier(n_neighbors=grid.best_params_["n_neighbors"], weights=grid.best_params_["weights"], algorithm="ball_tree")
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+
+    return model, y_pred, accuracy
+
+def svm(X_train, X_test, y_train, y_test):
+    from sklearn.svm import SVC
+    from sklearn.metrics import accuracy_score
+    from sklearn.model_selection import GridSearchCV
+    #from sklearn.multiclass import OneVsOneClassifier
+
+    param_grid = {'C': [4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52]}
+    grid = GridSearchCV(SVC(), param_grid, refit = True, verbose = 3,n_jobs=-1) 
+    grid.fit(X_train, y_train) 
+
+    model = SVC(C=grid.best_params_["C"])
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+
+    return model, y_pred, accuracy
+
+def neuralNetwork(X_train, X_test, y_train, y_test):
+    from sklearn.neural_network import MLPClassifier
+    from sklearn.metrics import accuracy_score
+    from sklearn.model_selection import GridSearchCV
+    import numpy as np
+
+    param_grid = {'solver': ['adam'],
+        'max_iter': [2000],
+        'alpha': 10.0 ** -np.arange(1, 7),
+        'hidden_layer_sizes': [(15,)],
+        'random_state': [1]
+        }
+    
+    grid = GridSearchCV(MLPClassifier(), param_grid, refit = True, verbose = 3,n_jobs=-1) 
+    grid.fit(X_train, y_train) 
+
+    model = MLPClassifier(solver=grid.best_params_["solver"], max_iter=grid.best_params_["max_iter"], alpha=grid.best_params_["alpha"], hidden_layer_sizes=grid.best_params_["hidden_layer_sizes"], random_state=grid.best_params_["random_state"])
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)

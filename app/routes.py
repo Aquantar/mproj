@@ -126,6 +126,28 @@ def prediction_results_confirmed():
         predictionOutput['Stichprobenverfahren'] = list2
         predictionOutput['Lenkungsmethode'] = list3
 
+        #check differences in pre and post human monitoring, and document
+        outputDictTemp = {}
+        outputDictTemp['Prüfmittel'] = list1
+        outputDictTemp['Stichprobenverfahren'] = list2
+        outputDictTemp['Lenkungsmethode'] = list3
+        totalVals = 0
+        diffSelection = 0
+        for key, item in outputDictTemp.items():
+            listPre = results[key]
+            listPost = outputDictTemp[key]
+            totalVals = totalVals + len(listPre)
+            for idx, val in enumerate(listPre):
+                if listPre[idx] != listPost[idx]:
+                    diffSelection+=1
+        modelMetrics = pd.read_excel('models//modelData.xlsx')
+        lastrow = modelMetrics.iloc[-1].tolist()
+        lastrow[5] = int(lastrow[5]) + totalVals
+        lastrow[6] = int(lastrow[6]) + diffSelection
+        lastrow[7] = lastrow[6]/lastrow[5]
+        modelMetrics.iloc[-1] = lastrow
+        modelMetrics.to_excel("models//modelData.xlsx", index=False)
+
         #update stashedTrainData with new rows
         trainData = pd.read_excel('models//model1//currentTrainData.xlsx')
         trainData = trainData.astype(str)
@@ -207,7 +229,7 @@ def model_training():
         modelMetrics = pd.read_excel('models//modelData.xlsx')
         modelID = len(modelMetrics)+1
         from datetime import datetime
-        newrow = [modelID, datetime.today().strftime('%Y-%m-%d'), accuracyList[0], accuracyList[1], accuracyList[2]]
+        newrow = [modelID, datetime.today().strftime('%Y-%m-%d'), accuracyList[0], accuracyList[1], accuracyList[2],0,0,0]
         modelMetrics.loc[len(modelMetrics)] = newrow
         modelMetrics.to_excel("models//modelData.xlsx", index=False)
 
