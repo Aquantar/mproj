@@ -107,6 +107,24 @@
             <p>Der Chart zeigt die Genauigkeit trainierter Modelle im Zeitverlauf</p>
             <p>Weiterhin kann ein neues Modell trainiert werden. In diesem Prozess werden neue Tupel, die noch nicht in das Training aufgenommen wurden, mit dem bestehenden Trainings-Set kombiniert</p>
         </div>
+        <!-- Prediction Summary Table -->
+        <table style="margin: 0 auto; margin-bottom: 20px; border-collapse: collapse; width: 60%;">
+            <thead>
+            <p>Aktuelle Modell-Metrik</p>
+                <tr style="background-color: #f4f4f4;">
+                    <th>Anzahl Vorhersagen</th>
+                    <th>Vorhersagen angepasst</th>
+                    <th>Anpassungs-Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ predictionStats.totalPredictions }}</td>
+                    <td>{{ predictionStats.predictionChanged }}</td>
+                    <td>{{ predictionStats.predictionChangeRatio }}</td>
+                </tr>
+            </tbody>
+        </table>
         <button id="calculateAccuracy">Accuracy berechnen</button>
         <div class="result" id="accuracyResult">
             <!-- Das Ergebnis wird hier angezeigt -->

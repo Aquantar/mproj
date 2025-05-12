@@ -52,22 +52,34 @@ def monitoring():
 
     accuracyData = [[], [], []]
     modelIDs = []
+    predictionStats = {}  # New dictionary to store values
 
-    if request.method == 'POST':
-        try:
-            import pandas as pd
-            modelMetrics = pd.read_excel('models/modelData.xlsx')
-            accuracyData_1 = [float(i) for i in modelMetrics['accuracy_1'].tolist()]
-            accuracyData_2 = [float(i) for i in modelMetrics['accuracy_2'].tolist()]
-            accuracyData_3 = [float(i) for i in modelMetrics['accuracy_3'].tolist()]
-            accuracyData.append(accuracyData_1)
-            accuracyData.append(accuracyData_2)
-            accuracyData.append(accuracyData_3)
-            modelIDs = modelMetrics['modelID'].tolist()
-        except Exception as e:
-            print(f"Fehler beim Laden der Modelldaten: {e}")
+    #if request.method == 'POST':
+    try:
+        import pandas as pd
+        modelMetrics = pd.read_excel('models/modelData.xlsx')
 
-    return render_template("monitoring.html", accuracyData=accuracyData, modelIDs=modelIDs)
+        accuracyData_1 = [float(i) for i in modelMetrics['accuracy_1'].tolist()]
+        accuracyData_2 = [float(i) for i in modelMetrics['accuracy_2'].tolist()]
+        accuracyData_3 = [float(i) for i in modelMetrics['accuracy_3'].tolist()]
+        accuracyData = [accuracyData_1, accuracyData_2, accuracyData_3]
+
+        modelIDs = modelMetrics['modelID'].tolist()
+
+        # Extract last row for prediction stats
+        last_row = modelMetrics.iloc[-1]
+        predictionStats = {
+            'totalPredictions': int(last_row['totalPredictions']),
+            'predictionChanged': int(last_row['predictionChanged']),
+            'predictionChangeRatio': f"{float(last_row['predictionChangeRatio']) * 100:.2f}%"
+        }
+
+        print(predictionStats)
+
+    except Exception as e:
+        print(f"Fehler beim Laden der Modelldaten: {e}")
+
+    return render_template("monitoring.html", accuracyData=accuracyData, modelIDs=modelIDs, predictionStats=predictionStats)
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
