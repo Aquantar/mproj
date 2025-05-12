@@ -205,56 +205,78 @@ def model_training():
     global outputCols
     if request.method == 'POST':
         import gzip
-
-        dir1 = 'models//model1'
-        dir2 = 'models//model2'
-        dir3 = 'models//model3'
-
-        for fileName in os.listdir(dir2):
-            shutil.copy(os.path.join(dir2, fileName), dir3)
-
-        for fileName in os.listdir(dir1):
-            shutil.copy(os.path.join(dir1, fileName), dir2)
-
-        #get both current train data and stashed rows, and combine them
-        trainData = pd.read_excel('models//model1//currentTrainData.xlsx')
-        trainDataNew = pd.read_excel('models//stashedTrainData.xlsx')
-        trainData = pd.concat([trainData, trainDataNew])
-        trainData = trainData.dropna(how="all")
-
-        #train new models, and create files
-        accuracyList = []
-        for col in outputCols:
-            model, scaler, conversionMap, accuracy = trainNewModel(trainData, col)                                                                                              
-            dump(model, gzip.open('models//model1//{}.pkl'.format(col), 'wb'))
-            dump(scaler, open('models//model1//scaler.pkl', 'wb'))
-            dump(conversionMap, open('models//model1//conversionMap.pkl', 'wb'))
-            accuracyList.append(accuracy)
-
-        #export train data
-        trainData.to_excel("models//model1//currentTrainData.xlsx", index=False) 
-        stashedTrainingDataOverride = pd.DataFrame(columns=list(trainData.columns.values))
-        stashedTrainingDataOverride.to_excel("models//stashedTrainData.xlsx", index=False)
-
-        #update and export model metrics
-        modelMetrics = pd.read_excel('models//modelData.xlsx')
-        modelID = len(modelMetrics)+1
         from datetime import datetime
-        newrow = [modelID, datetime.today().strftime('%Y-%m-%d'), accuracyList[0], accuracyList[1], accuracyList[2],0,0,0]
-        modelMetrics.loc[len(modelMetrics)] = newrow
-        modelMetrics.to_excel("models//modelData.xlsx", index=False)
 
-        accuracyData = []
-        accuracyData_1 = [float(i) for i in modelMetrics['accuracy_1'].tolist()]
-        accuracyData_2 = [float(i) for i in modelMetrics['accuracy_2'].tolist()]
-        accuracyData_3 = [float(i) for i in modelMetrics['accuracy_3'].tolist()]
-        accuracyData.append(accuracyData_1)
-        accuracyData.append(accuracyData_2)
-        accuracyData.append(accuracyData_3)
-        modelIDs = modelMetrics['modelID'].tolist()
+        try:
+            # Pfade für die Modellordner
+            dir1 = 'models//model1'
+            dir2 = 'models//model2'
+            dir3 = 'models//model3'
 
-        return render_template("monitoring.html", accuracyData=accuracyData, modelIDs=modelIDs)
-    return  #diese route wird aktuell nie ohne einen POST trigger aufgerufen, deswegen hier einfach return atm
+            # Alte Modelle verschieben (Versionierung)
+            for fileName in os.listdir(dir2):
+                shutil.copy(os.path.join(dir2, fileName), dir3)
+
+            for fileName in os.listdir(dir1):
+                shutil.copy(os.path.join(dir1, fileName), dir2)
+
+            # Trainingsdaten kombinieren
+            trainData = pd.read_excel('models//model1//currentTrainData.xlsx')
+            trainDataNew = pd.read_excel('models//stashedTrainData.xlsx')
+            trainData = pd.concat([trainData, trainDataNew]).dropna(how="all")
+
+            # Training neuer Modelle
+            accuracyList = []
+            progress = 0
+            total_steps = len(outputCols) + 2  # Anzahl der Spalten + 2 für Preprocessing und Metrics
+
+            # Schritt 1: Preprocessing Fortschritt
+            progress += 1
+            print(f"Preprocessing abgeschlossen ({progress}/{total_steps})")
+
+            # Trainiere Modelle für jede Ausgabespalte
+            for col in outputCols:
+                model, scaler, conversionMap, accuracy = trainNewModel(trainData, col)
+                dump(model, gzip.open(f'models//model1//{col}.pkl', 'wb'))
+                dump(scaler, open('models//model1//scaler.pkl', 'wb'))
+                dump(conversionMap, open('models//model1//conversionMap.pkl', 'wb'))
+                accuracyList.append(accuracy)
+
+                # Fortschritt aktualisieren
+                progress += 1
+                print(f"Modell für '{col}' trainiert ({progress}/{total_steps})")
+
+            # Trainingsdaten exportieren
+            trainData.to_excel("models//model1//currentTrainData.xlsx", index=False)
+            pd.DataFrame(columns=list(trainData.columns.values)).to_excel("models//stashedTrainData.xlsx", index=False)
+
+            # Modellmetriken aktualisieren
+            modelMetrics = pd.read_excel('models//modelData.xlsx')
+            modelID = len(modelMetrics) + 1
+            newrow = [modelID, datetime.today().strftime('%Y-%m-%d')] + accuracyList + [0, 0, 0]
+            modelMetrics.loc[len(modelMetrics)] = newrow
+            modelMetrics.to_excel("models//modelData.xlsx", index=False)
+
+            # Fortschritt finalisieren
+            progress += 1
+            print(f"Modellmetriken aktualisiert ({progress}/{total_steps})")
+
+            # Aktuelle Metriken für Monitoring laden
+            accuracyData = [
+                [float(i) for i in modelMetrics['accuracy_1'].tolist()],
+                [float(i) for i in modelMetrics['accuracy_2'].tolist()],
+                [float(i) for i in modelMetrics['accuracy_3'].tolist()]
+            ]
+            modelIDs = modelMetrics['modelID'].tolist()
+
+            # Rückgabe des Monitorings
+            return render_template("monitoring.html", accuracyData=accuracyData, modelIDs=modelIDs)
+
+        except Exception as e:
+            print(f"Fehler beim Modelltraining: {e}")
+            flash(f"Fehler beim Modelltraining: {e}")
+            return redirect(url_for('stasheddata'))
+    return redirect(url_for('stasheddata'))
 '''
 @app.route('/monitoring', methods=['GET', 'POST'])
 def monitoring():

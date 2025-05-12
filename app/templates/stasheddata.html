@@ -42,6 +42,39 @@
             transition: width 0.5s ease-out;
         }
 
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+        }
+
+        .popup h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .popup p {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #555;
+        }
+
         th, td {
             padding: 12px;
             border: 1px solid #ddd;
@@ -80,6 +113,7 @@
             transition: all 0.3s ease;
             margin-bottom: 20px;
             margin-top: 10px;
+            width: auto;
         }
 
         .styled-button:hover {
@@ -95,9 +129,22 @@
         <p>Hier werden Daten-Tupel angezeigt, die noch nicht in das Modelltraining aufgenommen wurden</p>
         <p>Nach der Prüfung dieser Tupel kann das Training eines neuen Modells unten angestoßen werden</p>
 
-        <!-- Ladebalken -->
+        <!-- Ladebalken für Datenladen -->
         <div class="loading-bar-container" id="loading-bar-container">
             <div class="loading-bar" id="loading-bar"></div>
+        </div>
+
+        <!-- Ladebalken für Modelltraining -->
+        <div class="loading-bar-container" id="training-loading-bar-container" style="display:none;">
+            <div class="loading-bar" id="training-loading-bar"></div>
+        </div>
+
+        <!-- Popup für Trainingsnachricht -->
+        <div class="popup-overlay" id="popup-overlay">
+            <div class="popup">
+                <h2>Modelltraining läuft...</h2>
+                <p>Bitte führen Sie während des Modelltrainings keine weiteren Aktionen durch.<br> Dies kann einige Minuten dauern.</p>
+            </div>
         </div>
 
         <div class="data-box" id="data-box" style="display:none;">
@@ -111,57 +158,68 @@
         </div>
 
         <div class="button-container">
-            <form action="/model_training" method="POST" style="display:inline;">
+            <!-- Trainings-Button mit Ladebalken -->
+            <form action="/model_training" method="POST" onsubmit="startTrainingLoadingBar()">
                 <button type="submit" class="styled-button">Neue Modelle trainieren</button>
             </form>
+
+            <form action="/manage_models" method="GET" style="display:inline;">
+                <button type="submit" class="styled-button">Modelle verwalten</button>
+            </form>
+
             <button onclick="window.location.href='/index'" class="styled-button">Zurück zur Startseite</button>
         </div>
     </div>
 
-    <!-- Manage Models Button -->
-    <form action="/manage_models" method="GET" style="display:inline;">
-        <input type="submit" value="Modelle verwalten" style="
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 10px;
-        ">
-    </form>
-
     <script>
-        // Simuliert den Ladeprozess
+        // Ladebalken für das Datenladen (beim Seitenaufruf)
         window.addEventListener('load', function() {
             const loadingBarContainer = document.getElementById('loading-bar-container');
             const loadingBar = document.getElementById('loading-bar');
             const dataBox = document.getElementById('data-box');
             const rowCount = {{ row_count }};
             
-            // Ladebalken anzeigen, wenn Daten vorhanden sind
             if (rowCount > 0) {
                 loadingBarContainer.style.display = 'block';
                 let progress = 0;
-                let step = Math.max(1, Math.round(100 / rowCount));  // Schrittgröße basierend auf der Anzahl der Zeilen
+                let step = Math.max(1, Math.round(100 / rowCount));
 
                 const interval = setInterval(() => {
                     progress += step;
                     loadingBar.style.width = Math.min(progress, 100) + '%';
                     
-                    // Beenden, wenn voll
                     if (progress >= 100) {
                         clearInterval(interval);
                         loadingBarContainer.style.display = 'none';
                         dataBox.style.display = 'block';
                     }
-                }, 50);  // Geschwindigkeit des Fortschrittsbalkens
+                }, 50);
             } else {
-                // Direkt anzeigen, wenn keine Daten vorhanden
                 dataBox.style.display = 'block';
             }
         });
+
+        // Ladebalken und Popup für das Modelltraining (beim Button-Klick)
+        function startTrainingLoadingBar() {
+            const trainingBarContainer = document.getElementById('training-loading-bar-container');
+            const trainingBar = document.getElementById('training-loading-bar');
+            const popupOverlay = document.getElementById('popup-overlay');
+
+            // Popup und Ladebalken anzeigen
+            popupOverlay.style.display = 'flex';
+            trainingBarContainer.style.display = 'block';
+            let progress = 0;
+
+            const interval = setInterval(() => {
+                progress += 5;
+                trainingBar.style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    popupOverlay.style.display = 'none';
+                }
+            }, 200);
+        }
     </script>
 </body>
 </html>
