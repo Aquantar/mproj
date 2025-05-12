@@ -3,38 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Model Monitoring</title>
+    <title>Administration - Model Monitoring</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
         .container {
             max-width: 1800px;
             margin: 50px auto;
             background: white;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
+
         .data-box {
             margin-top: 20px;
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 15px;
             background: #fff;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
 
-        table {
+        .loading-bar-container {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            table-layout: auto;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .loading-bar {
+            width: 0;
+            height: 20px;
+            background-color: #007BFF;
+            border-radius: 8px;
+            transition: width 0.5s ease-out;
         }
 
         th, td {
@@ -44,13 +49,43 @@
             white-space: nowrap;
             overflow: hidden;
         }
+
         th {
             background-color: #007BFF;
             color: white;
         }
+
         .error {
-            color: red;
+            color: #b30000;
             font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .button-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .styled-button {
+            display: inline-block;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background-color: #005A8C;
+            border: 1px solid #005A8C;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 90, 140, 0.3);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+
+        .styled-button:hover {
+            background-color: #003b5c;
+            box-shadow: 0 8px 20px rgba(0, 58, 92, 0.6), 0 0 15px rgba(0, 90, 140, 0.8);
+            transform: translateY(-3px);
         }
     </style>
 </head>
@@ -60,7 +95,12 @@
         <p>Hier werden Daten-Tupel angezeigt, die noch nicht in das Modelltraining aufgenommen wurden</p>
         <p>Nach der Prüfung dieser Tupel kann das Training eines neuen Modells unten angestoßen werden</p>
 
-        <div class="data-box">
+        <!-- Ladebalken -->
+        <div class="loading-bar-container" id="loading-bar-container">
+            <div class="loading-bar" id="loading-bar"></div>
+        </div>
+
+        <div class="data-box" id="data-box" style="display:none;">
             {% if error %}
                 <p class="error">{{ error }}</p>
             {% elif data %}
@@ -69,26 +109,45 @@
                 <p class="error">Keine Daten vorhanden</p>
             {% endif %}
         </div>
+
+        <div class="button-container">
+            <form action="/model_training" method="POST" style="display:inline;">
+                <button type="submit" class="styled-button">Neue Modelle trainieren</button>
+            </form>
+            <button onclick="window.location.href='/index'" class="styled-button">Zurück zur Startseite</button>
+        </div>
     </div>
 
-    <!-- Buttons außerhalb der Box -->
-    <div class="button-container">
-        <!-- Re-Train Models Button -->
-        <form action="/model_training" method="POST" style="display:inline;">
-            <input type="submit" value="Neue Modelle trainieren" style="
-                padding: 10px 20px;
-                background-color: #007BFF;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                font-size: 16px;
-                margin: 10px;
-            ">
-        </form>
-    </div>
+    <script>
+        // Simuliert den Ladeprozess
+        window.addEventListener('load', function() {
+            const loadingBarContainer = document.getElementById('loading-bar-container');
+            const loadingBar = document.getElementById('loading-bar');
+            const dataBox = document.getElementById('data-box');
+            const rowCount = {{ row_count }};
+            
+            // Ladebalken anzeigen, wenn Daten vorhanden sind
+            if (rowCount > 0) {
+                loadingBarContainer.style.display = 'block';
+                let progress = 0;
+                let step = Math.max(1, Math.round(100 / rowCount));  // Schrittgröße basierend auf der Anzahl der Zeilen
 
-    <br><br>
-
+                const interval = setInterval(() => {
+                    progress += step;
+                    loadingBar.style.width = Math.min(progress, 100) + '%';
+                    
+                    // Beenden, wenn voll
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        loadingBarContainer.style.display = 'none';
+                        dataBox.style.display = 'block';
+                    }
+                }, 50);  // Geschwindigkeit des Fortschrittsbalkens
+            } else {
+                // Direkt anzeigen, wenn keine Daten vorhanden
+                dataBox.style.display = 'block';
+            }
+        });
+    </script>
 </body>
 </html>

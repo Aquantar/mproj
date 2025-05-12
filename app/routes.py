@@ -266,27 +266,29 @@ def stasheddata():
 
     # Prüfen, ob Datei existiert
     if not os.path.exists(file_path):
-        return render_template("stasheddata.html", data=None, error="Datei nicht gefunden")
+        return render_template("stasheddata.html", data=None, error="Datei nicht gefunden", row_count=0)
 
     try:
         df = pd.read_excel(file_path, header=0, dtype=str)  # Alle Werte als Strings für Konsistenz
         
         if df.empty:
-            return render_template("stasheddata.html", data=None, error="Die Datei ist leer")
+            return render_template("stasheddata.html", data=None, error="Die Datei ist leer", row_count=0)
         
         # NaN-Werte ersetzen
         df = df.fillna("--")
 
+        # Zeilenanzahl für Ladebalken ermitteln
+        row_count = len(df)
+
+        # HTML-kompatible Tabelle generieren
         df['Aktion'] = df.index.map(
             lambda i: f'<form action="/delete_row" method="post" style="display:inline;"><input type="hidden" name="row_index" value="{i}"><button type="submit" style="padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin: 10px;">Löschen</button></form>'
         )
-
-        # HTML-kompatible Tabelle generieren
         table_html = df.to_html(classes='table table-striped', index=False, escape=False)
-        return render_template("stasheddata.html", data=table_html, error=None)
+        return render_template("stasheddata.html", data=table_html, error=None, row_count=row_count)
 
     except Exception as e:
-        return render_template("stasheddata.html", data=None, error=str(e))
+        return render_template("stasheddata.html", data=None, error=str(e), row_count=0)
     
 @app.route('/delete_row', methods=['POST'])
 def delete_row():
