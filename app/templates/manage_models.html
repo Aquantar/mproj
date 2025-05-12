@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelle verwalten</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .data-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            table-layout: auto;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            white-space: nowrap;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Modelle verwalten</h1>
+        <p>Hier sehen Sie die letzten drei trainierten Modelle mit ihren Leistungskennzahlen</p>
+        <p style="color: #dc3545; font-weight: bold;">⚠️ Hinweis: Das Wiederherstellen eines Back-Up Modells ersetzt das aktuelle Modell dauerhaft</p>
+
+        <div class="data-box">
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% elif models %}
+                {{ models|safe }}
+            {% else %}
+                <p class="error">Keine Modelldaten gefunden</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

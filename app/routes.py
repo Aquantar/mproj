@@ -302,3 +302,92 @@ def delete_row():
         return redirect(url_for('stasheddata'))
     except Exception as e:
         return render_template("stasheddata.html", data=None, error=str(e))
+    
+@app.route('/manage_models', methods=['GET'])
+def manage_models():
+    file_path = os.path.join("models", "modelData.xlsx")
+
+    if not os.path.exists(file_path):
+        return render_template("manage_models.html", models=None, error="Datei modelData.xlsx nicht gefunden")
+
+    try:
+        df = pd.read_excel(file_path, header=0, dtype=str)
+
+        if df.empty:
+            return render_template("manage_models.html", models=None, error="Die Datei ist leer")
+
+        # Only keep the last 3 rows (most recent models)
+        df = df.tail(3).reset_index(drop=True)
+
+        # Convert accuracy and ratio columns to whole-number percentages
+        for col in ['accuracy_1', 'accuracy_2', 'accuracy_3', 'predictionChangeRatio']:
+            if col in df.columns:
+                df[col] = df[col].astype(float).map(lambda x: f"{round(x * 100)}%")
+
+        # Add action buttons to backup models only (not model1)
+        df['Aktion'] = df['modelID'].map(lambda model_id: (
+            "" if str(model_id) == "1" else
+            f'''<form action="/reset_model" method="post" onsubmit="return confirm('Achtung: Diese Aktion kann nicht rückgängig gemacht werden. Fortfahren?');"><input type="hidden" name="model_id" value="{model_id}"><button type="submit" style="padding:6px 15px; background-color:#dc3545; color:white; border:none; border-radius:4px; cursor:pointer;">Wiederherstellen</button></form>'''
+        ))
+
+        # Rename columns for German UI labels
+        df.columns = [
+            "Modell-ID", "Trainingsdatum", "Genauigkeit Prüfmittel", "Genauigkeit Stichprobenverfahren",
+            "Genauigkeit Lenkungsmethode", "Gesamtanzahl Vorhersagen", "Angepasste Vorhersagen",
+            "Änderungsquote", "Aktion"
+        ]
+
+        # Convert to HTML table
+        models_table = df.to_html(classes='table table-striped', index=False, escape=False)
+        return render_template("manage_models.html", models=models_table, error=None)
+
+    except Exception as e:
+        return render_template("manage_models.html", models=None, error=str(e))
+    
+@app.route('/reset_model', methods=['POST'])
+def reset_model():
+    model_id = request.form.get('model_id')  # e.g., 'model2' or 'model3'
+
+    if model_id not in ['model2', 'model3']:
+        return redirect('/manage_models')  # Only allow valid backups
+
+    model_data_path = os.path.join("models", "modelData.xlsx")
+
+    try:
+        df = pd.read_excel(model_data_path, header=0, dtype=str)
+
+        # Reverse so most recent model is at index 0
+        df_reversed = df[::-1].reset_index(drop=True)
+
+        # Find the row of the selected model
+        selected_row = df_reversed[df_reversed['modelID'] == model_id]
+        if selected_row.empty:
+            return redirect('/manage_models')
+
+        row_index = selected_row.index[0]
+
+        # Keep only this model and newer ones (i.e., above in original)
+        df_new = df_reversed.iloc[:row_index + 1][::-1]
+
+        # Save back to Excel
+        df_new.to_excel(model_data_path, index=False)
+
+        # Replace model1 folder contents
+        source_dir = os.path.join("models", model_id)
+        dest_dir = os.path.join("models", "model1")
+
+        if os.path.exists(dest_dir):
+            shutil.rmtree(dest_dir)
+        shutil.copytree(source_dir, dest_dir)
+
+        # Clear model2 and model3
+        for backup in ['model2', 'model3']:
+            backup_path = os.path.join("models", backup)
+            if os.path.exists(backup_path):
+                shutil.rmtree(backup_path)
+                os.makedirs(backup_path)  # recreate empty
+
+        return redirect('/manage_models')
+
+    except Exception as e:
+        return f"Fehler beim Zurücksetzen des Modells: {str(e)}", 500
