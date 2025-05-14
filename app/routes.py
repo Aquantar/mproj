@@ -275,8 +275,15 @@ def model_training():
             ]
             modelIDs = modelMetrics['modelID'].tolist()
 
+            last_row = modelMetrics.iloc[-1]
+            predictionStats = {
+                'totalPredictions': int(last_row['totalPredictions']),
+                'predictionChanged': int(last_row['predictionChanged']),
+                'predictionChangeRatio': f"{float(last_row['predictionChangeRatio']) * 100:.2f}%"
+            }
+
             # Rückgabe des Monitorings
-            return render_template("monitoring.html", accuracyData=accuracyData, modelIDs=modelIDs)
+            return render_template("monitoring.html", accuracyData=accuracyData, modelIDs=modelIDs, predictionStats=predictionStats)
 
         except Exception as e:
             print(f"Fehler beim Modelltraining: {e}")
