@@ -50,6 +50,8 @@ def logout():
 def monitoring():
     if 'user' not in session:
         return redirect(url_for('login'))
+    
+    print("???")
 
     accuracyData = [[], [], []]
     modelIDs = []
@@ -92,14 +94,12 @@ def prediction_results():
     global results
     global outputCols
     global predInputFormatted
-    global originalInputFile #
+    global originalInputFile
     if request.method == 'POST':
         import gzip
         predictionInput = request.files['input_prediction']
         originalInputFile = request.files['input_prediction']
-        originalInputFile = load_workbook('input_prediction.xlsx') #
-        originalInputFileSheet = originalInputFile.active #
-        originalInputFile.save("test.xlsx") #
+        originalInputFile = load_workbook(originalInputFile)
         conversionMap = load(open('models//model1//conversionMap.pkl', 'rb'))   #load conversion map of current model
         scaler = load(open('models//model1//scaler.pkl', 'rb')) #load scaler of current model
         predInputFormatted = convertPredDataToDataframe(predictionInput) #take input file, convert into dataframe to be used for predictions
@@ -123,6 +123,7 @@ def prediction_results():
 def prediction_results_confirmed():
     global results
     global predInputFormatted
+    global originalInputFile
     if request.method == 'POST':
         #replace predicted values with modified ones from results form
         choicesOutput = request.form
@@ -176,7 +177,43 @@ def prediction_results_confirmed():
         stashedData = stashedData.replace(['nan'], [""]) 
         with pd.ExcelWriter("models//stashedTrainData.xlsx") as writer:
             stashedData.to_excel(writer, index=False)  
+
+
+        originalInputFileSheet = originalInputFile.active
+
+        start_row = 13
+        end_row = originalInputFileSheet.max_row  # or set a specific number if needed
+
+        # Define the column indices (1-indexed)
+        col_pruefmittel = 15  # Column O
+        col_stichprobe = 16   # Column P
+        col_lenkung = 18      # Column R
+
+        list3_mapped= []
+        mappingFrame = pd.read_excel('data//controlMethod_mappingInfo.xlsx')
+        for idx, x in enumerate(list3):
+            print(mappingFrame.loc[mappingFrame['Lenkungsmethode'] == int(float(list3[idx])), 'Beschreibung'])
+            list3_mapped.append(mappingFrame.loc[mappingFrame['Lenkungsmethode'] == int(float(list3[idx])), 'Beschreibung'].item())
+
+        # Insert dummy values
+        for i, row_num in enumerate(range(start_row, end_row + 1), start=1):
+            try:
+                originalInputFileSheet.cell(row=row_num, column=col_pruefmittel).value = list1[i-1]
+                originalInputFileSheet.cell(row=row_num, column=col_stichprobe).value = list2[i-1]
+                originalInputFileSheet.cell(row=row_num, column=col_lenkung).value = list3_mapped[i-1]
+            except:
+                pass
+
+        sio = BytesIO()
+        outputName = "output"
+
+        originalInputFile.save(sio)
+        sio.seek(0)
+        resp = make_response(sio.getvalue())
+        resp.headers["Content-Disposition"] = "attachment; filename={}.xlsx".format(outputName)
+        resp.headers["Content-Type"] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
          
+        """
         #export results to excel and download
         sio = BytesIO()
         outputName = "output"
@@ -203,6 +240,7 @@ def prediction_results_confirmed():
         resp = make_response(sio.getvalue())
         resp.headers["Content-Disposition"] = "attachment; filename={}.xlsx".format(outputName)
         resp.headers['Content-Type'] = 'application/x-xlsx'
+        """
         return resp
     return #diese route sollte auch nie ohne POST aufgerufen werden können, aber vllt automatisch zurück zu index redirecten nachdem POST fertig ist?
 
@@ -258,7 +296,14 @@ def model_training():
 
             # Modellmetriken aktualisieren
             modelMetrics = pd.read_excel('models//modelData.xlsx')
-            modelID = len(modelMetrics) + 1
+
+            if not modelMetrics.empty and 'modelID' in modelMetrics.columns:
+                last_model_id = pd.to_numeric(modelMetrics['modelID'], errors='coerce').dropna().astype(int).max()
+                modelID = last_model_id + 1
+            else:
+                modelID = 1  # Start from 1 if file is empty or column missing
+
+            #modelID = len(modelMetrics) + 1
             newrow = [modelID, datetime.today().strftime('%Y-%m-%d')] + accuracyList + [0, 0, 0]
             modelMetrics.loc[len(modelMetrics)] = newrow
             modelMetrics.to_excel("models//modelData.xlsx", index=False)
@@ -273,10 +318,17 @@ def model_training():
                 [float(i) for i in modelMetrics['accuracy_2'].tolist()],
                 [float(i) for i in modelMetrics['accuracy_3'].tolist()]
             ]
+            last_row = modelMetrics.iloc[-1]
+
+            predictionStats = {
+                'totalPredictions': int(last_row['totalPredictions']),
+                'predictionChanged': int(last_row['predictionChanged']),
+                'predictionChangeRatio': f"{float(last_row['predictionChangeRatio']) * 100:.2f}%"
+            }
             modelIDs = modelMetrics['modelID'].tolist()
 
             # Rückgabe des Monitorings
-            return render_template("monitoring.html", accuracyData=accuracyData, modelIDs=modelIDs)
+            return render_template("monitoring.html", accuracyData=accuracyData, modelIDs=modelIDs, predictionStats=predictionStats)
 
         except Exception as e:
             print(f"Fehler beim Modelltraining: {e}")
@@ -387,47 +439,65 @@ def manage_models():
 @app.route('/reset_model', methods=['POST'])
 def reset_model():
     model_id = request.form.get('model_id')  # e.g., 'model2' or 'model3'
-
-    if model_id not in ['model2', 'model3']:
+    model_name = "model" + str(model_id)
+    print(model_name)
+    if model_name not in ['model2', 'model3']:
         return redirect('/manage_models')  # Only allow valid backups
-
     model_data_path = os.path.join("models", "modelData.xlsx")
 
-    try:
-        df = pd.read_excel(model_data_path, header=0, dtype=str)
+    df = pd.read_excel(model_data_path, header=0, dtype=str)
 
-        # Reverse so most recent model is at index 0
-        df_reversed = df[::-1].reset_index(drop=True)
+    # Reverse so most recent model is at index 0
+    df_reversed = df[::-1].reset_index(drop=True)
 
-        # Find the row of the selected model
-        selected_row = df_reversed[df_reversed['modelID'] == model_id]
-        if selected_row.empty:
-            return redirect('/manage_models')
-
-        row_index = selected_row.index[0]
-
-        # Keep only this model and newer ones (i.e., above in original)
-        df_new = df_reversed.iloc[:row_index + 1][::-1]
-
-        # Save back to Excel
-        df_new.to_excel(model_data_path, index=False)
-
-        # Replace model1 folder contents
-        source_dir = os.path.join("models", model_id)
-        dest_dir = os.path.join("models", "model1")
-
-        if os.path.exists(dest_dir):
-            shutil.rmtree(dest_dir)
-        shutil.copytree(source_dir, dest_dir)
-
-        # Clear model2 and model3
-        for backup in ['model2', 'model3']:
-            backup_path = os.path.join("models", backup)
-            if os.path.exists(backup_path):
-                shutil.rmtree(backup_path)
-                os.makedirs(backup_path)  # recreate empty
-
+    # Find the row of the selected model
+    selected_row = df_reversed[df_reversed['modelID'] == model_id]
+    if selected_row.empty:
         return redirect('/manage_models')
+    print("found2")
+    row_index = selected_row.index[0]
 
-    except Exception as e:
-        return f"Fehler beim Zurücksetzen des Modells: {str(e)}", 500
+    # Keep only this model and newer ones (i.e., above in original)
+    df_new = df_reversed.iloc[:row_index + 1][::-1]
+
+    # Save back to Excel
+    df_new.to_excel(model_data_path, index=False)
+
+    # --- COMPARE TRAINING DATA ---
+    current_model_path = os.path.join("models", "model1", "currentTrainData.xlsx")
+    backup_model_path = os.path.join("models", model_name, "currentTrainData.xlsx")
+    stash_path = os.path.join("models", "stashedTrainData.xlsx")
+
+    if os.path.exists(current_model_path) and os.path.exists(backup_model_path):
+        current_df = pd.read_excel(current_model_path, dtype=str)
+        backup_df = pd.read_excel(backup_model_path, dtype=str)
+
+        # Find rows in current_df that are NOT in backup_df
+        diff_df = pd.concat([current_df, backup_df]).drop_duplicates(keep=False)
+
+        # Append to stashedTrainData.xlsx
+        if not diff_df.empty:
+            if os.path.exists(stash_path):
+                existing_stash_df = pd.read_excel(stash_path, dtype=str)
+                updated_stash_df = pd.concat([existing_stash_df, diff_df], ignore_index=True).drop_duplicates()
+            else:
+                updated_stash_df = diff_df
+            updated_stash_df.to_excel(stash_path, index=False)
+
+    # Replace model1 folder contents
+    source_dir = os.path.join("models", model_name)
+    print(source_dir)
+    dest_dir = os.path.join("models", "model1")
+
+    if os.path.exists(dest_dir):
+        shutil.rmtree(dest_dir)
+    shutil.copytree(source_dir, dest_dir)
+
+    # Clear model2 and model3
+    for backup in ['model2', 'model3']:
+        backup_path = os.path.join("models", backup)
+        if os.path.exists(backup_path):
+            shutil.rmtree(backup_path)
+            os.makedirs(backup_path)  # recreate empty
+
+    return redirect('/manage_models')

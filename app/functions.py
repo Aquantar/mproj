@@ -110,11 +110,11 @@ def trainNewModel(trainData, outputFeature):
     modelDict["RF"] = randomForest(X_train, X_test, y_train, y_test)
     print("Accuracy for " + str(outputFeature) + " (RF): " + str(modelDict["RF"][2]))   
     #modelDict["KNN"] = knn(X_train, X_test, y_train, y_test)
-    print("Accuracy for " + str(outputFeature) + " (KNN): " + str(modelDict["KNN"][2]))      
+    #print("Accuracy for " + str(outputFeature) + " (KNN): " + str(modelDict["KNN"][2]))      
     #modelDict["SVM"] = svm(X_train, X_test, y_train, y_test)
-    print("Accuracy for " + str(outputFeature) + " (SVM): " + str(modelDict["SVM"][2]))  
+    #print("Accuracy for " + str(outputFeature) + " (SVM): " + str(modelDict["SVM"][2]))  
     #modelDict["MLP"] = neuralNetwork(X_train, X_test, y_train, y_test)
-    print("Accuracy for " + str(outputFeature) + " (MLP): " + str(modelDict["MLP"][2]))  
+    #print("Accuracy for " + str(outputFeature) + " (MLP): " + str(modelDict["MLP"][2]))  
 
     keySelected = "RF"
     for key, value in modelDict.items():
