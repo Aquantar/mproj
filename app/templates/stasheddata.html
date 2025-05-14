@@ -158,8 +158,8 @@
         </div>
 
         <div class="button-container">
-            <!-- Trainings-Button mit Ladebalken -->
-            <form action="/model_training" method="POST" onsubmit="startTrainingLoadingBar()">
+            <!-- Modelltraining: jetzt als JavaScript-gesteuerter Button -->
+            <form id="train-form">
                 <button type="submit" class="styled-button">Neue Modelle trainieren</button>
             </form>
 
@@ -199,27 +199,41 @@
             }
         });
 
-        // Ladebalken und Popup für das Modelltraining (beim Button-Klick)
-        function startTrainingLoadingBar() {
+        // Asynchrones Modelltraining via fetch()
+        document.getElementById('train-form').addEventListener('submit', function(e) {
+            e.preventDefault(); // Verhindert Standardverhalten
+
             const trainingBarContainer = document.getElementById('training-loading-bar-container');
             const trainingBar = document.getElementById('training-loading-bar');
             const popupOverlay = document.getElementById('popup-overlay');
 
-            // Popup und Ladebalken anzeigen
             popupOverlay.style.display = 'flex';
             trainingBarContainer.style.display = 'block';
-            let progress = 0;
+            trainingBar.style.width = '0%';
 
+            let progress = 0;
             const interval = setInterval(() => {
-                progress += 5;
+                progress += 3;
                 trainingBar.style.width = progress + '%';
-                
                 if (progress >= 100) {
                     clearInterval(interval);
-                    popupOverlay.style.display = 'none';
                 }
-            }, 200);
-        }
+            }, 300);
+
+            fetch('/model_training', {
+                method: 'POST'
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.open();
+                document.write(html);
+                document.close();
+            })
+            .catch(err => {
+                console.error('Fehler beim Modelltraining:', err);
+                popupOverlay.innerHTML = '<div class="popup"><h2>Fehler</h2><p>Das Modelltraining konnte nicht gestartet werden.</p></div>';
+            });
+        });
     </script>
 </body>
 </html>
