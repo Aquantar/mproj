@@ -4,6 +4,7 @@ app = Flask(__name__)
 results = {}
 predictionInput = None
 predInputFormatted = None
+originalInputFile = None
 
 allCols = ['Produktmerkmal', 'Produktmerkmal_Text', 'Spezifikation', 'Unterer_Grenzwert', 'Oberer_Grenzwert', 'Masseinheit', 'Prozesselement', 'Maschine', 'Prüfmittel', 'Stichprobenverfahren', 'Lenkungsmethode']
 inputCols = ['Produktmerkmal', 'Produktmerkmal_Text', 'Spezifikation', 'Unterer_Grenzwert', 'Oberer_Grenzwert', 'Masseinheit', 'Prozesselement', 'Maschine']

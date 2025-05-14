@@ -11,6 +11,7 @@ import re
 from flask import flash, session
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
+from openpyxl import load_workbook
 
 app.secret_key = "dein_geheimer_schluessel"  # Für Flash-Nachrichten
 
@@ -91,9 +92,14 @@ def prediction_results():
     global results
     global outputCols
     global predInputFormatted
+    global originalInputFile #
     if request.method == 'POST':
         import gzip
         predictionInput = request.files['input_prediction']
+        originalInputFile = request.files['input_prediction']
+        originalInputFile = load_workbook('input_prediction.xlsx') #
+        originalInputFileSheet = originalInputFile.active #
+        originalInputFile.save("test.xlsx") #
         conversionMap = load(open('models//model1//conversionMap.pkl', 'rb'))   #load conversion map of current model
         scaler = load(open('models//model1//scaler.pkl', 'rb')) #load scaler of current model
         predInputFormatted = convertPredDataToDataframe(predictionInput) #take input file, convert into dataframe to be used for predictions
