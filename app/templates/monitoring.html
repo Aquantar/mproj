@@ -20,6 +20,26 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        .submit-button {
+        display: inline-block;
+        padding: 15px 40px;
+        font-size: 18px;
+        font-weight: bold;
+        color: white;
+        background-color: #005A8C;
+        border: 1px solid #005A8C;
+        border-radius: 30px;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0, 90, 140, 0.3);
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+        margin-top: 10px;
+        }
+        .submit-button:hover {
+        background-color: #003b5c;
+        box-shadow: 0 8px 20px rgba(0, 58, 92, 0.6), 0 0 15px rgba(0, 90, 140, 0.8);
+        transform: translateY(-3px);
+        }
         h1 {
             color: #333;
         }
@@ -125,10 +145,6 @@
                 </tr>
             </tbody>
         </table>
-        <button id="calculateAccuracy">Accuracy berechnen</button>
-        <div class="result" id="accuracyResult">
-            <!-- Das Ergebnis wird hier angezeigt -->
-        </div>
         <canvas id="accuracyChart" width="800" height="400"></canvas>
     </div>
 
@@ -166,10 +182,7 @@
 
     <script>
 
-        document.getElementById("calculateAccuracy").addEventListener("click", function() {
-            const resultElement = document.getElementById("accuracyResult");
-            resultElement.textContent = "Berechnung läuft... (Funktion noch nicht implementiert)";
-        });
+        
 
         // Chart initialisieren
         const ctx = document.getElementById('accuracyChart').getContext('2d');
@@ -266,8 +279,8 @@
             });
         }
     </script>
-    <button onclick="window.location.href='/stasheddata'">Neue Daten verwalten</button>
+    <button class="submit-button" onclick="window.location.href='/stasheddata'">Neue Daten verwalten</button>
     <br>
-    <button onclick="window.location.href='/index'">Zurück</button>
+    <button class="submit-button" onclick="window.location.href='/index'">Zurück</button>
 
 </body>

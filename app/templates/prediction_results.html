@@ -40,6 +40,26 @@
         select.red {
             background-color: lightcoral;
         }
+        .submit-button {
+        display: inline-block;
+        padding: 15px 40px;
+        font-size: 18px;
+        font-weight: bold;
+        color: white;
+        background-color: #005A8C;
+        border: 1px solid #005A8C;
+        border-radius: 30px;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0, 90, 140, 0.3);
+        transition: all 0.3s ease;
+        margin-top: 20px;
+        }
+
+        .submit-button:hover {
+        background-color: #003b5c;
+        box-shadow: 0 8px 20px rgba(0, 58, 92, 0.6), 0 0 15px rgba(0, 90, 140, 0.8);
+        transform: translateY(-3px);
+        }
     </style>
 </head>
 <body>
@@ -131,11 +151,13 @@
             {% endfor %}
         </tbody>
     </table>
-    <input type="submit" value="Submit">
+    <div style="text-align: center;">
+        <button type="submit" class="submit-button">Excel-Download bereitstellen</button>
+    </div>
     </form>
 
     <div class="button-container">
-        <button onclick="window.location.href='/index'">Zurück zur Startseite</button>
+        <button onclick="window.location.href='/index'" class="submit-button">Zurück zur Startseite</button>
     </div>
 </body>
 </html>
