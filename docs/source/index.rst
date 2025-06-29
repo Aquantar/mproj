@@ -11,11 +11,16 @@ Add your content using ``reStructuredText`` syntax. See the
 documentation for details.
 
 
+
 .. toctree::
    :maxdepth: 2
    :caption: Inhalt:
 
-   einleitung
-   datenmodell
-   module
+   intro
+   quick_start
+   framework
+   model_training
+   data_prediction
+   dashboard
+   deployment
 
