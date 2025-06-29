@@ -7,9 +7,9 @@
 .rst-content .varname {
     font-family: monospace; /* Keep it code-like */
     background-color: #ffffff; /* Light red background */
-    color: #cc0000;          /* Darker red text */
-    padding: 1px 0px;        /* Some padding around the text */
-    border: 1px solid #ff9999; /* Red border */
+    color: #db5757;          /* Darker red text */
+    padding: 0px 2px;        /* Some padding around the text */
+    border: 1px solid #d8d8d8; /* Red border */
     border-radius: 4px;      /* Slightly rounded corners */
     white-space: nowrap;     /* Prevent the variable name from breaking across lines */
 }

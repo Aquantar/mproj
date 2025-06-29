@@ -9,7 +9,7 @@
   <title>Model Training &mdash; Jopp_PJS 16.05.2025 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=4ce73113" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=1d209903" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -116,8 +116,8 @@
 <section id="parameters">
 <h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p><cite>outputFeature</cite> (string): The feature to be predicted based on input data</p></li>
-<li><p><cite>trainData</cite> (dataframe): The set of raw training data</p></li>
+<li><p><span class="varname">outputFeature</span> (string): The feature to be predicted based on input data</p></li>
+<li><p><span class="varname">trainData</span> (dataframe): The set of raw training data</p></li>
 </ul>
 </section>
 <section id="process">
@@ -125,9 +125,9 @@
 <ol class="arabic simple">
 <li><dl class="simple">
 <dt>Data Pre-Processing:</dt><dd><ul class="simple">
-<li><p>Calls the function <cite>prepareRawData</cite> which cleans the training data before further processing</p></li>
+<li><p>Calls the function <span class="varname">prepareRawData</span> which cleans the training data before further processing</p></li>
 <li><p>Create Conversion Map: A map which maps each value of in the training data to a number which is unique within that feature column is created, and the training data is converted to numbers using this map</p></li>
-<li><p>Create Training/Testing Split: The data is split into a training/testing set at an 80/20 ratio, and further is split into input and output features, resulting in <cite>X_train</cite>, <cite>X_test</cite>, <cite>y_train</cite>, <cite>y_test</cite></p></li>
+<li><p>Create Training/Testing Split: The data is split into a training/testing set at an 80/20 ratio, and further is split into input and output features, resulting in <span class="varname">X_train</span>, <span class="varname">X_test</span>, <span class="varname">y_train</span>, <span class="varname">y_test</span></p></li>
 <li><p>Input Feature Scaling: Input features are scaled to values between 0 and 1</p></li>
 </ul>
 </dd>
@@ -135,8 +135,8 @@
 </li>
 <li><dl class="simple">
 <dt>Model Training:</dt><dd><ul class="simple">
-<li><p>Models of the four selected algorithms are trained with the prepared training data from step 1 using the functions <cite>randomForest</cite>, <cite>knn</cite>, <cite>svm</cite>, and <cite>neuralNetwork</cite></p></li>
-<li><p>The best performing models from each algorithm are compared, and the single model with the highest <cite>accuracy_score</cite> is selected as the final model for the currently desired output feature</p></li>
+<li><p>Models of the four selected algorithms are trained with the prepared training data from step 1 using the functions <span class="varname">randomForest</span>, <span class="varname">knn</span>, <span class="varname">svm</span>, and <span class="varname">neuralNetwork</span></p></li>
+<li><p>The best performing models from each algorithm are compared, and the single model with the highest <span class="varname">accuracy_score</span> is selected as the final model for the currently desired output feature</p></li>
 </ul>
 </dd>
 </dl>
@@ -147,9 +147,9 @@
 <h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p><span class="varname">res[0]</span> : The selected model</p></li>
-<li><p><cite>scaler</cite>: The scaler built for model training</p></li>
-<li><p><cite>conversionMap</cite> (dictionary): The dictionary which contains the built mapping between text values in the original input data and the numeric values used in training</p></li>
-<li><p><cite>res[2]</cite> (float): The accuracy of the selected model</p></li>
+<li><p><span class="varname">scaler</span> : The scaler built for model training</p></li>
+<li><p><span class="varname">conversionMap</span> (dictionary): The dictionary which contains the built mapping between text values in the original input data and the numeric values used in training</p></li>
+<li><p><span class="varname">res[2]</span> (float): The accuracy of the selected model</p></li>
 </ul>
 </section>
 <section id="notes">

@@ -10,26 +10,26 @@ This function fully delegates the training of new predictive model for a single 
 
 Parameters
 ^^^^^^^^^^^^^^^^
-- `outputFeature` (string): The feature to be predicted based on input data
-- `trainData` (dataframe): The set of raw training data
+- :varname:`outputFeature` (string): The feature to be predicted based on input data
+- :varname:`trainData` (dataframe): The set of raw training data
 
 Process
 ^^^^^^^^^^^^^^^^
 1. Data Pre-Processing:
-        - Calls the function `prepareRawData` which cleans the training data before further processing
+        - Calls the function :varname:`prepareRawData` which cleans the training data before further processing
         - Create Conversion Map: A map which maps each value of in the training data to a number which is unique within that feature column is created, and the training data is converted to numbers using this map
-        - Create Training/Testing Split: The data is split into a training/testing set at an 80/20 ratio, and further is split into input and output features, resulting in `X_train`, `X_test`, `y_train`, `y_test`
+        - Create Training/Testing Split: The data is split into a training/testing set at an 80/20 ratio, and further is split into input and output features, resulting in :varname:`X_train`, :varname:`X_test`, :varname:`y_train`, :varname:`y_test`
         - Input Feature Scaling: Input features are scaled to values between 0 and 1
 2. Model Training:
-    - Models of the four selected algorithms are trained with the prepared training data from step 1 using the functions `randomForest`, `knn`, `svm`, and `neuralNetwork`
-    - The best performing models from each algorithm are compared, and the single model with the highest `accuracy_score` is selected as the final model for the currently desired output feature
+    - Models of the four selected algorithms are trained with the prepared training data from step 1 using the functions :varname:`randomForest`, :varname:`knn`, :varname:`svm`, and :varname:`neuralNetwork`
+    - The best performing models from each algorithm are compared, and the single model with the highest :varname:`accuracy_score` is selected as the final model for the currently desired output feature
 
 Returns
 ^^^^^^^^^^^^^^^^
 - :varname:`res[0]` : The selected model
-- `scaler`: The scaler built for model training
-- `conversionMap` (dictionary): The dictionary which contains the built mapping between text values in the original input data and the numeric values used in training
-- `res[2]` (float): The accuracy of the selected model
+- :varname:`scaler` : The scaler built for model training
+- :varname:`conversionMap` (dictionary): The dictionary which contains the built mapping between text values in the original input data and the numeric values used in training
+- :varname:`res[2]` (float): The accuracy of the selected model
 
 Notes
 ^^^^^^^^^^^^^^^^
