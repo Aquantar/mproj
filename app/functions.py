@@ -1,12 +1,12 @@
-from app import app, inputCols, outputCols, allCols
+from app import outputCols, allCols
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 
 def createPrediction(model, predData, outputFeature, conversionMap, scaler): 
-    #predData = convertPredDataToDataframe(predData)
-    predData = prepareRawData(predData)
-    #predData = predData.drop(outputCols, axis=1)
+    predData = prepareRawData(predData) #prepare raw data for predictions
+
+    #replace vals in predData with corresponding vals in conversionMap. If doesn't exist in conversionMap, create a new val
     for index, row in predData.iterrows():
         for key, value in conversionMap.items():
             if key in predData.columns:
@@ -23,9 +23,10 @@ def createPrediction(model, predData, outputFeature, conversionMap, scaler):
                     conversionMap[key] = currentDict
                     predData.at[index, key]=value[row[key]]
     predData = predData.values.tolist()
-    predData = scaler.transform(predData)
-    preds = model.predict(predData)
+    predData = scaler.transform(predData) #apply scaler to predData
+    preds = model.predict(predData) #predict output features
     
+    #re-map output vals to their text versions
     predictions_text = []
     for idx, pred in enumerate(preds):
         if outputFeature in conversionMap:
@@ -59,7 +60,7 @@ def createPrediction(model, predData, outputFeature, conversionMap, scaler):
                             else:
                                 tuple.append([key, str(key) + " (" + str(int(round(proba,2)*100)) + "%)", proba, str(int(float(key))) + " (" + str(int(round(proba,2)*100)) + "%)"])
             else:
-                print("???")
+                pass
         probaTuple.append(tuple)
 
     #sort probabilityList
@@ -86,8 +87,9 @@ def createPrediction(model, predData, outputFeature, conversionMap, scaler):
     return predictions_text, probaTuple
 
 def trainNewModel(trainData, outputFeature): 
-    trainData = prepareRawData(trainData)
+    trainData = prepareRawData(trainData) #prepare raw data for model training
 
+    #create conversion map
     conversionMap = dict()
     for col in allCols:
         if col in trainData.columns:
@@ -96,26 +98,29 @@ def trainNewModel(trainData, outputFeature):
             trainData[col] = pd.to_numeric(trainData[col])
             conversionMap[col] = conversionOutput[1]
 
+    #create split
     X = trainData.drop(outputCols, axis=1).values.tolist()
     y = trainData[outputFeature].values.tolist()
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
+    #scale data
     scaler = MinMaxScaler()
     scaler.fit(X_train)
     X_train = scaler.transform(X_train)
     X_test = scaler.transform(X_test)
     
+    #train models
     modelDict = {}
-
     modelDict["RF"] = randomForest(X_train, X_test, y_train, y_test)
     print("Accuracy for " + str(outputFeature) + " (RF): " + str(modelDict["RF"][2]))   
-    #modelDict["KNN"] = knn(X_train, X_test, y_train, y_test)
-    #print("Accuracy for " + str(outputFeature) + " (KNN): " + str(modelDict["KNN"][2]))      
-    #modelDict["SVM"] = svm(X_train, X_test, y_train, y_test)
-    #print("Accuracy for " + str(outputFeature) + " (SVM): " + str(modelDict["SVM"][2]))  
-    #modelDict["MLP"] = neuralNetwork(X_train, X_test, y_train, y_test)
-    #print("Accuracy for " + str(outputFeature) + " (MLP): " + str(modelDict["MLP"][2]))  
+    modelDict["KNN"] = knn(X_train, X_test, y_train, y_test)
+    print("Accuracy for " + str(outputFeature) + " (KNN): " + str(modelDict["KNN"][2]))      
+    modelDict["SVM"] = svm(X_train, X_test, y_train, y_test)
+    print("Accuracy for " + str(outputFeature) + " (SVM): " + str(modelDict["SVM"][2]))  
+    modelDict["MLP"] = neuralNetwork(X_train, X_test, y_train, y_test)
+    print("Accuracy for " + str(outputFeature) + " (MLP): " + str(modelDict["MLP"][2]))  
 
+    #select model with highest accuracy
     keySelected = "RF"
     for key, value in modelDict.items():
         if value[2] > modelDict[keySelected][2]:
@@ -158,7 +163,6 @@ def svm(X_train, X_test, y_train, y_test):
     from sklearn.svm import SVC
     from sklearn.metrics import accuracy_score
     from sklearn.model_selection import GridSearchCV
-    #from sklearn.multiclass import OneVsOneClassifier
 
     param_grid = {'C': [4, 8, 16, 32, 48, 64, 80]}
     grid = GridSearchCV(SVC(), param_grid, refit = True, verbose = 3,n_jobs=-1) 
@@ -216,7 +220,6 @@ def prepareRawData(data):
     data = data.fillna(0)
 
     #formatiere zahlen zu korrektem dezimalformat (, statt .) und wandle in float um
-
     for index, row in data.iterrows():
         data.at[index,'Spezifikation']=str(row['Spezifikation']).replace(',','.')
     for index, row in data.iterrows():
@@ -242,9 +245,6 @@ def prepareRawData(data):
     data['Unterer_Grenzwert'] = list_lower
     data['Oberer_Grenzwert'] = list_upper
 
-    #wandle spalte "nachkommastellen" in integer um
-    #data['Nachkommastellen'] = data['Nachkommastellen'].astype(int)
-
     #wandle alle spalten in string um
     data = data.astype(str)
 
@@ -262,16 +262,15 @@ def convertTextColumnToNumbers(data, colname):
         data.at[index,colname]=map_uniqueValues.get(row[colname])
     return data, map_uniqueValues
 
-def getUniqueValues(data):
+def getUniqueValues(data): #extracts all unique values from a dataframe
     uniqueVals = {}
     for col in outputCols:    
         uniqueList =  data[col].unique()
-        #print(uniqueList)
         uniqueList = [str(r) for r in uniqueList]    
         uniqueVals[col] = uniqueList
     return uniqueVals
 
-def convertPredDataToDataframe(data):
+def convertPredDataToDataframe(data): #takes the initial input and converts it into a dataframe suitable predictions
     pd.set_option('display.max_columns', None)
     dataAll = pd.read_excel(data)
     data = pd.read_excel(data, skiprows=11)
@@ -286,20 +285,14 @@ def convertPredDataToDataframe(data):
             units.append(split[1])
         except:
             units.append("")
-
     data = data.rename(columns={"Unnamed: 6": "Produktmerkmal", "Unnamed: 7": "Produktmerkmal_Text", "Unnamed: 10": "Spezifikation", "Unnamed: 11": "Unterer_Grenzwert", "Unnamed: 13": "Oberer_Grenzwert"})
     data["Masseinheit"] = units
     data = data[data['Produktmerkmal_Text'].notna()]
     
-
-
     prozesselement = dataAll.iloc[11,2]
     maschine = dataAll.iloc[11,5]
-    arbeitsplatz = dataAll.iloc[2,6]
 
     data["Prozesselement"] = prozesselement
     data["Maschine"] = maschine
-    #data["Arbeitsplatz"] = arbeitsplatz.split("\n")[1]
-    #print(data)
 
     return data

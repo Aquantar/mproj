@@ -96,7 +96,7 @@
                 <td>
                     {% set confidence = probaDict['Prüfmittel'][i][0][2] %}
                     <select name="Prüfmittel" class="
-                        {% if confidence >= 0.5 %}
+                        {% if confidence >= 0.75 %}
                             green
                         {% elif confidence >= 0.25 %}
                             yellow
@@ -114,7 +114,7 @@
                 <td>
                     {% set confidence = probaDict['Stichprobenverfahren'][i][0][2] %}
                     <select name="Stichprobenverfahren" class="
-                        {% if confidence >= 0.5 %}
+                        {% if confidence >= 0.75 %}
                             green
                         {% elif confidence >= 0.25 %}
                             yellow
@@ -132,7 +132,7 @@
                 <td>
                     {% set confidence = probaDict['Lenkungsmethode'][i][0][2] %}
                     <select name="Lenkungsmethode" class="
-                        {% if confidence >= 0.5 %}
+                        {% if confidence >= 0.75 %}
                             green
                         {% elif confidence >= 0.25 %}
                             yellow
