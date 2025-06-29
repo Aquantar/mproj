@@ -12,12 +12,37 @@ documentation for details.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Inhalt:
+   :caption: Introduction:
 
-   intro
-   quick_start
-   framework
-   model_training
-   data_prediction
-   dashboard
-   deployment
+   introduction
+   usecase
+   toolOverview
+   conclusion
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Quick Start:
+
+   getting_started
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Tool Framework:
+
+   problem_description
+   selected_algorithms
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Tool Usage:
+
+   predicting_new_vals
+   monitoring_performance
+   trainingNewModels
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Core Methods:
+
+   trainNewModel
+   createPrediction
