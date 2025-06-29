@@ -14,10 +14,10 @@ documentation for details.
    :maxdepth: 2
    :caption: Inhalt:
 
-   Intro
-   Quick_start
-   Framework
-   Model_training
-   Data_prediction
-   Dashboard
-   Deployment
+   intro
+   quick_start
+   framework
+   model_training
+   data_prediction
+   dashboard
+   deployment
