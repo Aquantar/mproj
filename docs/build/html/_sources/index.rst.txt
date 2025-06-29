@@ -42,7 +42,7 @@ documentation for details.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Core Methods:
+   :caption: Tool Functionality:
 
    trainNewModel
    createPrediction

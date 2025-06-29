@@ -6,9 +6,10 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>trainNewModels &mdash; Jopp_PJS 16.05.2025 documentation</title>
+  <title>Model Training &mdash; Jopp_PJS 16.05.2025 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=4ce73113" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -44,7 +45,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usecase.html">Use Case</a></li>
 <li class="toctree-l1"><a class="reference internal" href="toolOverview.html">Tool Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="conclusion.html">Conclusion</a></li>
@@ -64,10 +65,17 @@
 <li class="toctree-l1"><a class="reference internal" href="monitoring_performance.html">Monitoring Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trainingNewModels.html">Training new Models</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Core Methods:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tool Functionality:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">trainNewModels</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#this-is-a-header">This is a header</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Model Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#trainnewmodel">1: trainNewModel</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#purpose">Purpose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#process">Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#returns">Returns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="createPrediction.html">Create Predictions</a></li>
@@ -87,9 +95,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">trainNewModels</li>
+      <li class="breadcrumb-item active">Model Training</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/trainNewModel.rst.txt" rel="nofollow"> View page source</a>
+              <a href="https://github.com/your-github-username/your-repo-name/blob/main/docs/trainNewModel.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -97,22 +105,105 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="trainnewmodels">
-<h1>trainNewModels<a class="headerlink" href="#trainnewmodels" title="Link to this heading"></a></h1>
-<section id="this-is-a-header">
-<h2>This is a header<a class="headerlink" href="#this-is-a-header" title="Link to this heading"></a></h2>
-<p>This is a paragraph. It can span multiple lines, and you can continue writing more content here.
-Just make sure to leave a blank line between paragraphs.</p>
-<p>Here's a code snippet from your tool:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">conversionMap</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">allCols</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">trainData</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">conversionOutput</span> <span class="o">=</span> <span class="n">convertTextColumnToNumbers</span><span class="p">(</span><span class="n">trainData</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span>
-        <span class="n">trainData</span> <span class="o">=</span> <span class="n">conversionOutput</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">trainData</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">trainData</span><span class="p">[</span><span class="n">col</span><span class="p">])</span>
-        <span class="n">conversionMap</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">conversionOutput</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+  <section id="model-training">
+<h1>Model Training<a class="headerlink" href="#model-training" title="Link to this heading"></a></h1>
+<section id="trainnewmodel">
+<h2>1: trainNewModel<a class="headerlink" href="#trainnewmodel" title="Link to this heading"></a></h2>
+<section id="purpose">
+<h3>Purpose<a class="headerlink" href="#purpose" title="Link to this heading"></a></h3>
+<p>This function fully delegates the training of new predictive model for a single desired output feature, including data preprocessing, model training, and model selection.</p>
+</section>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><cite>outputFeature</cite> (string): The feature to be predicted based on input data</p></li>
+<li><p><cite>trainData</cite> (dataframe): The set of raw training data</p></li>
+</ul>
+</section>
+<section id="process">
+<h3>Process<a class="headerlink" href="#process" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt>Data Pre-Processing:</dt><dd><ul class="simple">
+<li><p>Calls the function <cite>prepareRawData</cite> which cleans the training data before further processing</p></li>
+<li><p>Create Conversion Map: A map which maps each value of in the training data to a number which is unique within that feature column is created, and the training data is converted to numbers using this map</p></li>
+<li><p>Create Training/Testing Split: The data is split into a training/testing set at an 80/20 ratio, and further is split into input and output features, resulting in <cite>X_train</cite>, <cite>X_test</cite>, <cite>y_train</cite>, <cite>y_test</cite></p></li>
+<li><p>Input Feature Scaling: Input features are scaled to values between 0 and 1</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Model Training:</dt><dd><ul class="simple">
+<li><p>Models of the four selected algorithms are trained with the prepared training data from step 1 using the functions <cite>randomForest</cite>, <cite>knn</cite>, <cite>svm</cite>, and <cite>neuralNetwork</cite></p></li>
+<li><p>The best performing models from each algorithm are compared, and the single model with the highest <cite>accuracy_score</cite> is selected as the final model for the currently desired output feature</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><span class="varname">res[0]</span> : The selected model</p></li>
+<li><p><cite>scaler</cite>: The scaler built for model training</p></li>
+<li><p><cite>conversionMap</cite> (dictionary): The dictionary which contains the built mapping between text values in the original input data and the numeric values used in training</p></li>
+<li><p><cite>res[2]</cite> (float): The accuracy of the selected model</p></li>
+</ul>
+</section>
+<section id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The built scaler as well as conversion map are saved after model training to be used when predicting new values with that pre-trained model</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">trainNewModel</span><span class="p">(</span><span class="n">trainData</span><span class="p">,</span> <span class="n">outputFeature</span><span class="p">):</span>
+    <span class="n">trainData</span> <span class="o">=</span> <span class="n">prepareRawData</span><span class="p">(</span><span class="n">trainData</span><span class="p">)</span> <span class="c1">#prepare raw data for model training</span>
+
+    <span class="c1">#create conversion map</span>
+    <span class="n">conversionMap</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">allCols</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">trainData</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">conversionOutput</span> <span class="o">=</span> <span class="n">convertTextColumnToNumbers</span><span class="p">(</span><span class="n">trainData</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span>
+            <span class="n">trainData</span> <span class="o">=</span> <span class="n">conversionOutput</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">trainData</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">trainData</span><span class="p">[</span><span class="n">col</span><span class="p">])</span>
+            <span class="n">conversionMap</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">conversionOutput</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1">#create split</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">trainData</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">outputCols</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">trainData</span><span class="p">[</span><span class="n">outputFeature</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+    <span class="c1">#scale data</span>
+    <span class="n">scaler</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
+    <span class="n">scaler</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+    <span class="n">X_train</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+    <span class="n">X_test</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+    <span class="c1">#train models</span>
+    <span class="n">modelDict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">modelDict</span><span class="p">[</span><span class="s2">&quot;RF&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">randomForest</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy for &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">outputFeature</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; (RF): &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">modelDict</span><span class="p">[</span><span class="s2">&quot;RF&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]))</span>
+    <span class="n">modelDict</span><span class="p">[</span><span class="s2">&quot;KNN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">knn</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy for &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">outputFeature</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; (KNN): &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">modelDict</span><span class="p">[</span><span class="s2">&quot;KNN&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]))</span>
+    <span class="n">modelDict</span><span class="p">[</span><span class="s2">&quot;SVM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">svm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy for &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">outputFeature</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; (SVM): &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">modelDict</span><span class="p">[</span><span class="s2">&quot;SVM&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]))</span>
+    <span class="n">modelDict</span><span class="p">[</span><span class="s2">&quot;MLP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">neuralNetwork</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy for &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">outputFeature</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; (MLP): &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">modelDict</span><span class="p">[</span><span class="s2">&quot;MLP&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]))</span>
+
+    <span class="c1">#select model with highest accuracy</span>
+    <span class="n">keySelected</span> <span class="o">=</span> <span class="s2">&quot;RF&quot;</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">modelDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">modelDict</span><span class="p">[</span><span class="n">keySelected</span><span class="p">][</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="n">keySelected</span> <span class="o">=</span> <span class="n">key</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Selected model: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">keySelected</span><span class="p">))</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">modelDict</span><span class="p">[</span><span class="n">keySelected</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scaler</span><span class="p">,</span> <span class="n">conversionMap</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 </pre></div>
 </div>
+</section>
 </section>
 </section>
 

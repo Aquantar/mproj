@@ -1,0 +1,15 @@
+/* docs/_static/custom.css */
+
+/*
+   This CSS targets elements with the 'varname' class,
+   which we will apply using a custom Sphinx role.
+*/
+.rst-content .varname {
+    font-family: monospace; /* Keep it code-like */
+    background-color: #ffffff; /* Light red background */
+    color: #cc0000;          /* Darker red text */
+    padding: 1px 0px;        /* Some padding around the text */
+    border: 1px solid #ff9999; /* Red border */
+    border-radius: 4px;      /* Slightly rounded corners */
+    white-space: nowrap;     /* Prevent the variable name from breaking across lines */
+}
