@@ -13,7 +13,6 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="app" href="modules.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -36,14 +35,124 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
-<section id="app-functions-module">
-<h2>app.functions module<a class="headerlink" href="#app-functions-module" title="Link to this heading">¶</a></h2>
+<section id="module-app.functions">
+<span id="app-functions-module"></span><h2>app.functions module<a class="headerlink" href="#module-app.functions" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.functions.convertPredDataToDataframe">
+<span class="sig-prename descclassname"><span class="pre">app.functions.</span></span><span class="sig-name descname"><span class="pre">convertPredDataToDataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.functions.convertPredDataToDataframe" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.functions.convertTextColumnToNumbers">
+<span class="sig-prename descclassname"><span class="pre">app.functions.</span></span><span class="sig-name descname"><span class="pre">convertTextColumnToNumbers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.functions.convertTextColumnToNumbers" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.functions.createPrediction">
+<span class="sig-prename descclassname"><span class="pre">app.functions.</span></span><span class="sig-name descname"><span class="pre">createPrediction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputFeature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversionMap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.functions.createPrediction" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.functions.getUniqueValues">
+<span class="sig-prename descclassname"><span class="pre">app.functions.</span></span><span class="sig-name descname"><span class="pre">getUniqueValues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.functions.getUniqueValues" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.functions.knn">
+<span class="sig-prename descclassname"><span class="pre">app.functions.</span></span><span class="sig-name descname"><span class="pre">knn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.functions.knn" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.functions.neuralNetwork">
+<span class="sig-prename descclassname"><span class="pre">app.functions.</span></span><span class="sig-name descname"><span class="pre">neuralNetwork</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.functions.neuralNetwork" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.functions.prepareRawData">
+<span class="sig-prename descclassname"><span class="pre">app.functions.</span></span><span class="sig-name descname"><span class="pre">prepareRawData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.functions.prepareRawData" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.functions.randomForest">
+<span class="sig-prename descclassname"><span class="pre">app.functions.</span></span><span class="sig-name descname"><span class="pre">randomForest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.functions.randomForest" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.functions.svm">
+<span class="sig-prename descclassname"><span class="pre">app.functions.</span></span><span class="sig-name descname"><span class="pre">svm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.functions.svm" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.functions.trainNewModel">
+<span class="sig-prename descclassname"><span class="pre">app.functions.</span></span><span class="sig-name descname"><span class="pre">trainNewModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputFeature</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.functions.trainNewModel" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="app-routes-module">
-<h2>app.routes module<a class="headerlink" href="#app-routes-module" title="Link to this heading">¶</a></h2>
+<section id="module-app.routes">
+<span id="app-routes-module"></span><h2>app.routes module<a class="headerlink" href="#module-app.routes" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.delete_row">
+<span class="sig-prename descclassname"><span class="pre">app.routes.</span></span><span class="sig-name descname"><span class="pre">delete_row</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.routes.delete_row" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.index">
+<span class="sig-prename descclassname"><span class="pre">app.routes.</span></span><span class="sig-name descname"><span class="pre">index</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.routes.index" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.login">
+<span class="sig-prename descclassname"><span class="pre">app.routes.</span></span><span class="sig-name descname"><span class="pre">login</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.routes.login" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.logout">
+<span class="sig-prename descclassname"><span class="pre">app.routes.</span></span><span class="sig-name descname"><span class="pre">logout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.routes.logout" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.manage_models">
+<span class="sig-prename descclassname"><span class="pre">app.routes.</span></span><span class="sig-name descname"><span class="pre">manage_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.routes.manage_models" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.model_training">
+<span class="sig-prename descclassname"><span class="pre">app.routes.</span></span><span class="sig-name descname"><span class="pre">model_training</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.routes.model_training" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.monitoring">
+<span class="sig-prename descclassname"><span class="pre">app.routes.</span></span><span class="sig-name descname"><span class="pre">monitoring</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.routes.monitoring" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.prediction_results">
+<span class="sig-prename descclassname"><span class="pre">app.routes.</span></span><span class="sig-name descname"><span class="pre">prediction_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.routes.prediction_results" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.prediction_results_confirmed">
+<span class="sig-prename descclassname"><span class="pre">app.routes.</span></span><span class="sig-name descname"><span class="pre">prediction_results_confirmed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.routes.prediction_results_confirmed" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.reset_model">
+<span class="sig-prename descclassname"><span class="pre">app.routes.</span></span><span class="sig-name descname"><span class="pre">reset_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.routes.reset_model" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.stasheddata">
+<span class="sig-prename descclassname"><span class="pre">app.routes.</span></span><span class="sig-name descname"><span class="pre">stasheddata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.routes.stasheddata" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.verify_password">
+<span class="sig-prename descclassname"><span class="pre">app.routes.</span></span><span class="sig-name descname"><span class="pre">verify_password</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.routes.verify_password" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading">¶</a></h2>
+<section id="module-app">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-app" title="Link to this heading">¶</a></h2>
 </section>
 </section>
 
@@ -64,21 +173,11 @@
 
 
 <h3>Navigation</h3>
-<p class="caption" role="heading"><span class="caption-text">Inhalt:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">app</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">app package</a></li>
-</ul>
-</li>
-</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-  <li><a href="modules.html">app</a><ul>
-      <li>Previous: <a href="modules.html" title="previous chapter">app</a></li>
-  </ul></li>
   </ul></li>
 </ul>
 </div>

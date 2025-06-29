@@ -13,8 +13,6 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="app package" href="app.html" />
-    <link rel="prev" title="Jopp_PJS documentation" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -38,9 +36,35 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="app.html">app package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="app.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app-functions-module">app.functions module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app-routes-module">app.routes module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="app.html#module-app.functions">app.functions module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.functions.convertPredDataToDataframe"><code class="docutils literal notranslate"><span class="pre">convertPredDataToDataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.functions.convertTextColumnToNumbers"><code class="docutils literal notranslate"><span class="pre">convertTextColumnToNumbers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.functions.createPrediction"><code class="docutils literal notranslate"><span class="pre">createPrediction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.functions.getUniqueValues"><code class="docutils literal notranslate"><span class="pre">getUniqueValues()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.functions.knn"><code class="docutils literal notranslate"><span class="pre">knn()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.functions.neuralNetwork"><code class="docutils literal notranslate"><span class="pre">neuralNetwork()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.functions.prepareRawData"><code class="docutils literal notranslate"><span class="pre">prepareRawData()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.functions.randomForest"><code class="docutils literal notranslate"><span class="pre">randomForest()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.functions.svm"><code class="docutils literal notranslate"><span class="pre">svm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.functions.trainNewModel"><code class="docutils literal notranslate"><span class="pre">trainNewModel()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.html#module-app.routes">app.routes module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.routes.delete_row"><code class="docutils literal notranslate"><span class="pre">delete_row()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.routes.index"><code class="docutils literal notranslate"><span class="pre">index()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.routes.login"><code class="docutils literal notranslate"><span class="pre">login()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.routes.logout"><code class="docutils literal notranslate"><span class="pre">logout()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.routes.manage_models"><code class="docutils literal notranslate"><span class="pre">manage_models()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.routes.model_training"><code class="docutils literal notranslate"><span class="pre">model_training()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.routes.monitoring"><code class="docutils literal notranslate"><span class="pre">monitoring()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.routes.prediction_results"><code class="docutils literal notranslate"><span class="pre">prediction_results()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.routes.prediction_results_confirmed"><code class="docutils literal notranslate"><span class="pre">prediction_results_confirmed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.routes.reset_model"><code class="docutils literal notranslate"><span class="pre">reset_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.routes.stasheddata"><code class="docutils literal notranslate"><span class="pre">stasheddata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#app.routes.verify_password"><code class="docutils literal notranslate"><span class="pre">verify_password()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.html#module-app">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -64,20 +88,11 @@
 
 
 <h3>Navigation</h3>
-<p class="caption" role="heading"><span class="caption-text">Inhalt:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">app</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="app.html">app package</a></li>
-</ul>
-</li>
-</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Jopp_PJS documentation</a></li>
-      <li>Next: <a href="app.html" title="next chapter">app package</a></li>
   </ul></li>
 </ul>
 </div>
