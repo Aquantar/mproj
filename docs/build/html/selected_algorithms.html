@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Selected Algorithms &mdash; Jopp_PJS 16.05.2025 documentation</title>
+  <title>Solution Approach &mdash; Jopp_PJS 16.05.2025 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css?v=1d209903" />
@@ -57,7 +57,12 @@
 <p class="caption" role="heading"><span class="caption-text">Tool Framework:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="problem_description.html">Problem Formulation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Selected Algorithms</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Solution Approach</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#framework">Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#initial-testing">Initial Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tool-design">Tool Design</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tool Usage:</span></p>
 <ul>
@@ -86,7 +91,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Selected Algorithms</li>
+      <li class="breadcrumb-item active">Solution Approach</li>
       <li class="wy-breadcrumbs-aside">
               <a href="https://github.com/your-github-username/your-repo-name/blob/main/docs/selected_algorithms.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
@@ -96,9 +101,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="selected-algorithms">
-<h1>Selected Algorithms<a class="headerlink" href="#selected-algorithms" title="Link to this heading"></a></h1>
-<p>Einführung in das Projekt. Perfekt. 2.</p>
+  <section id="solution-approach">
+<h1>Solution Approach<a class="headerlink" href="#solution-approach" title="Link to this heading"></a></h1>
+<section id="framework">
+<h2>Framework<a class="headerlink" href="#framework" title="Link to this heading"></a></h2>
+<p>By viewing an initial data set containing component characteristics in conjunction with their determined control plan features (further referred to as output features), we have determined that all desired output features (testing equipment, sampling rate, validation procedure) are selected from a finite catalogue of options which is greater than 2.
+Following this discovery we have hypothesized the specific problem to solve to be a multi-class classification problem, and that it may be possible to predict the desired output features using suitable machine learning algorithms with high accuracy after training them on the vast amount of historical data for existing components which Jopp possesses.</p>
+</section>
+<section id="initial-testing">
+<h2>Initial Testing<a class="headerlink" href="#initial-testing" title="Link to this heading"></a></h2>
+<p>During initial testing with multiple machine learning algorithms suitable for a multi-class classification problem, we have discovered that the desired output features are predictable with a significant accuracy by using a combination of significant input features, determined to be the characteristic name, its optimal measurement, its lower and upper measurement limits, its measurement unit, its process category, and the machine it is created with.</p>
+<p>Further, we have determined the best performing algorithms with the specific data set to be Random Forest, K-Nearest Neighbors, Support Vector Machine as well as Multi-Layer Perceptron, with each algorihm performing comparatively differently for each of the three desired output features.</p>
+<p>While significant predictive power could be achieved for each desired output feature, it has also been discovered that there is a margin of error when using machine learning in order to predict these values. Due to the data used in training being a real-world data set which has been built up manually over a long time, there are many inconsistencies as well as errors contained within, overall lowering the accuracy which can be achieved.</p>
+</section>
+<section id="tool-design">
+<h2>Tool Design<a class="headerlink" href="#tool-design" title="Link to this heading"></a></h2>
+<p>Due to the discoveries mentioned above, we have designed our tool to provide the following core functionality: A web-UI in which a set of data containing characteristics data for a component can be input, which then relays this data to a pre-trained model for each output feature using the best-performing algorithm for that feature.
+After predictions are performed, the results are shown to the user through the web-UI, on which the user can validate and manipulate the results in order to account for the non-perfect accuracy in predictions, displaying a probability value for each output feature that shows the confidence of the trained models.
+Further, to achieve a self-reinforcement loop, new data tuples gathered in this way are saved and can be used to re-train models, improving their predictive power over time.</p>
+</section>
 </section>
 
 
