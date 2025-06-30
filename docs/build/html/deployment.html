@@ -1,0 +1,231 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="English" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deployment &mdash; Jopp_PJS 16.05.2025 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=1d209903" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5c80bd1b"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Jopp_PJS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usecase.html">Use Case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toolOverview.html">Tool Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conclusion.html">Conclusion</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Quick Start:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tool Framework:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="problem_description.html">Problem Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="selected_algorithms.html">Solution Approach</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tool Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="predicting_new_vals.html">Predicting new Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monitoring_performance.html">Monitoring Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trainingNewModels.html">Training new Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technical Functionality:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="code_trainNewModel.html">Model Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_createPrediction.html">Feature Prediction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_modelMonitoring.html">Model Management</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Jopp_PJS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Deployment</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/your-github-username/your-repo-name/blob/main/docs/deployment.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="deployment">
+<h1>Deployment<a class="headerlink" href="#deployment" title="Link to this heading"></a></h1>
+<p>The goal is to deploy the application within the Jopp infrastructure and make it usable for them.
+We used a containerized approach with Docker. This allows for simple deployment on any target system without the need to install dependencies manually.</p>
+<section id="dockerfile">
+<h2>Dockerfile<a class="headerlink" href="#dockerfile" title="Link to this heading"></a></h2>
+<p>The project is containerized using the following Dockerfile.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basis-Image auswählen</span>
+<span class="n">FROM</span> <span class="n">python</span><span class="p">:</span><span class="mf">3.9</span>
+
+<span class="c1"># Arbeitsverzeichnis im Container setzen</span>
+<span class="n">WORKDIR</span> <span class="o">/</span><span class="n">app</span>
+
+<span class="c1"># Abhängigkeiten kopieren und installieren</span>
+<span class="n">COPY</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">RUN</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">cache</span><span class="o">-</span><span class="nb">dir</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+
+<span class="c1"># Alle Projektdaten kopieren</span>
+<span class="n">COPY</span> <span class="o">.</span> <span class="o">.</span>
+
+<span class="c1"># Port freigeben</span>
+<span class="n">EXPOSE</span> <span class="mi">5000</span>
+
+<span class="c1"># Startbefehl für die Anwendung</span>
+<span class="n">CMD</span> <span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="s2">&quot;main.py&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<p>All necessary Python libraries are defined in the requirements.txt file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Flask</span><span class="o">==</span><span class="mf">3.1.0</span>
+<span class="n">pandas</span><span class="o">==</span><span class="mf">2.2.3</span>
+<span class="n">scikit_learn</span><span class="o">==</span><span class="mf">1.6.1</span>
+<span class="n">xlsxwriter</span><span class="o">==</span><span class="mf">3.1.9</span>
+<span class="n">gunicorn</span><span class="o">==</span><span class="mf">21.2.0</span>
+<span class="n">openpyxl</span><span class="o">==</span><span class="mf">3.1.2</span>
+<span class="n">Flask</span><span class="o">-</span><span class="n">HTTPAuth</span>
+</pre></div>
+</div>
+</section>
+<section id="deployment-steps">
+<h2>Deployment Steps<a class="headerlink" href="#deployment-steps" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p><strong>Build the Docker image locally:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>flask-app<span class="w"> </span>.
+</pre></div>
+</div>
+</li>
+<li><p><strong>Test the image locally:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">5000</span>:5000<span class="w"> </span>flask-app
+</pre></div>
+</div>
+</li>
+<li><p><strong>Export the image as a `.tar` file:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>save<span class="w"> </span>flask-app<span class="w"> </span>&gt;<span class="w"> </span>flask-app.tar
+</pre></div>
+</div>
+</li>
+<li><p><strong>Transfer the image to the test PC via SCP:</strong></p>
+<p>The test PC is accessible via SSH on port <code class="docutils literal notranslate"><span class="pre">5522</span></code>. Use the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scp<span class="w"> </span>-P<span class="w"> </span><span class="m">5522</span><span class="w"> </span>/path/to/flask-app.tar<span class="w"> </span>serdar_isik@212.185.51.181:/home/serdar_isik/
+</pre></div>
+</div>
+<p>Alternatively:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scp<span class="w"> </span>-P<span class="w"> </span><span class="m">5522</span><span class="w"> </span>/path/to/flask-app.tar<span class="w"> </span>johannes_klauer@212.185.51.181:/home/johannes_klauer/
+</pre></div>
+</div>
+<p>SSH credentials:</p>
+<ul class="simple">
+<li><p><strong>User:</strong> serdar_isik
+<strong>Password:</strong> FyElT*********</p></li>
+<li><p><strong>User:</strong> johannes_klauer
+<strong>Password:</strong> NXZj*********</p></li>
+</ul>
+</li>
+<li><p><strong>SSH into the remote machine (via Windows Terminal, Bash, or similar):</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>serdar_isik@212.185.51.181<span class="w"> </span>-p<span class="w"> </span><span class="m">5522</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Load the image on the test PC:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>load<span class="w"> </span>&lt;<span class="w"> </span>flask-app.tar
+</pre></div>
+</div>
+</li>
+<li><p><strong>Run the container on the test PC and map to port 80:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-p<span class="w"> </span><span class="m">80</span>:5000<span class="w"> </span>flask-app
+</pre></div>
+</div>
+</li>
+<li><p><strong>Access the web application:</strong></p>
+<p>The container exposes port 5000 internally, which is mapped to port 80 on the host.
+The application is reachable under:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>http://212.185.51.181:5580
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<p>Deployment done by Johannes</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Serdar Isik, Johannes Klauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

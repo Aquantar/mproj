@@ -15,7 +15,7 @@
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5c80bd1b"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -61,7 +61,11 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tool Usage:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Predicting new Values</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Predicting new Values</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#technical-aspects">Technical Aspects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="monitoring_performance.html">Monitoring Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trainingNewModels.html">Training new Models</a></li>
 </ul>
@@ -98,7 +102,85 @@
              
   <section id="predicting-new-values">
 <h1>Predicting new Values<a class="headerlink" href="#predicting-new-values" title="Link to this heading"></a></h1>
-<p>Einführung in das Projekt. Perfekt. 2.</p>
+<p>On the landing page, the first step to generate predictions is uploading an input Excel file via the &quot;Datei auswählen&quot; button.</p>
+<a class="reference internal image-reference" href="_images/landingpage.png"><img alt="Screenshot Landing Page" class="align-center" src="_images/landingpage.png" style="width: 600px;" />
+</a>
+<p>By clicking on &quot;Vorhersage” the prediction process is initiated, and the user is redirected to the page where the results are displayed.</p>
+<a class="reference internal image-reference" href="_images/Controlplancreation.png"><img alt="Screenshot Landing Page" class="align-center" src="_images/Controlplancreation.png" style="width: 600px;" />
+</a>
+<p>By default, the page displays the results with the highest probability for each predicted value. If a prediction appears incorrect, it can be manually adjusted via a drop-down menu. Therefore, it is necessary to manually review all values to ensure their correctness. The probability of each predicted value is shown in parentheses, and values with a probability greater than 75% are highlighted in green through color coding.
+By clicking the button &quot;Excel Download bereitstellen&quot; the table with the currenctly selected values is downloaded as an excel file.</p>
+<section id="technical-aspects">
+<h2>Technical Aspects<a class="headerlink" href="#technical-aspects" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>The loop iterates over all features (featureCount) and creates one table row (&lt;tr&gt;) per item.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="o">%</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">featureCount</span><span class="p">)</span> <span class="o">%</span><span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>The first few columns display values from the original input dataset. If a specific key is missing, the placeholder &quot;Fehlend&quot; is shown:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">td</span><span class="o">&gt;</span><span class="p">{{</span> <span class="n">predictionInput</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Produktmerkmal&#39;</span><span class="p">,</span> <span class="s1">&#39;Fehlend&#39;</span><span class="p">)</span> <span class="p">}}</span><span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">td</span><span class="o">&gt;</span><span class="p">{{</span> <span class="n">predictionInput</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Produktmerkmal_Text&#39;</span><span class="p">,</span> <span class="s1">&#39;Fehlend&#39;</span><span class="p">)</span> <span class="p">}}</span><span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">td</span><span class="o">&gt;</span><span class="p">{{</span> <span class="n">predictionInput</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Spezifikation&#39;</span><span class="p">,</span> <span class="s1">&#39;Fehlend&#39;</span><span class="p">)</span> <span class="p">}}</span><span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">td</span><span class="o">&gt;</span><span class="p">{{</span> <span class="n">predictionInput</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Unterer_Grenzwert&#39;</span><span class="p">,</span> <span class="s1">&#39;Fehlend&#39;</span><span class="p">)</span> <span class="p">}}</span><span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">td</span><span class="o">&gt;</span><span class="p">{{</span> <span class="n">predictionInput</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Oberer_Grenzwert&#39;</span><span class="p">,</span> <span class="s1">&#39;Fehlend&#39;</span><span class="p">)</span> <span class="p">}}</span><span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">td</span><span class="o">&gt;</span><span class="p">{{</span> <span class="n">predictionInput</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Prozesselement&#39;</span><span class="p">,</span> <span class="s1">&#39;Fehlend&#39;</span><span class="p">)</span> <span class="p">}}</span><span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">td</span><span class="o">&gt;</span><span class="p">{{</span> <span class="n">predictionInput</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Maschine&#39;</span><span class="p">,</span> <span class="s1">&#39;Fehlend&#39;</span><span class="p">)</span> <span class="p">}}</span><span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>For the fields Prüfmittel, Stichprobenverfahren, and Lenkungsmethode, drop-down menus are shown. These menus are pre-filled with the model’s predicted value and allow manual correction by the user. Each drop-down is color-coded depending on the model’s confidence score:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">select</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Prüfmittel&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;</span>
+    <span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">confidence</span> <span class="o">&gt;=</span> <span class="mf">0.75</span> <span class="o">%</span><span class="p">}</span>
+        <span class="n">green</span>
+    <span class="p">{</span><span class="o">%</span> <span class="k">elif</span> <span class="n">confidence</span> <span class="o">&gt;=</span> <span class="mf">0.25</span> <span class="o">%</span><span class="p">}</span>
+        <span class="n">yellow</span>
+    <span class="p">{</span><span class="o">%</span> <span class="k">else</span> <span class="o">%</span><span class="p">}</span>
+        <span class="n">red</span>
+    <span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span>
+<span class="s2">&quot;&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>probaDict['Lenkungsmethode'][i] refers to a list of tuples that contain possible prediction options for row i of the Lenkungsmethode field.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="o">%</span> <span class="nb">set</span> <span class="n">confidence</span> <span class="o">=</span> <span class="n">probaDict</span><span class="p">[</span><span class="s1">&#39;Lenkungsmethode&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">%</span><span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Each drop-down contains multiple prediction options. These are taken from probaDict and structured as tuples.</p></li>
+<li><p><span class="varname">tuple[0]</span> : The probability</p></li>
+<li><p><span class="varname">tuple[1]</span> : The actual prediction key</p></li>
+<li><p><span class="varname">tuple[3]</span> : Shown in the dropdown</p></li>
+<li><p>The selected attribute is added if the value is equal to the model’s predicted result for that row (results['Lenkungsmethode'][i]), making it the default shown item.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="o">%</span> <span class="k">for</span> <span class="nb">tuple</span> <span class="ow">in</span> <span class="n">probaDict</span><span class="p">[</span><span class="s1">&#39;Lenkungsmethode&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">%</span><span class="p">}</span>
+    <span class="o">&lt;</span><span class="n">option</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;{{ tuple[1] }}&quot;</span> <span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="nb">tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;Lenkungsmethode&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">%</span><span class="p">}</span> <span class="n">selected</span> <span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="p">{{</span> <span class="nb">tuple</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">}}</span>
+    <span class="o">&lt;/</span><span class="n">option</span><span class="o">&gt;</span>
+<span class="p">{</span><span class="o">%</span> <span class="n">endfor</span> <span class="o">%</span><span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Below the table, there is a submit button. When clicked, the selected values are compiled and made available as an Excel download.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">button</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;submit&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;submit-button&quot;</span><span class="o">&gt;</span><span class="n">Excel</span><span class="o">-</span><span class="n">Download</span> <span class="n">bereitstellen</span><span class="o">&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>A second button lets the user return to the homepage.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">button</span> <span class="n">onclick</span><span class="o">=</span><span class="s2">&quot;window.location.href=&#39;/index&#39;&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;submit-button&quot;</span><span class="o">&gt;</span><span class="n">Zurück</span> <span class="n">zur</span> <span class="n">Startseite</span><span class="o">&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<p>HTML and logic done by Johannes</p>
+</section>
 </section>
 
 

@@ -15,7 +15,7 @@
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5c80bd1b"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -62,7 +62,11 @@
 <p class="caption" role="heading"><span class="caption-text">Tool Usage:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="predicting_new_vals.html">Predicting new Values</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Monitoring Performance</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Monitoring Performance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#technical-aspects">Technical Aspects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="trainingNewModels.html">Training new Models</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Technical Functionality:</span></p>
@@ -98,7 +102,96 @@
              
   <section id="monitoring-performance">
 <h1>Monitoring Performance<a class="headerlink" href="#monitoring-performance" title="Link to this heading"></a></h1>
-<p>Einführung in das Projekt. Perfekt. 2.</p>
+<p>The administration interface of the prediction system shows insights into the model's performance over time and allows administrators ro review model results in more detail.</p>
+<a class="reference internal image-reference" href="_images/administration.png"><img alt="Screenshot Administration Page" class="align-center" src="_images/administration.png" style="width: 600px;" />
+</a>
+<section id="technical-aspects">
+<h2>Technical Aspects<a class="headerlink" href="#technical-aspects" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>A summary table displaying three metrics from the latest prediction.</p></li>
+<li><p><span class="varname">totalPredictions</span> (Anzahl Vorhersagen): Number of predictions made.</p></li>
+<li><p><span class="varname">predictionChanged</span> (Vorhersagen angepasst): Number of predictions manually adjusted by users.</p></li>
+<li><p><span class="varname">predicitionChangeRatio</span> (Anpassungsrate): Ratio of adjusted predictions to the total, indicating user trust.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">table</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;margin: 0 auto; margin-bottom: 20px; border-collapse: collapse; width: 60%;&quot;</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">thead</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">Metriken</span> <span class="n">des</span> <span class="n">aktuellen</span> <span class="n">Modells</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="n">tr</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;background-color: #f4f4f4;&quot;</span><span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="n">th</span><span class="o">&gt;</span><span class="n">Anzahl</span> <span class="n">Vorhersagen</span><span class="o">&lt;/</span><span class="n">th</span><span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="n">th</span><span class="o">&gt;</span><span class="n">Vorhersagen</span> <span class="n">angepasst</span><span class="o">&lt;/</span><span class="n">th</span><span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="n">th</span><span class="o">&gt;</span><span class="n">Anpassungs</span><span class="o">-</span><span class="n">Rate</span><span class="o">&lt;/</span><span class="n">th</span><span class="o">&gt;</span>
+            <span class="o">&lt;/</span><span class="n">tr</span><span class="o">&gt;</span>
+        <span class="o">&lt;/</span><span class="n">thead</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">tbody</span><span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="n">tr</span><span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="n">td</span><span class="o">&gt;</span><span class="p">{{</span> <span class="n">predictionStats</span><span class="o">.</span><span class="n">totalPredictions</span> <span class="p">}}</span><span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="n">td</span><span class="o">&gt;</span><span class="p">{{</span> <span class="n">predictionStats</span><span class="o">.</span><span class="n">predictionChanged</span> <span class="p">}}</span><span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="n">td</span><span class="o">&gt;</span><span class="p">{{</span> <span class="n">predictionStats</span><span class="o">.</span><span class="n">predictionChangeRatio</span> <span class="p">}}</span><span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span>
+            <span class="o">&lt;/</span><span class="n">tr</span><span class="o">&gt;</span>
+        <span class="o">&lt;/</span><span class="n">tbody</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">table</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Render a line chart showing accuracy trends for different target labels (Prüfmittel, Stichprobenverfahren, Lenkungsmethode).</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">canvas</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;accuracyChart&quot;</span> <span class="n">width</span><span class="o">=</span><span class="s2">&quot;800&quot;</span> <span class="n">height</span><span class="o">=</span><span class="s2">&quot;400&quot;</span><span class="o">&gt;&lt;/</span><span class="n">canvas</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Plot accuracy over different model versions <span class="varname">modelIDs</span></p></li>
+<li><p><span class="varname">accuracyData</span> contains separate accuracy series for each target variable</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">const</span> <span class="n">accuracyChart</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Chart</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nb">type</span><span class="p">:</span> <span class="s1">&#39;line&#39;</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">labels</span><span class="p">:</span> <span class="p">{{</span> <span class="n">modelIDs</span><span class="o">|</span><span class="n">tojson</span> <span class="p">}},</span>
+            <span class="n">datasets</span><span class="p">:</span> <span class="p">[{</span>
+                <span class="n">label</span><span class="p">:</span> <span class="s1">&#39;Prüfmittel&#39;</span><span class="p">,</span>
+                <span class="n">data</span><span class="p">:</span> <span class="p">{{</span> <span class="n">accuracyData</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">|</span><span class="n">tojson</span> <span class="p">}},</span>
+                <span class="n">borderColor</span><span class="p">:</span> <span class="s1">&#39;rgba(75, 192, 192, 1)&#39;</span><span class="p">,</span>
+                <span class="o">//</span><span class="n">backgroundColor</span><span class="p">:</span> <span class="s1">&#39;rgba(75, 192, 192, 0.2)&#39;</span><span class="p">,</span>
+                <span class="n">borderWidth</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="n">fill</span><span class="p">:</span> <span class="n">true</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="n">label</span><span class="p">:</span> <span class="s1">&#39;Stichprobenverfahren&#39;</span><span class="p">,</span>
+                <span class="n">data</span><span class="p">:</span> <span class="p">{{</span> <span class="n">accuracyData</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">|</span><span class="n">tojson</span> <span class="p">}},</span>
+                <span class="n">borderColor</span><span class="p">:</span> <span class="s1">&#39;rgba(75, 192, 192, 1)&#39;</span><span class="p">,</span>
+                <span class="o">//</span><span class="n">backgroundColor</span><span class="p">:</span> <span class="s1">&#39;rgba(75, 192, 192, 0.2)&#39;</span><span class="p">,</span>
+                <span class="n">borderWidth</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="n">fill</span><span class="p">:</span> <span class="n">true</span>
+            <span class="p">},</span>
+
+            <span class="p">{</span>
+                <span class="n">label</span><span class="p">:</span> <span class="s1">&#39;Lenkungsmethode&#39;</span><span class="p">,</span>
+                <span class="n">data</span><span class="p">:</span> <span class="p">{{</span> <span class="n">accuracyData</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">|</span><span class="n">tojson</span> <span class="p">}},</span>
+                <span class="n">borderColor</span><span class="p">:</span> <span class="s1">&#39;rgba(75, 192, 192, 1)&#39;</span><span class="p">,</span>
+                <span class="o">//</span><span class="n">backgroundColor</span><span class="p">:</span> <span class="s1">&#39;rgba(75, 192, 192, 0.2)&#39;</span><span class="p">,</span>
+                <span class="n">borderWidth</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="n">fill</span><span class="p">:</span> <span class="n">true</span>
+            <span class="p">}]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Loads the Chart.js library from a CDN for plotting the line chart.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">script</span> <span class="n">src</span><span class="o">=</span><span class="s2">&quot;https://cdn.jsdelivr.net/npm/chart.js&quot;</span><span class="o">&gt;&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Button to manage stored predictions</p></li>
+<li><p>Button to return to landing page</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">button</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;submit-button&quot;</span> <span class="n">onclick</span><span class="o">=</span><span class="s2">&quot;window.location.href=&#39;/stasheddata&#39;&quot;</span><span class="o">&gt;</span><span class="n">Neue</span> <span class="n">Daten</span> <span class="n">verwalten</span><span class="o">&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">button</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;submit-button&quot;</span> <span class="n">onclick</span><span class="o">=</span><span class="s2">&quot;window.location.href=&#39;/index&#39;&quot;</span><span class="o">&gt;</span><span class="n">Zurück</span><span class="o">&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<p>HTML and logic done by Johannes and Serdar</p>
+</section>
 </section>
 
 

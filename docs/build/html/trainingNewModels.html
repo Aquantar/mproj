@@ -15,7 +15,7 @@
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5c80bd1b"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -63,7 +63,16 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="predicting_new_vals.html">Predicting new Values</a></li>
 <li class="toctree-l1"><a class="reference internal" href="monitoring_performance.html">Monitoring Performance</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Training new Models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Training new Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#management-and-integration-of-new-data">Management and Integration of new Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#triggering-model-training">Triggering Model Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#managing-existing-models">Managing existing Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#functionality">Functionality</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Technical Functionality:</span></p>
 <ul>
@@ -98,7 +107,180 @@
              
   <section id="training-new-models">
 <h1>Training new Models<a class="headerlink" href="#training-new-models" title="Link to this heading"></a></h1>
-<p>Einführung in das Projekt. Perfekt. 2.</p>
+<p>By clicking on the button <span class="varname">Neue Daten verwalten</span> on the Administration page you get to the <span class="varname">Management and Integration of new Data</span> page where it is possible to see the data which was submitted as correct but has not yet been used to train models with.</p>
+<section id="management-and-integration-of-new-data">
+<h2>Management and Integration of new Data<a class="headerlink" href="#management-and-integration-of-new-data" title="Link to this heading"></a></h2>
+<p>The functionality of this page allows users to review new tuples that have not yet been used to train the models but are confirmed to be correct. These tuples can either be deleted or used to train new models.</p>
+<a class="reference internal image-reference" href="_images/managementandintegrationofnewdata.png"><img alt="Screenshot Neue Daten verwalten Page" class="align-center" src="_images/managementandintegrationofnewdata.png" style="width: 600px;" />
+</a>
+<a class="reference internal image-reference" href="_images/trainnewmodels.png"><img alt="Screenshot Neue Daten verwalten Page" class="align-center" src="_images/trainnewmodels.png" style="width: 600px;" />
+</a>
+<ul class="simple">
+<li><p>Loading bars visualize the loading progress when stashed data (data that has not yet been trained with) is fetched from the server after the page loads and when a new model is being trained.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;loading-bar-container&quot;</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;loading-bar-container&quot;</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;loading-bar-container&quot;</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;training-loading-bar-container&quot;</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;display:none;&quot;</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Blocking message that informs the user that the training is in progress and no further actions should be taken during this time.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;popup-overlay&quot;</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;popup-overlay&quot;</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;popup&quot;</span><span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="n">h2</span><span class="o">&gt;</span><span class="n">Modelltraining</span> <span class="n">läuft</span><span class="o">...&lt;/</span><span class="n">h2</span><span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">Bitte</span> <span class="n">führen</span> <span class="n">Sie</span> <span class="n">während</span> <span class="n">des</span> <span class="n">Modelltrainings</span> <span class="n">keine</span> <span class="n">weiteren</span> <span class="n">Aktionen</span> <span class="n">durch</span><span class="o">.&lt;</span><span class="n">br</span><span class="o">&gt;</span> <span class="n">Dies</span> <span class="n">kann</span> <span class="n">einige</span> <span class="n">Minuten</span> <span class="n">dauern</span><span class="o">.&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+        <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Error message if data could not be fetched, the actual HTML data or a message if no data is available.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;data-box&quot;</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;data-box&quot;</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;display:none;&quot;</span><span class="o">&gt;</span>
+        <span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">error</span> <span class="o">%</span><span class="p">}</span>
+            <span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="o">&gt;</span><span class="p">{{</span> <span class="n">error</span> <span class="p">}}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+        <span class="p">{</span><span class="o">%</span> <span class="k">elif</span> <span class="n">data</span> <span class="o">%</span><span class="p">}</span>
+            <span class="p">{{</span> <span class="n">data</span><span class="o">|</span><span class="n">safe</span> <span class="p">}}</span>
+        <span class="p">{</span><span class="o">%</span> <span class="k">else</span> <span class="o">%</span><span class="p">}</span>
+            <span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="o">&gt;</span><span class="n">Keine</span> <span class="n">Daten</span> <span class="n">vorhanden</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+        <span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span>
+<span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Buttons for starting new model training, managing already trained models and back to landing page</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;button-container&quot;</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">form</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;train-form&quot;</span><span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="n">button</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;submit&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;styled-button&quot;</span><span class="o">&gt;</span><span class="n">Neue</span> <span class="n">Modelle</span> <span class="n">trainieren</span><span class="o">&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
+        <span class="o">&lt;/</span><span class="n">form</span><span class="o">&gt;</span>
+
+        <span class="o">&lt;</span><span class="n">form</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;/manage_models&quot;</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;display:inline;&quot;</span><span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="n">button</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;submit&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;styled-button&quot;</span><span class="o">&gt;</span><span class="n">Modelle</span> <span class="n">verwalten</span><span class="o">&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
+        <span class="o">&lt;/</span><span class="n">form</span><span class="o">&gt;</span>
+
+        <span class="o">&lt;</span><span class="n">button</span> <span class="n">onclick</span><span class="o">=</span><span class="s2">&quot;window.location.href=&#39;/index&#39;&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;styled-button&quot;</span><span class="o">&gt;</span><span class="n">Zurück</span> <span class="n">zur</span> <span class="n">Startseite</span><span class="o">&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>if <span class="varname">rowCount &gt; 0</span>, a loading animation is shown.</p></li>
+<li><p>Progress is incremented over time to simulate data loading</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">window</span><span class="o">.</span><span class="n">addEventListener</span><span class="p">(</span><span class="s1">&#39;load&#39;</span><span class="p">,</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">const</span> <span class="n">loadingBarContainer</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">getElementById</span><span class="p">(</span><span class="s1">&#39;loading-bar-container&#39;</span><span class="p">);</span>
+        <span class="n">const</span> <span class="n">loadingBar</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">getElementById</span><span class="p">(</span><span class="s1">&#39;loading-bar&#39;</span><span class="p">);</span>
+        <span class="n">const</span> <span class="n">dataBox</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">getElementById</span><span class="p">(</span><span class="s1">&#39;data-box&#39;</span><span class="p">);</span>
+        <span class="n">const</span> <span class="n">rowCount</span> <span class="o">=</span> <span class="p">{{</span> <span class="n">row_count</span> <span class="p">}};</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">rowCount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">loadingBarContainer</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s1">&#39;block&#39;</span><span class="p">;</span>
+            <span class="n">let</span> <span class="n">progress</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="n">let</span> <span class="n">step</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Math</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">/</span> <span class="n">rowCount</span><span class="p">));</span>
+
+            <span class="n">const</span> <span class="n">interval</span> <span class="o">=</span> <span class="n">setInterval</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+                <span class="n">progress</span> <span class="o">+=</span> <span class="n">step</span><span class="p">;</span>
+                <span class="n">loadingBar</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">progress</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;%&#39;</span><span class="p">;</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">progress</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">clearInterval</span><span class="p">(</span><span class="n">interval</span><span class="p">);</span>
+                    <span class="n">loadingBarContainer</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span><span class="p">;</span>
+                    <span class="n">dataBox</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s1">&#39;block&#39;</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">},</span> <span class="mi">50</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">dataBox</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s1">&#39;block&#39;</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+</pre></div>
+</div>
+</section>
+<section id="triggering-model-training">
+<h2>Triggering Model Training<a class="headerlink" href="#triggering-model-training" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>shows a popup and training progress bar</p></li>
+<li><p>sends <span class="varname">POST</span> request to <span class="varname">/model_training</span></p></li>
+<li><p>replaces page content with server response upon success</p></li>
+<li><p>catches and shows error popup in case of failure</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">document</span><span class="o">.</span><span class="n">getElementById</span><span class="p">(</span><span class="s1">&#39;train-form&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">addEventListener</span><span class="p">(</span><span class="s1">&#39;submit&#39;</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">e</span><span class="o">.</span><span class="n">preventDefault</span><span class="p">();</span>
+
+        <span class="n">const</span> <span class="n">trainingBarContainer</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">getElementById</span><span class="p">(</span><span class="s1">&#39;training-loading-bar-container&#39;</span><span class="p">);</span>
+        <span class="n">const</span> <span class="n">trainingBar</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">getElementById</span><span class="p">(</span><span class="s1">&#39;training-loading-bar&#39;</span><span class="p">);</span>
+        <span class="n">const</span> <span class="n">popupOverlay</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">getElementById</span><span class="p">(</span><span class="s1">&#39;popup-overlay&#39;</span><span class="p">);</span>
+
+        <span class="n">popupOverlay</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s1">&#39;flex&#39;</span><span class="p">;</span>
+        <span class="n">trainingBarContainer</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s1">&#39;block&#39;</span><span class="p">;</span>
+        <span class="n">trainingBar</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="s1">&#39;0%&#39;</span><span class="p">;</span>
+
+        <span class="n">let</span> <span class="n">progress</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">const</span> <span class="n">interval</span> <span class="o">=</span> <span class="n">setInterval</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="n">progress</span> <span class="o">+=</span> <span class="mi">3</span><span class="p">;</span>
+            <span class="n">trainingBar</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">progress</span> <span class="o">+</span> <span class="s1">&#39;%&#39;</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">progress</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">clearInterval</span><span class="p">(</span><span class="n">interval</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">},</span> <span class="mi">300</span><span class="p">);</span>
+
+        <span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;/model_training&#39;</span><span class="p">,</span> <span class="p">{</span>
+            <span class="n">method</span><span class="p">:</span> <span class="s1">&#39;POST&#39;</span>
+        <span class="p">})</span>
+        <span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">response</span> <span class="o">=&gt;</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">())</span>
+        <span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">html</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="n">document</span><span class="o">.</span><span class="n">open</span><span class="p">();</span>
+            <span class="n">document</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">html</span><span class="p">);</span>
+            <span class="n">document</span><span class="o">.</span><span class="n">close</span><span class="p">();</span>
+        <span class="p">})</span>
+        <span class="o">.</span><span class="n">catch</span><span class="p">(</span><span class="n">err</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Fehler beim Modelltraining:&#39;</span><span class="p">,</span> <span class="n">err</span><span class="p">);</span>
+            <span class="n">popupOverlay</span><span class="o">.</span><span class="n">innerHTML</span> <span class="o">=</span> <span class="s1">&#39;&lt;div class=&quot;popup&quot;&gt;&lt;h2&gt;Fehler&lt;/h2&gt;&lt;p&gt;Das Modelltraining konnte nicht gestartet werden.&lt;/p&gt;&lt;/div&gt;&#39;</span><span class="p">;</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+</pre></div>
+</div>
+</section>
+<section id="managing-existing-models">
+<h2>Managing existing Models<a class="headerlink" href="#managing-existing-models" title="Link to this heading"></a></h2>
+<p>The Management of existing models page provides an overview of the most recently trained models and allows for restoring previous model versions.</p>
+<section id="functionality">
+<h3>Functionality<a class="headerlink" href="#functionality" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Model Overview</strong>:
+Displays up to three of the most recently trained machine learning models, including key performance metrics.</p></li>
+<li><p><strong>Warning Message</strong>:
+A highlighted warning (<cite>⚠️</cite>) informs the user that restoring a backup model will <em>permanently</em> replace the currently active model.</p></li>
+<li><p><strong>Dynamic Content Rendering</strong>:</p>
+<ul>
+<li><p>If an error occurs while loading model data, the error is shown in red.</p></li>
+<li><p>If model data is available, it is injected into the page as pre-formatted HTML using the <cite>safe</cite> Jinja2 filter.</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;container&quot;</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">Modelle</span> <span class="n">verwalten</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">Hier</span> <span class="n">sehen</span> <span class="n">Sie</span> <span class="n">die</span> <span class="n">letzten</span> <span class="n">drei</span> <span class="n">trainierten</span> <span class="n">Modelle</span> <span class="n">mit</span> <span class="n">ihren</span> <span class="n">Leistungskennzahlen</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">p</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;color: #dc3545; font-weight: bold;&quot;</span><span class="o">&gt;</span><span class="err">⚠️</span> <span class="n">Hinweis</span><span class="p">:</span> <span class="n">Das</span> <span class="n">Wiederherstellen</span> <span class="n">eines</span> <span class="n">Back</span><span class="o">-</span><span class="n">Up</span> <span class="n">Modells</span> <span class="n">ersetzt</span> <span class="n">das</span> <span class="n">aktuelle</span> <span class="n">Modell</span> <span class="n">dauerhaft</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+
+    <span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;data-box&quot;</span><span class="o">&gt;</span>
+        <span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">error</span> <span class="o">%</span><span class="p">}</span>
+            <span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="o">&gt;</span><span class="p">{{</span> <span class="n">error</span> <span class="p">}}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+        <span class="p">{</span><span class="o">%</span> <span class="k">elif</span> <span class="n">models</span> <span class="o">%</span><span class="p">}</span>
+            <span class="p">{{</span> <span class="n">models</span><span class="o">|</span><span class="n">safe</span> <span class="p">}}</span>
+        <span class="p">{</span><span class="o">%</span> <span class="k">else</span> <span class="o">%</span><span class="p">}</span>
+            <span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="o">&gt;</span><span class="n">Keine</span> <span class="n">Modelldaten</span> <span class="n">gefunden</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+        <span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span>
+    <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<p>HTML and logic done by Johannes</p>
+</section>
 </section>
 
 

@@ -15,7 +15,7 @@
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5c80bd1b"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -47,7 +47,13 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usecase.html">Use Case</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tool Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tool Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#landing-page">Landing Page</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#control-plan-creation">Control Plan Creation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#administration">Administration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tool-improvement">Tool Improvement</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="conclusion.html">Conclusion</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Quick Start:</span></p>
@@ -98,7 +104,32 @@
              
   <section id="tool-overview">
 <h1>Tool Overview<a class="headerlink" href="#tool-overview" title="Link to this heading"></a></h1>
-<p>Einführung in das Projekt. Perfekt. 2.</p>
+<p>This section provides a brief insight into the main functionalities of the tool and explains their purpose.</p>
+<section id="landing-page">
+<h2>Landing Page<a class="headerlink" href="#landing-page" title="Link to this heading"></a></h2>
+<p>The landing page is designed to provide users with a clear and concise overview of the tool’s functionalities. It is divided into two main sections: the prediction area and the administration area.</p>
+<a class="reference internal image-reference" href="_images/landingpage.png"><img alt="Screenshot Landing Page" class="align-center" src="_images/landingpage.png" style="width: 600px;" />
+</a>
+</section>
+<section id="control-plan-creation">
+<h2>Control Plan Creation<a class="headerlink" href="#control-plan-creation" title="Link to this heading"></a></h2>
+<p>On the “Control Plan Creation” page, the completed prediction is displayed. Here, the user still has the option to adjust the predicted values. Additionally, color coding is used to indicate whether the prediction probability exceeds 75% or not. By clicking the submit button, the table containing the finalized values can be downloaded as an Excel file.</p>
+<a class="reference internal image-reference" href="_images/Controlplancreation.png"><img alt="Screenshot Landing Page" class="align-center" src="_images/Controlplancreation.png" style="width: 600px;" />
+</a>
+<a class="reference internal image-reference" href="_images/controlplandownload.png"><img alt="Screenshot Landing Page" class="align-center" src="_images/controlplandownload.png" style="width: 600px;" />
+</a>
+</section>
+<section id="administration">
+<h2>Administration<a class="headerlink" href="#administration" title="Link to this heading"></a></h2>
+<p>The Administration section provides both short-term and long-term quality assurance functionalities. In the short term, users gain an overview of the current predictive performance of the model generation through key metrics such as the number of predictions, the number of manual adjustments, and the resulting adjustment rate. This allows users to directly assess how reliable the current model is.</p>
+<p>In the long term, a dynamic chart displays the development of predictive accuracy across different model generations. This visualization supports ongoing quality monitoring and ensures that any fluctuations or improvements in predictive power over time can be tracked and evaluated. Additionally, the interface allows users to manage and upload new data to continuously improve and retrain the model.</p>
+<p>The administration page is additionally protected by a login form to prevent unauthorized access, ensuring that only authorized users can execute the retraining function.</p>
+<a class="reference internal image-reference" href="_images/administration.png"><img alt="Screenshot Administration Page" class="align-center" src="_images/administration.png" style="width: 600px;" />
+</a>
+</section>
+<section id="tool-improvement">
+<h2>Tool Improvement<a class="headerlink" href="#tool-improvement" title="Link to this heading"></a></h2>
+</section>
 </section>
 
 
