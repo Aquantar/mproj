@@ -23,6 +23,7 @@ def createPrediction(model, predData, outputFeature, conversionMap, scaler):
                     conversionMap[key] = currentDict
                     predData.at[index, key]=value[row[key]]
     predData = predData.values.tolist()
+    
     predData = scaler.transform(predData) #apply scaler to predData
     preds = model.predict(predData) #predict output features
     
@@ -270,7 +271,7 @@ def getUniqueValues(data): #extracts all unique values from a dataframe
         uniqueVals[col] = uniqueList
     return uniqueVals
 
-def convertPredDataToDataframe(data): #takes the initial input and converts it into a dataframe suitable predictions
+def convertPredDataToDataframe(data): #takes the initial input and converts it into a dataframe suitable for predictions
     pd.set_option('display.max_columns', None)
     dataAll = pd.read_excel(data)
     data = pd.read_excel(data, skiprows=11)

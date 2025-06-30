@@ -1,0 +1,617 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="English" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feature Prediction &mdash; Jopp_PJS 16.05.2025 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=1d209903" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5c80bd1b"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Model Management" href="code_modelMonitoring.html" />
+    <link rel="prev" title="Model Training" href="code_trainNewModel.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Jopp_PJS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usecase.html">Use Case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toolOverview.html">Tool Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conclusion.html">Conclusion</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Quick Start:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tool Framework:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="problem_description.html">Problem Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="selected_algorithms.html">Selected Algorithms</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tool Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="predicting_new_vals.html">Predicting new Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monitoring_performance.html">Monitoring Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trainingNewModels.html">Training new Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technical Functionality:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="code_trainNewModel.html">Model Training</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Feature Prediction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#function-prediction-results">Function: prediction_results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#purpose">Purpose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#process">Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#returns">Returns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#function-prediction-results-confirmed">Function: prediction_results_confirmed</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Purpose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Returns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#function-convertpreddatatodataframe">Function: convertPredDataToDataframe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Purpose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">Returns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#function-createprediction">Function: createPrediction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id11">Purpose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id12">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id13">Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id14">Returns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id15">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#function-getuniquevalues">Function: getUniqueValues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id16">Purpose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id17">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id18">Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id19">Returns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id20">Notes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="code_modelMonitoring.html">Model Management</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Jopp_PJS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Feature Prediction</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/your-github-username/your-repo-name/blob/main/docs/code_createPrediction.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="feature-prediction">
+<h1>Feature Prediction<a class="headerlink" href="#feature-prediction" title="Link to this heading"></a></h1>
+<section id="function-prediction-results">
+<h2>Function: prediction_results<a class="headerlink" href="#function-prediction-results" title="Link to this heading"></a></h2>
+<section id="purpose">
+<h3>Purpose<a class="headerlink" href="#purpose" title="Link to this heading"></a></h3>
+<p>This function is part of routes.py. After receiving an input in the form of a .xlsx file through the web-UI, it loads relevant items required for output feature prediction and calls <span class="varname">createPrediction</span> for each desired output feature type.</p>
+</section>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><span class="varname">input_prediction</span>: Input .xlsx file uploaded via web-UI containing raw input data tuples</p></li>
+</ul>
+</section>
+<section id="process">
+<h3>Process<a class="headerlink" href="#process" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt>Preparation of items required for predicions:</dt><dd><ul class="simple">
+<li><p>Loads the <span class="varname">conversionMap</span> built during model training</p></li>
+<li><p>Loads the <span class="varname">scaler</span> built during model training</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Initial Preparation: <span class="varname">convertPredDataToDataframe</span> is called in order to convert the initial input file into a dataframe suitable for pre-processing</p></li>
+<li><p>Delegation of output feature prediction: For each desired output feature, the correct model is loaded and <span class="varname">createPrediction</span> is called</p></li>
+<li><p>Resulting output features for each feature type are added to input and visualized on the web-UI</p></li>
+</ol>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Reroute to <span class="varname">prediction_results.html</span>, displaying input featurs and the corresponding predicted output features on the web-UI</p></li>
+</ul>
+</section>
+<section id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Built by: Serdar (Corresponding Web-Overlay <span class="varname">prediction_results.html</span> built by Serdar, Johannes)</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/prediction_results_confirmed&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">prediction_results</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">results</span>
+    <span class="k">global</span> <span class="n">outputCols</span>
+    <span class="k">global</span> <span class="n">predInputFormatted</span>
+    <span class="k">global</span> <span class="n">originalInputFile</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">originalInputFile</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s1">&#39;input_prediction&#39;</span><span class="p">]</span>
+        <span class="n">conversionMap</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;models//model1//conversionMap.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">))</span>   <span class="c1">#load conversion map of current model</span>
+        <span class="n">scaler</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;models//model1//scaler.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">))</span> <span class="c1">#load scaler of current model</span>
+        <span class="n">predInputFormatted</span> <span class="o">=</span> <span class="n">convertPredDataToDataframe</span><span class="p">(</span><span class="n">originalInputFile</span><span class="p">)</span> <span class="c1">#take input file, convert into dataframe to be used for predictions</span>
+        <span class="n">originalInputFile</span> <span class="o">=</span> <span class="n">load_workbook</span><span class="p">(</span><span class="n">originalInputFile</span><span class="p">)</span> <span class="c1">#saving original input as workbook in this var to re-output it including predicion results later</span>
+        <span class="n">probaDict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">outputCols</span><span class="p">:</span>  <span class="c1">#perform prediction for each desired predicted feature</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;models//model1//</span><span class="si">{}</span><span class="s1">.pkl&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">col</span><span class="p">),</span> <span class="s1">&#39;rb&#39;</span><span class="p">))</span> <span class="c1">#load current model</span>
+            <span class="n">singleColResults</span><span class="p">,</span> <span class="n">probaTuple</span> <span class="o">=</span> <span class="n">createPrediction</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">predInputFormatted</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">conversionMap</span><span class="p">,</span> <span class="n">scaler</span><span class="p">)</span> <span class="c1">#create predictions for current feature</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">singleColResults</span> <span class="c1">#add predictions to results dict</span>
+            <span class="n">probaDict</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">probaTuple</span> <span class="c1">#add probability values to probaDict</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>  <span class="c1">#add output features to input</span>
+            <span class="n">predInputFormatted</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="n">unique_values</span> <span class="o">=</span> <span class="n">getUniqueValues</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;models//model1//currentTrainData.xlsx&#39;</span><span class="p">))</span> <span class="c1">#extract all unique values for display purposes</span>
+
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;prediction_results.html&#39;</span><span class="p">,</span> <span class="n">uniqueVals</span><span class="o">=</span><span class="n">unique_values</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="n">results</span><span class="p">,</span> <span class="n">featureCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">predInputFormatted</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="n">predictionInput</span><span class="o">=</span><span class="n">predInputFormatted</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">),</span> <span class="n">probaDict</span><span class="o">=</span><span class="n">probaDict</span><span class="p">)</span>
+    <span class="k">return</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="function-prediction-results-confirmed">
+<h2>Function: prediction_results_confirmed<a class="headerlink" href="#function-prediction-results-confirmed" title="Link to this heading"></a></h2>
+<section id="id1">
+<h3>Purpose<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>This function is part of routes.py. After prediction results have been validated by a human via web-UI following the function <span class="varname">prediction_results</span>, any modifications done are applied and documented before a final output file is streamed outwards. Further, new tuples found within the input data that do not exist within the training data of the current model are saved for re-training in the future</p>
+</section>
+<section id="id2">
+<h3>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><span class="varname">choicesOutput</span> : request form containing validated and possibly manipulated prediction data after human interaction via Web-UI</p></li>
+</ul>
+</section>
+<section id="id3">
+<h3>Process<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt>Preparation and output of validated results</dt><dd><ul class="simple">
+<li><p>Any human changes done via web-UI during the control step are implemented in the output dataframe</p></li>
+<li><p>Input tuples are combined with their corresponding output features</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Amount of human changes to results are recorded to model metrics</p></li>
+<li><p>File <span class="varname">stashedTrainData</span> is updated with input tuples that do not exist in current training data</p></li>
+<li><p>Download of final output file is initiated</p></li>
+</ol>
+</section>
+<section id="id4">
+<h3>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Final output file in the form of a streamed .xlsx file</p></li>
+</ul>
+</section>
+<section id="id5">
+<h3>Notes<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Built by: Serdar, Johannes (Corresponding Web-Overlay <span class="varname">prediction_results.html</span> built by Serdar, Johannes)</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/prediction_results_confirmed&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">prediction_results_confirmed</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">results</span>
+    <span class="k">global</span> <span class="n">predInputFormatted</span>
+    <span class="k">global</span> <span class="n">originalInputFile</span>
+    <span class="k">global</span> <span class="n">outputCols</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="c1">#replace predicted values with modified ones from results form</span>
+        <span class="n">choicesOutput</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span>
+        <span class="n">outputDict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">choicesOutput</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">multi</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">valTrimmed</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39; \(\d+%\)&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">listTemp</span> <span class="o">=</span> <span class="n">outputDict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">listTemp</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">listTemp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">valTrimmed</span><span class="p">)</span>
+            <span class="n">outputDict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">listTemp</span>
+
+        <span class="c1">#check differences in pre and post human monitoring, and document</span>
+        <span class="n">totalVals</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">diffSelection</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">outputDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">listPre</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">listPost</span> <span class="o">=</span> <span class="n">outputDict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">totalVals</span> <span class="o">=</span> <span class="n">totalVals</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">listPre</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">listPre</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">listPre</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">!=</span> <span class="n">listPost</span><span class="p">[</span><span class="n">idx</span><span class="p">]:</span>
+                    <span class="n">diffSelection</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="n">modelMetrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;models//modelData.xlsx&#39;</span><span class="p">)</span>
+        <span class="n">lastrow</span> <span class="o">=</span> <span class="n">modelMetrics</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">lastrow</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lastrow</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span> <span class="o">+</span> <span class="n">totalVals</span>
+        <span class="n">lastrow</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lastrow</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span> <span class="o">+</span> <span class="n">diffSelection</span>
+        <span class="n">lastrow</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="n">lastrow</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">/</span><span class="n">lastrow</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="n">modelMetrics</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">lastrow</span>
+        <span class="n">modelMetrics</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s2">&quot;models//modelData.xlsx&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1">#combine predictions with inputs</span>
+        <span class="n">predictionOutput</span> <span class="o">=</span> <span class="n">predInputFormatted</span>
+        <span class="n">predictionOutput</span><span class="p">[</span><span class="s1">&#39;Prüfmittel&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">outputDict</span><span class="p">[</span><span class="s1">&#39;Prüfmittel&#39;</span><span class="p">]</span>
+        <span class="n">predictionOutput</span><span class="p">[</span><span class="s1">&#39;Stichprobenverfahren&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">outputDict</span><span class="p">[</span><span class="s1">&#39;Stichprobenverfahren&#39;</span><span class="p">]</span>
+        <span class="n">predictionOutput</span><span class="p">[</span><span class="s1">&#39;Lenkungsmethode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">outputDict</span><span class="p">[</span><span class="s1">&#39;Lenkungsmethode&#39;</span><span class="p">]</span>
+
+        <span class="c1">#update stashedTrainData with new rows which don&#39;t exist in training data</span>
+        <span class="n">trainData</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;models//model1//currentTrainData.xlsx&#39;</span><span class="p">)</span>
+        <span class="n">trainData</span> <span class="o">=</span> <span class="n">trainData</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">predictionOutput</span> <span class="o">=</span> <span class="n">predictionOutput</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">newData</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">predictionOutput</span><span class="p">,</span><span class="n">trainData</span><span class="p">,</span> <span class="n">indicator</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;outer&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;_merge==&quot;left_only&quot;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;_merge&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">stashedData</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;models//stashedTrainData.xlsx&#39;</span><span class="p">)</span>
+        <span class="n">stashedData</span> <span class="o">=</span> <span class="n">stashedData</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">stashedData</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">stashedData</span><span class="p">,</span> <span class="n">newData</span><span class="p">])</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+        <span class="n">stashedData</span> <span class="o">=</span> <span class="n">stashedData</span><span class="o">.</span><span class="n">replace</span><span class="p">([</span><span class="s1">&#39;nan&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+        <span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelWriter</span><span class="p">(</span><span class="s2">&quot;models//stashedTrainData.xlsx&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+            <span class="n">stashedData</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1">#get original input file to add output vals into</span>
+        <span class="n">originalInputFileSheet</span> <span class="o">=</span> <span class="n">originalInputFile</span><span class="o">.</span><span class="n">active</span>
+        <span class="n">start_row</span> <span class="o">=</span> <span class="mi">13</span>
+        <span class="n">end_row</span> <span class="o">=</span> <span class="n">originalInputFileSheet</span><span class="o">.</span><span class="n">max_row</span>  <span class="c1"># or set a specific number if needed</span>
+        <span class="n">col_pruefmittel</span> <span class="o">=</span> <span class="mi">15</span>
+        <span class="n">col_stichprobe</span> <span class="o">=</span> <span class="mi">16</span>
+        <span class="n">col_lenkung</span> <span class="o">=</span> <span class="mi">18</span>
+        <span class="c1">#map lenkungsmethode number value to text value for output</span>
+        <span class="n">lm_mapped</span><span class="o">=</span> <span class="p">[]</span>
+        <span class="n">mappingFrame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;data//controlMethod_mappingInfo.xlsx&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">outputDict</span><span class="p">[</span><span class="s1">&#39;Lenkungsmethode&#39;</span><span class="p">]):</span>
+            <span class="n">lm_mapped</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mappingFrame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mappingFrame</span><span class="p">[</span><span class="s1">&#39;Lenkungsmethode&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">outputDict</span><span class="p">[</span><span class="s1">&#39;Lenkungsmethode&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">])),</span> <span class="s1">&#39;Beschreibung&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="c1">#insert vals into input</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row_num</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">start_row</span><span class="p">,</span> <span class="n">end_row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">originalInputFileSheet</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">row_num</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">col_pruefmittel</span><span class="p">)</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">outputDict</span><span class="p">[</span><span class="s1">&#39;Prüfmittel&#39;</span><span class="p">][</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">originalInputFileSheet</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">row_num</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">col_stichprobe</span><span class="p">)</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">outputDict</span><span class="p">[</span><span class="s1">&#39;Stichprobenverfahren&#39;</span><span class="p">][</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">originalInputFileSheet</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">row_num</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">col_lenkung</span><span class="p">)</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">lm_mapped</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="c1">#initiate download of output</span>
+        <span class="n">sio</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
+        <span class="n">outputName</span> <span class="o">=</span> <span class="s2">&quot;output&quot;</span>
+        <span class="n">originalInputFile</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sio</span><span class="p">)</span>
+        <span class="n">sio</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">make_response</span><span class="p">(</span><span class="n">sio</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+        <span class="n">resp</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;attachment; filename=</span><span class="si">{}</span><span class="s2">.xlsx&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputName</span><span class="p">)</span>
+        <span class="n">resp</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&quot;</span>
+        <span class="k">return</span> <span class="n">resp</span>
+    <span class="k">return</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="function-convertpreddatatodataframe">
+<h2>Function: convertPredDataToDataframe<a class="headerlink" href="#function-convertpreddatatodataframe" title="Link to this heading"></a></h2>
+<section id="id6">
+<h3>Purpose<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>The initial input as desired by Jopp is distinctly formatted and thus not suitable for pre-processing. This function extracts relevant data from the initial input into a dataframe.</p>
+</section>
+<section id="id7">
+<h3>Parameters<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><span class="varname">data</span> (dataframe): Raw dataframe used as input by Jopp</p></li>
+</ul>
+</section>
+<section id="id8">
+<h3>Process<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Relevant rows and columns are extracted from the input dataframe, and a new dataframe containing raw data suitable for pre-processing is created</p></li>
+</ol>
+</section>
+<section id="id9">
+<h3>Returns<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><span class="varname">data</span> (dataframe): Dataframe containing relevant extracted data</p></li>
+</ul>
+</section>
+<section id="id10">
+<h3>Notes<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Built by: Serdar</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">convertPredDataToDataframe</span><span class="p">(</span><span class="n">data</span><span class="p">):</span> <span class="c1">#takes the initial input and converts it into a dataframe suitable for predictions</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">dataAll</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">]],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">specificationList</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Unnamed: 10&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">units</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">specificationList</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">split</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="n">specificationList</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">units</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">split</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">units</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Unnamed: 6&quot;</span><span class="p">:</span> <span class="s2">&quot;Produktmerkmal&quot;</span><span class="p">,</span> <span class="s2">&quot;Unnamed: 7&quot;</span><span class="p">:</span> <span class="s2">&quot;Produktmerkmal_Text&quot;</span><span class="p">,</span> <span class="s2">&quot;Unnamed: 10&quot;</span><span class="p">:</span> <span class="s2">&quot;Spezifikation&quot;</span><span class="p">,</span> <span class="s2">&quot;Unnamed: 11&quot;</span><span class="p">:</span> <span class="s2">&quot;Unterer_Grenzwert&quot;</span><span class="p">,</span> <span class="s2">&quot;Unnamed: 13&quot;</span><span class="p">:</span> <span class="s2">&quot;Oberer_Grenzwert&quot;</span><span class="p">})</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Masseinheit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">units</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Produktmerkmal_Text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()]</span>
+
+    <span class="n">prozesselement</span> <span class="o">=</span> <span class="n">dataAll</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">maschine</span> <span class="o">=</span> <span class="n">dataAll</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">11</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Prozesselement&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prozesselement</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Maschine&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">maschine</span>
+
+    <span class="k">return</span> <span class="n">data</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="function-createprediction">
+<h2>Function: createPrediction<a class="headerlink" href="#function-createprediction" title="Link to this heading"></a></h2>
+<section id="id11">
+<h3>Purpose<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<p>This function derives the predicted output features for a desired column by employing a pre-trained model on a tuple of input features. Further, a list of predicted probabilities for each classified value is created to provide decision support during the human validation step.</p>
+</section>
+<section id="id12">
+<h3>Parameters<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><span class="varname">model</span> : The model to be used for predictions</p></li>
+<li><p><span class="varname">predData</span> (dataframe): The set of raw input data, containing one or multiple input tuples</p></li>
+<li><p><span class="varname">outputFeature</span> (string): The name of the desired output feature</p></li>
+<li><p><span class="varname">conversionMap</span> (dictionary): A dictionary that maps each possible unique value within a column to a unique numeric value</p></li>
+<li><p><span class="varname">scaler</span> : The scaler created during model training which normalizes each input value to a number between 0 and 1</p></li>
+</ul>
+</section>
+<section id="id13">
+<h3>Process<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt>Data Pre-Processing:</dt><dd><ul class="simple">
+<li><p>Calls the function <span class="varname">prepareRawData</span> which cleans the input data before further processing</p></li>
+<li><p>Applying <span class="varname">conversionMap</span> which has been built during model training, each value within the input data is replaced with its corresponding numeric value. If a value does not exist within <span class="varname">conversionMap</span>, it is paired with a new unique number and added to the dictionary</p></li>
+<li><p>Input features are scaled to values between 0 and 1 using <span class="varname">scaler</span> which has been built during model training</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Feature Prediction:</dt><dd><ul class="simple">
+<li><p>The pre-trained model is applied to the input data, predicting a set of output features, one per input tuple</p></li>
+<li><p>Resulting output features are re-mapped to non-numeric values using <span class="varname">conversionMap</span></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Probability List Creation:</dt><dd><ul class="simple">
+<li><p>Using the function <span class="varname">predict_proba</span>, a probability distribution for each input feature tuple is created, indicating the probability with which each possible output feature is the correct one for each case</p></li>
+<li><p>The created probability tuple of all output features for each input tuple is sorted by probability</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+<section id="id14">
+<h3>Returns<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><span class="varname">predictions_text</span> (list): The list of output features, derived from their respective input tuples</p></li>
+<li><p><span class="varname">probaTuple</span> (list): A list of lists containing all possible output features for each input tuple, paired with their respective probability in being correct</p></li>
+</ul>
+</section>
+<section id="id15">
+<h3>Notes<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Built by: Serdar</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">createPrediction</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">predData</span><span class="p">,</span> <span class="n">outputFeature</span><span class="p">,</span> <span class="n">conversionMap</span><span class="p">,</span> <span class="n">scaler</span><span class="p">):</span>
+    <span class="n">predData</span> <span class="o">=</span> <span class="n">prepareRawData</span><span class="p">(</span><span class="n">predData</span><span class="p">)</span> <span class="c1">#prepare raw data for predictions</span>
+
+    <span class="c1">#replace vals in predData with corresponding vals in conversionMap. If doesn&#39;t exist in conversionMap, create a new val</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">predData</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">conversionMap</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">predData</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">predData</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">value</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="n">currentDict</span> <span class="o">=</span> <span class="n">conversionMap</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                    <span class="n">highestValue</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">for</span> <span class="n">key2</span><span class="p">,</span> <span class="n">value2</span> <span class="ow">in</span> <span class="n">currentDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="n">value2</span> <span class="o">&gt;</span> <span class="n">highestValue</span><span class="p">:</span>
+                            <span class="n">highestValue</span> <span class="o">=</span> <span class="n">value2</span>
+                    <span class="n">highestValue</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">currentDict</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span> <span class="o">=</span> <span class="n">highestValue</span>
+                    <span class="n">conversionMap</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">currentDict</span>
+                    <span class="n">predData</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">value</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span>
+    <span class="n">predData</span> <span class="o">=</span> <span class="n">predData</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="n">predData</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">predData</span><span class="p">)</span> <span class="c1">#apply scaler to predData</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">predData</span><span class="p">)</span> <span class="c1">#predict output features</span>
+
+    <span class="c1">#re-map output vals to their text versions</span>
+    <span class="n">predictions_text</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">pred</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">preds</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">outputFeature</span> <span class="ow">in</span> <span class="n">conversionMap</span><span class="p">:</span>
+            <span class="n">mapping</span> <span class="o">=</span> <span class="n">conversionMap</span><span class="p">[</span><span class="n">outputFeature</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="n">preds</span><span class="p">[</span><span class="n">idx</span><span class="p">]:</span>
+                    <span class="n">predictions_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">predictions_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">pred</span><span class="p">))</span>
+
+    <span class="c1">#prepare mapping for Lenkungsmethode</span>
+    <span class="k">if</span> <span class="n">outputFeature</span> <span class="o">==</span> <span class="s2">&quot;Lenkungsmethode&quot;</span><span class="p">:</span>
+        <span class="n">mappingFrame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;data//controlMethod_mappingInfo.xlsx&#39;</span><span class="p">)</span>
+
+    <span class="c1">#create probabilityList</span>
+    <span class="n">predProbabilities</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">predData</span><span class="p">)</span>
+    <span class="n">probaTuple</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">predTuple</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">predProbabilities</span><span class="p">):</span>
+        <span class="nb">tuple</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">idx2</span><span class="p">,</span> <span class="n">proba</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">predProbabilities</span><span class="p">[</span><span class="n">idx</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">outputFeature</span> <span class="ow">in</span> <span class="n">conversionMap</span><span class="p">:</span>
+                <span class="n">mapping</span> <span class="o">=</span> <span class="n">conversionMap</span><span class="p">[</span><span class="n">outputFeature</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="n">idx2</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">outputFeature</span> <span class="o">!=</span> <span class="s2">&quot;Lenkungsmethode&quot;</span><span class="p">:</span>
+                            <span class="nb">tuple</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">proba</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;%)&quot;</span><span class="p">,</span> <span class="n">proba</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">desc</span> <span class="o">=</span> <span class="n">mappingFrame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mappingFrame</span><span class="p">[</span><span class="s1">&#39;Lenkungsmethode&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">key</span><span class="p">)),</span> <span class="s1">&#39;Beschreibung&#39;</span><span class="p">]</span>
+                            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="nb">tuple</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">proba</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;%)&quot;</span><span class="p">,</span> <span class="n">proba</span><span class="p">,</span> <span class="n">desc</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">key</span><span class="p">)))</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">proba</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;%)&quot;</span><span class="p">])</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="nb">tuple</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">proba</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;%)&quot;</span><span class="p">,</span> <span class="n">proba</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">key</span><span class="p">)))</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">proba</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;%)&quot;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="n">probaTuple</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">tuple</span><span class="p">)</span>
+
+    <span class="c1">#sort probabilityList</span>
+    <span class="n">sortedFull</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="nb">tuple</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">probaTuple</span><span class="p">):</span>
+        <span class="n">probaTupleSorted</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">idx2</span><span class="p">,</span> <span class="n">tuple2</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">probaTuple</span><span class="p">[</span><span class="n">idx</span><span class="p">]):</span>
+            <span class="n">singleTuple</span> <span class="o">=</span> <span class="n">probaTuple</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="n">idx2</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">probaTupleSorted</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">probaTupleSorted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">singleTuple</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">probaTupleSorted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">singleTuple</span><span class="p">)</span>
+                <span class="n">correctOrder</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">startIndex</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">probaTupleSorted</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+                <span class="k">while</span> <span class="ow">not</span> <span class="n">correctOrder</span> <span class="ow">and</span> <span class="n">startIndex</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">probaTupleSorted</span><span class="p">[</span><span class="n">startIndex</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">probaTupleSorted</span><span class="p">[</span><span class="n">startIndex</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]:</span>
+                        <span class="n">probaTupleSorted</span><span class="p">[</span><span class="n">startIndex</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">probaTupleSorted</span><span class="p">[</span><span class="n">startIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">probaTupleSorted</span><span class="p">[</span><span class="n">startIndex</span><span class="p">],</span> <span class="n">probaTupleSorted</span><span class="p">[</span><span class="n">startIndex</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">startIndex</span> <span class="o">=</span> <span class="n">startIndex</span><span class="o">-</span><span class="mi">1</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">correctOrder</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">sortedFull</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">probaTupleSorted</span><span class="p">)</span>
+    <span class="n">probaTuple</span> <span class="o">=</span> <span class="n">sortedFull</span>
+
+    <span class="k">return</span> <span class="n">predictions_text</span><span class="p">,</span> <span class="n">probaTuple</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="function-getuniquevalues">
+<h2>Function: getUniqueValues<a class="headerlink" href="#function-getuniquevalues" title="Link to this heading"></a></h2>
+<section id="id16">
+<h3>Purpose<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
+<p>This function extracts all unique values within a dataframe and is used when displaying the prediction results on the web-UI.</p>
+</section>
+<section id="id17">
+<h3>Parameters<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><span class="varname">data</span> (dataframe): Any dataframe</p></li>
+</ul>
+</section>
+<section id="id18">
+<h3>Process<a class="headerlink" href="#id18" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>For each column within the dataframe, all unique values are extracted and appended to a list, which is added to a final dictionary containing all lists.</p></li>
+</ol>
+</section>
+<section id="id19">
+<h3>Returns<a class="headerlink" href="#id19" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><span class="varname">uniqueVals</span> (dictionary): A dictionary that contains a list of unique values for each column within the dataframe (key)</p></li>
+</ul>
+</section>
+<section id="id20">
+<h3>Notes<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Built by: Serdar</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">getUniqueValues</span><span class="p">(</span><span class="n">data</span><span class="p">):</span> <span class="c1">#extracts all unique values from a dataframe</span>
+    <span class="n">uniqueVals</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">outputCols</span><span class="p">:</span>
+        <span class="n">uniqueList</span> <span class="o">=</span>  <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+        <span class="n">uniqueList</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">uniqueList</span><span class="p">]</span>
+        <span class="n">uniqueVals</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">uniqueList</span>
+    <span class="k">return</span> <span class="n">uniqueVals</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="code_trainNewModel.html" class="btn btn-neutral float-left" title="Model Training" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="code_modelMonitoring.html" class="btn btn-neutral float-right" title="Model Management" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Serdar Isik, Johannes Klauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

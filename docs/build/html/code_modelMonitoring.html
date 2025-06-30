@@ -1,0 +1,424 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="English" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Model Management &mdash; Jopp_PJS 16.05.2025 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=1d209903" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5c80bd1b"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Feature Prediction" href="code_createPrediction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Jopp_PJS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usecase.html">Use Case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toolOverview.html">Tool Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conclusion.html">Conclusion</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Quick Start:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tool Framework:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="problem_description.html">Problem Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="selected_algorithms.html">Selected Algorithms</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tool Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="predicting_new_vals.html">Predicting new Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monitoring_performance.html">Monitoring Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trainingNewModels.html">Training new Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technical Functionality:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="code_trainNewModel.html">Model Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_createPrediction.html">Feature Prediction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Model Management</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#function-monitoring">Function: monitoring</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#purpose">Purpose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#process">Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#returns">Returns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#function-stasheddata">Function: stasheddata</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Purpose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Returns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#function-delete-row">Function: delete_row</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Purpose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">Returns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#function-manage-models">Function: manage_models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id11">Purpose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id12">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id13">Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id14">Returns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id15">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#function-reset-model">Function: reset_model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id16">Purpose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id17">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id18">Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id19">Returns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id20">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#function-login">Function: login</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id21">Purpose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id22">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id23">Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id24">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#function-verify-password">Function: verify_password</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id25">Purpose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id26">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id27">Returns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id28">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#function-logout">Function: logout</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id29">Purpose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id30">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id31">Returns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id32">Notes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Jopp_PJS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Model Management</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/your-github-username/your-repo-name/blob/main/docs/code_modelMonitoring.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="model-management">
+<h1>Model Management<a class="headerlink" href="#model-management" title="Link to this heading"></a></h1>
+<section id="function-monitoring">
+<h2>Function: monitoring<a class="headerlink" href="#function-monitoring" title="Link to this heading"></a></h2>
+<section id="purpose">
+<h3>Purpose<a class="headerlink" href="#purpose" title="Link to this heading"></a></h3>
+<p>This function is part of routes.py and initializes <span class="varname">monitoring.html</span> as part of the Web-UI.</p>
+</section>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>None</p></li>
+</ul>
+</section>
+<section id="process">
+<h3>Process<a class="headerlink" href="#process" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Checks for a validated user, calls for login otherwise</p></li>
+<li><p>Initializes <span class="varname">monitoring.html</span>, extracting relevant data for a graph that displays model performance across output features as well as additional metrics for the current model</p></li>
+</ol>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Reroute to <span class="varname">monitoring.html</span></p></li>
+</ul>
+</section>
+<section id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Built by: Serdar, Johannes (Corresponding Web-Overlay <span class="varname">monitoring.html</span> built by Johannes)</p></li>
+</ul>
+</section>
+</section>
+<section id="function-stasheddata">
+<h2>Function: stasheddata<a class="headerlink" href="#function-stasheddata" title="Link to this heading"></a></h2>
+<section id="id1">
+<h3>Purpose<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>This function is part of routes.py and initializes <span class="varname">stashedData.html</span> which displays all input tuples that have been used for prediction, but do not exist in the data used to train the current model (Thus can be used for further training)</p>
+</section>
+<section id="id2">
+<h3>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>None</p></li>
+</ul>
+</section>
+<section id="id3">
+<h3>Process<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<p>Checks whether <span class="varname">stashedTrainData.xlsx</span> contains rows, displays them in the form of a table if yes.</p>
+</section>
+<section id="id4">
+<h3>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Reroute to <span class="varname">stashedData.html</span></p></li>
+</ul>
+</section>
+<section id="id5">
+<h3>Notes<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Built by: Serdar, Johannes (Corresponding Web-Overlay <span class="varname">stashedData.html</span> built by Serdar, Johannes)</p></li>
+</ul>
+</section>
+</section>
+<section id="function-delete-row">
+<h2>Function: delete_row<a class="headerlink" href="#function-delete-row" title="Link to this heading"></a></h2>
+<section id="id6">
+<h3>Purpose<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>This function allows for the deletion of an input tuple displayed in <span class="varname">stasheddata.html</span></p>
+</section>
+<section id="id7">
+<h3>Parameters<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>None</p></li>
+</ul>
+</section>
+<section id="id8">
+<h3>Process<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<p>Removes the selected row from <span class="varname">stashedData.xlsx</span>, then re-builds <span class="varname">stasheddata.html</span></p>
+</section>
+<section id="id9">
+<h3>Returns<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Reroute to <span class="varname">stashedData.html</span></p></li>
+</ul>
+</section>
+<section id="id10">
+<h3>Notes<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Built by: Serdar (Corresponding Web-Overlay <span class="varname">stashedData.html</span> built by Serdar, Johannes)</p></li>
+</ul>
+</section>
+</section>
+<section id="function-manage-models">
+<h2>Function: manage_models<a class="headerlink" href="#function-manage-models" title="Link to this heading"></a></h2>
+<section id="id11">
+<h3>Purpose<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<p>This function prepares the three most recent models to be displayed in <span class="varname">manage_models.html</span></p>
+</section>
+<section id="id12">
+<h3>Parameters<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>None</p></li>
+</ul>
+</section>
+<section id="id13">
+<h3>Process<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<p>Accesses <span class="varname">modelData.xlsx</span> to extract metrics about the most recent three models and relays this data to <span class="varname">manage_models.html</span>. Additionally, a button that allows for a non-current model to be restored as the current model is added.</p>
+</section>
+<section id="id14">
+<h3>Returns<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Reroute to <span class="varname">manage_models.html</span></p></li>
+</ul>
+</section>
+<section id="id15">
+<h3>Notes<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Built by: Serdar (Corresponding Web-Overlay <span class="varname">manage_models.html</span> built by Serdar)</p></li>
+</ul>
+</section>
+</section>
+<section id="function-reset-model">
+<h2>Function: reset_model<a class="headerlink" href="#function-reset-model" title="Link to this heading"></a></h2>
+<section id="id16">
+<h3>Purpose<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
+<p>This function restores a non-current backup model as the current one.</p>
+</section>
+<section id="id17">
+<h3>Parameters<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>request form that contains the ID of the model to be restored.</p></li>
+</ul>
+</section>
+<section id="id18">
+<h3>Process<a class="headerlink" href="#id18" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Deletes all rows from <span class="varname">modelData.xlsx</span> which appear after the selected model ID</p></li>
+<li><p>Compares training data between the model to be restored to and the current model, re-adds all input tuples which have been added afterwards to <span class="varname">stashedTrainData.xlsx</span></p></li>
+<li><p>Replaces the model in folder <span class="varname">model1</span> with the selected model</p></li>
+</ol>
+</section>
+<section id="id19">
+<h3>Returns<a class="headerlink" href="#id19" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Reroute to <span class="varname">manage_models.html</span></p></li>
+</ul>
+</section>
+<section id="id20">
+<h3>Notes<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Built by: Serdar (Corresponding Web-Overlay <span class="varname">manage_models.html</span> built by Serdar)</p></li>
+</ul>
+</section>
+</section>
+<section id="function-login">
+<h2>Function: login<a class="headerlink" href="#function-login" title="Link to this heading"></a></h2>
+<section id="id21">
+<h3>Purpose<a class="headerlink" href="#id21" title="Link to this heading"></a></h3>
+<p>This function implements the login functionality used to check whether a user is authorized to access <span class="varname">monitoring.html</span></p>
+</section>
+<section id="id22">
+<h3>Parameters<a class="headerlink" href="#id22" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>None</p></li>
+</ul>
+</section>
+<section id="id23">
+<h3>Process<a class="headerlink" href="#id23" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Displays a form using <span class="varname">login.html</span> which requests a user name and password</p></li>
+<li><p>Verifies the username and password by calling <span class="varname">verify_password</span></p></li>
+</ol>
+</section>
+<section id="id24">
+<h3>Notes<a class="headerlink" href="#id24" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Built by: Johannes (Corresponding Web-Overlay <span class="varname">login.html</span> built by Johannes)</p></li>
+</ul>
+</section>
+</section>
+<section id="function-verify-password">
+<h2>Function: verify_password<a class="headerlink" href="#function-verify-password" title="Link to this heading"></a></h2>
+<section id="id25">
+<h3>Purpose<a class="headerlink" href="#id25" title="Link to this heading"></a></h3>
+<p>This function checks whether the username and passwort with which a user attempts to access <span class="varname">monitoring.html</span> is valid</p>
+</section>
+<section id="id26">
+<h3>Parameters<a class="headerlink" href="#id26" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><span class="varname">username</span> : User Name</p></li>
+<li><p><span class="varname">password</span> : Password</p></li>
+</ul>
+</section>
+<section id="id27">
+<h3>Returns<a class="headerlink" href="#id27" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><span class="varname">username</span> if valid, None otherwise</p></li>
+</ul>
+</section>
+<section id="id28">
+<h3>Notes<a class="headerlink" href="#id28" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Built by: Johannes (Corresponding Web-Overlay <span class="varname">login.html</span> built by Johannes)</p></li>
+</ul>
+</section>
+</section>
+<section id="function-logout">
+<h2>Function: logout<a class="headerlink" href="#function-logout" title="Link to this heading"></a></h2>
+<section id="id29">
+<h3>Purpose<a class="headerlink" href="#id29" title="Link to this heading"></a></h3>
+<p>This function logs a user out of the system</p>
+</section>
+<section id="id30">
+<h3>Parameters<a class="headerlink" href="#id30" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>None</p></li>
+</ul>
+</section>
+<section id="id31">
+<h3>Returns<a class="headerlink" href="#id31" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Reroute to <span class="varname">logout.html</span></p></li>
+</ul>
+</section>
+<section id="id32">
+<h3>Notes<a class="headerlink" href="#id32" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Built by: Johannes (Corresponding Web-Overlay <span class="varname">logout.html</span> built by Johannes)</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="code_createPrediction.html" class="btn btn-neutral float-left" title="Feature Prediction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Serdar Isik, Johannes Klauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

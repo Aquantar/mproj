@@ -42,7 +42,8 @@ documentation for details.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Tool Functionality:
+   :caption: Technical Functionality:
 
-   trainNewModel
-   createPrediction
+   code_trainNewModel
+   code_createPrediction
+   code_modelMonitoring
