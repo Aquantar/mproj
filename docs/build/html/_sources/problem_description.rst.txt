@@ -13,7 +13,7 @@ Status Quo
 Historically, the process described above is performed by human experts in an audit when a new component is designed at Jopp. During this process, data regarding each component characteristic is viewed in detail and vast experience accumulated over 
 time is applied to select correct values during control plan creation. This has lead to a large set of data over multiple years, which documents a multitude of characteristics across many components in conjunction with their selected values regarding the correct testing equipment, optimal sampling rate, and validation procedure.
 
-Problem
+Determined Problem
 ----------------
 
 While the above process has been applied for a long time at Jopp, it has proven to be a time-consuming task which is also prone to human error. During our initial analysis conducted together with Jopp, it has been determined that this area of operations

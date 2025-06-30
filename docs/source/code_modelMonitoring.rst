@@ -26,6 +26,7 @@ Notes
 - Built by: Serdar, Johannes (Corresponding Web-Overlay :varname:`monitoring.html` built by Johannes)
 
 .. code-block:: python
+
     @app.route('/monitoring', methods=['GET', 'POST'])
     def monitoring():
         if 'user' not in session:
@@ -85,6 +86,7 @@ Notes
 - Built by: Serdar, Johannes (Corresponding Web-Overlay :varname:`stashedData.html` built by Serdar, Johannes)
 
 .. code-block:: python
+
     @app.route('/stasheddata', methods=['GET', 'POST'])
     def stasheddata(): #load and display stashed data (new training data which has not been incorporated in a model yet)
         file_path = os.path.join("models", "stashedTrainData.xlsx")
@@ -131,6 +133,7 @@ Notes
 - Built by: Serdar (Corresponding Web-Overlay :varname:`stashedData.html` built by Serdar, Johannes)
 
 .. code-block:: python
+
     @app.route('/delete_row', methods=['POST'])
     def delete_row(): #functionality to delete a row in stashed data view
         row_index = int(request.form['row_index'])
@@ -168,6 +171,7 @@ Notes
 - Built by: Serdar (Corresponding Web-Overlay :varname:`manage_models.html` built by Serdar)
 
 .. code-block:: python
+
     @app.route('/manage_models', methods=['GET'])
     def manage_models(): #functionality to view current models
         file_path = os.path.join("models", "modelData.xlsx")
@@ -230,6 +234,7 @@ Notes
 - Built by: Serdar (Corresponding Web-Overlay :varname:`manage_models.html` built by Serdar)
 
 .. code-block:: python
+
     @app.route('/reset_model', methods=['POST'])
     def reset_model(): #logic to reset a model to a previous version
         model_id = request.form.get('model_id')
@@ -311,6 +316,7 @@ Notes
 - Built by: Johannes (Corresponding Web-Overlay :varname:`login.html` built by Johannes)
 
 .. code-block:: python
+
     @app.route('/login', methods=['GET', 'POST'])
     def login():
         if request.method == 'POST':
@@ -345,6 +351,7 @@ Notes
 - Built by: Johannes (Corresponding Web-Overlay :varname:`login.html` built by Johannes)
 
 .. code-block:: python
+
     @auth.verify_password
     def verify_password(username, password):
         if username in users and check_password_hash(users.get(username), password):
@@ -371,6 +378,7 @@ Notes
 - Built by: Johannes (Corresponding Web-Overlay :varname:`logout.html` built by Johannes)
 
 .. code-block:: python
+    
     def logout():
         session.pop('user', None)
         return render_template('logout.html')

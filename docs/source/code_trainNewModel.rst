@@ -28,6 +28,7 @@ Notes
 - Built by: Serdar, Johannes (Corresponding Web-Overlay :varname:`monitoring.html` built by Johannes)
 
 .. code-block:: python
+    
     @app.route('/model_training', methods=['GET', 'POST'])
     def model_training():
         global outputCols
