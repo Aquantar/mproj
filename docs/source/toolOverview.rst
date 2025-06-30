@@ -41,3 +41,21 @@ The administration page is additionally protected by a login form to prevent una
 
 Tool Improvement
 ----------------
+The Tool Improvement page allows the user to stashed data with which has not been trained yet but has already been submitted as correct. The user can delete rows if necessary and start the training of new models with the stashed data. 
+
+.. image:: _static/managementandintegrationofnewdata.png
+   :alt: Screenshot Landing Page
+   :width: 600px
+   :align: center
+
+.. image:: _static/trainnewmodels.png
+   :alt: Screenshot Landing Page
+   :width: 600px
+   :align: center
+
+The model management page allows the user to set back to a former model.
+
+.. image:: _static/managementofexistingmodels.png
+   :alt: Screenshot Landing Page
+   :width: 600px
+   :align: center

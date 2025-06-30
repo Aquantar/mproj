@@ -49,6 +49,13 @@
 <li class="toctree-l1"><a class="reference internal" href="usecase.html">Use Case</a></li>
 <li class="toctree-l1"><a class="reference internal" href="toolOverview.html">Tool Overview</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Conclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#deployment">Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dockerfile">Dockerfile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deployment-steps">Deployment Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Quick Start:</span></p>
 <ul>
@@ -100,6 +107,111 @@
 <h1>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading"></a></h1>
 <p>The developed system demonstrated a strong predictive performance, achieving an average accuracy of approximately 86% across the three core output features—validation equipment (~92.5%), sampling rate (~80%), and validation procedure (~85%). These results underline the model’s capability to support the creation of control plans in a reliable and data-driven manner.</p>
 <p>Overall, the implementation of this predictive system led to significant improvements in the control plan creation process. Most notably, it drastically reduced the time required to develop such plans and minimized the risk of human error. Additionally, it lowered the need for human resources in the decision-making phase and as a result increased the standardization of the process. Thanks to its data-driven architecture, the system also enables continuous self-improvement through ongoing re-training with new data—ensuring it remains robust and relevant in future use cases.</p>
+</section>
+<section id="deployment">
+<h1>Deployment<a class="headerlink" href="#deployment" title="Link to this heading"></a></h1>
+<p>The goal is to deploy the application within the Jopp infrastructure and make it usable for them.
+We used a containerized approach with Docker. This allows for simple deployment on any target system without the need to install dependencies manually.</p>
+<section id="dockerfile">
+<h2>Dockerfile<a class="headerlink" href="#dockerfile" title="Link to this heading"></a></h2>
+<p>The project is containerized using the following Dockerfile.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basis-Image auswählen</span>
+<span class="n">FROM</span> <span class="n">python</span><span class="p">:</span><span class="mf">3.9</span>
+
+<span class="c1"># Arbeitsverzeichnis im Container setzen</span>
+<span class="n">WORKDIR</span> <span class="o">/</span><span class="n">app</span>
+
+<span class="c1"># Abhängigkeiten kopieren und installieren</span>
+<span class="n">COPY</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">RUN</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">cache</span><span class="o">-</span><span class="nb">dir</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+
+<span class="c1"># Alle Projektdaten kopieren</span>
+<span class="n">COPY</span> <span class="o">.</span> <span class="o">.</span>
+
+<span class="c1"># Port freigeben</span>
+<span class="n">EXPOSE</span> <span class="mi">5000</span>
+
+<span class="c1"># Startbefehl für die Anwendung</span>
+<span class="n">CMD</span> <span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="s2">&quot;main.py&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<p>All necessary Python libraries are defined in the requirements.txt file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Flask</span><span class="o">==</span><span class="mf">3.1.0</span>
+<span class="n">pandas</span><span class="o">==</span><span class="mf">2.2.3</span>
+<span class="n">scikit_learn</span><span class="o">==</span><span class="mf">1.6.1</span>
+<span class="n">xlsxwriter</span><span class="o">==</span><span class="mf">3.1.9</span>
+<span class="n">gunicorn</span><span class="o">==</span><span class="mf">21.2.0</span>
+<span class="n">openpyxl</span><span class="o">==</span><span class="mf">3.1.2</span>
+<span class="n">Flask</span><span class="o">-</span><span class="n">HTTPAuth</span>
+</pre></div>
+</div>
+</section>
+<section id="deployment-steps">
+<h2>Deployment Steps<a class="headerlink" href="#deployment-steps" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p><strong>Build the Docker image locally:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>flask-app<span class="w"> </span>.
+</pre></div>
+</div>
+</li>
+<li><p><strong>Test the image locally:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">5000</span>:5000<span class="w"> </span>flask-app
+</pre></div>
+</div>
+</li>
+<li><p><strong>Export the image as a `.tar` file:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>save<span class="w"> </span>flask-app<span class="w"> </span>&gt;<span class="w"> </span>flask-app.tar
+</pre></div>
+</div>
+</li>
+<li><p><strong>Transfer the image to the test PC via SCP:</strong></p>
+<p>The test PC is accessible via SSH on port <code class="docutils literal notranslate"><span class="pre">5522</span></code>. Use the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scp<span class="w"> </span>-P<span class="w"> </span><span class="m">5522</span><span class="w"> </span>/path/to/flask-app.tar<span class="w"> </span>serdar_isik@212.185.51.181:/home/serdar_isik/
+</pre></div>
+</div>
+<p>Alternatively:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scp<span class="w"> </span>-P<span class="w"> </span><span class="m">5522</span><span class="w"> </span>/path/to/flask-app.tar<span class="w"> </span>johannes_klauer@212.185.51.181:/home/johannes_klauer/
+</pre></div>
+</div>
+<p>SSH credentials:</p>
+<ul class="simple">
+<li><p><strong>User:</strong> serdar_isik
+<strong>Password:</strong> FyElT*********</p></li>
+<li><p><strong>User:</strong> johannes_klauer
+<strong>Password:</strong> NXZj*********</p></li>
+</ul>
+</li>
+<li><p><strong>SSH into the remote machine (via Windows Terminal, Bash, or similar):</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>serdar_isik@212.185.51.181<span class="w"> </span>-p<span class="w"> </span><span class="m">5522</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Load the image on the test PC:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>load<span class="w"> </span>&lt;<span class="w"> </span>flask-app.tar
+</pre></div>
+</div>
+</li>
+<li><p><strong>Run the container on the test PC and map to port 80:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-p<span class="w"> </span><span class="m">80</span>:5000<span class="w"> </span>flask-app
+</pre></div>
+</div>
+</li>
+<li><p><strong>Access the web application:</strong></p>
+<p>The container exposes port 5000 internally, which is mapped to port 80 on the host.
+The application is reachable under:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>http://212.185.51.181:5580
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<p>Deployment done by Johannes</p>
+</section>
 </section>
 
 

@@ -44,3 +44,27 @@ This file contains the route definitions that link frontend requests to backend 
     @app.route('/index', methods=['GET', 'POST'])
     def index():
         return render_template('index.html')
+
+Run the program
+^^^^^^^^^^^^^^^^^
+1.  Make sure to install all necessary libraries using:
+
+.. code-block:: bash
+
+    pip install -r requirements.txt
+
+2.  Ensure all necessary project files and input data to test the system are present 
+
+3.  Start the Flask server
+
+4.  Username for administration page: 
+
+.. code-block:: text
+
+    admin
+
+5.  Passwort for administration page:
+
+.. code-block:: text
+
+    meinpasswort

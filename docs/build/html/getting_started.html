@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="usecase.html">Use Case</a></li>
 <li class="toctree-l1"><a class="reference internal" href="toolOverview.html">Tool Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="conclusion.html">Conclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conclusion.html#deployment">Deployment</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Quick Start:</span></p>
 <ul class="current">
@@ -56,6 +57,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#init-py">__init__.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#main-py">main.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#routes-py">routes.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-the-program">Run the program</a></li>
 </ul>
 </li>
 </ul>
@@ -136,6 +138,29 @@
 <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/index&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;index.html&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="run-the-program">
+<h2>Run the program<a class="headerlink" href="#run-the-program" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Make sure to install all necessary libraries using:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Ensure all necessary project files and input data to test the system are present</p></li>
+<li><p>Start the Flask server</p></li>
+<li><p>Username for administration page:</p></li>
+</ol>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>admin
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Passwort for administration page:</p></li>
+</ol>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>meinpasswort
 </pre></div>
 </div>
 </section>
