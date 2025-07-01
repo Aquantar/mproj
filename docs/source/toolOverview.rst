@@ -14,15 +14,15 @@ The landing page is designed to provide users with a clear and concise overview 
 
 Control Plan Creation
 ---------------------
-On the “Control Plan Creation” page, the completed prediction is displayed. Here, the user still has the option to adjust the predicted values. Additionally, color coding is used to indicate whether the prediction probability exceeds 75% or not. By clicking the submit button, the table containing the finalized values can be downloaded as an Excel file.
+On the Control Plan Creation page, the completed prediction is displayed. Here, the user still has the option to adjust the predicted values. Additionally, color coding is used to indicate whether the prediction probability exceeds 75% or not. By clicking the submit button, the table containing the finalized values can be downloaded as an Excel file.
 
 .. image:: _static/Controlplancreation.png
-   :alt: Screenshot Landing Page
+   :alt: Screenshot controlplan Page
    :width: 600px
    :align: center
 
 .. image:: _static/controlplandownload.png
-   :alt: Screenshot Landing Page
+   :alt: Screenshot controlplan Page
    :width: 600px
    :align: center
 
